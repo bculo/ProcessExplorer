@@ -6,14 +6,8 @@ namespace ProcessExplorer.Service.Services.System
     {
         public static IPlatformInformationService CreatePlatformInformationService()
         {
-            IPlatformInformationService service = null;
-
-            service = new SystemInformationService();
-
-
-            if (service != null)
-                service.Set();
-
+            IPlatformInformationService service = new SystemInformationService();
+            service.Set();
             return service;
         }
     }

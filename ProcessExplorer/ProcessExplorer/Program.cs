@@ -12,7 +12,9 @@ namespace ProcessExplorer
     {
         public static void Main(string[] args)
         {
+            System.Console.WriteLine("Starting application...");
             MainAsync(args).Wait();
+            System.Console.WriteLine("Closing application...");
         }
 
         /// <summary>
