@@ -1,10 +1,13 @@
-﻿using
-using ProcessExplorer.Application.Common.Models;
+﻿using ProcessExplorer.Application.Common.Models;
 
 namespace ProcessExplorer.Application.Common.Interfaces
 {
+    /// <summary>
+    /// Singleton
+    /// </summary>
     public interface IPlatformInformationService
     {
-        public PlatformInformation PlatformInformation { get; }
+        PlatformInformation PlatformInformation { get; }
+        void Set();
     }
 }

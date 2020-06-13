@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Service.Services.System;
 
 namespace ProcessExplorer
 {
@@ -51,6 +52,8 @@ namespace ProcessExplorer
 
             //Add startup point
             services.AddTransient<Startup>();
+
+            //Platform information singleton
             services.AddSingleton(GetPlatormInformationService());
 
             return services;
@@ -62,7 +65,7 @@ namespace ProcessExplorer
         /// <returns></returns>
         private static IPlatformInformationService GetPlatormInformationService()
         {
-            return Service.Services.System.PlatformInformationServiceFactory.CreatePlatformInformationService();
+            return PlatformInformationServiceFactory.CreatePlatformInformationService();
         }
 
         /// <summary>

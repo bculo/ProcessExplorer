@@ -14,17 +14,26 @@ namespace ProcessExplorer.Service.Services.System
             {
                 if (information == null)
                     throw new ArgumentNullException(nameof(PlatformInformation));
-
                 return information;
             } 
         }
 
+        /// <summary>
+        /// Set platform information
+        /// </summary>
         public void Set()
         {
-            if (PlatformInformation != null)
+            if (information != null)
                 throw new InvalidOperationException($"Operation { nameof(Set) } can be executed only once");
 
-            
+            information = new PlatformInformation
+            {
+                MachineName = Environment.MachineName,
+                Platform = Environment.OSVersion.Platform.ToString(),
+                PlatformVersion = Environment.OSVersion.VersionString,
+                UserName = Environment.UserName,
+                UserDomainName = Environment.UserDomainName
+            };
         }
     }
 }

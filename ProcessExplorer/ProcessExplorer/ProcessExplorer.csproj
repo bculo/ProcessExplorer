@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProcessExplorer.Application\ProcessExplorer.Application.csproj" />
+    <ProjectReference Include="..\ProcessExplorer.Service\ProcessExplorer.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
