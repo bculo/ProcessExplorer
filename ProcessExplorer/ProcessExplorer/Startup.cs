@@ -1,24 +1,26 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ProcessExplorer.Application.Common.Interfaces;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer
 {
+    /*
+     * https://stackoverflow.com/questions/5071894/c-sharp-kill-all-processes-not-essential-to-running-windows
+     */
     public class Startup
     {
-        public async Task StartApplication(IConfiguration configuration, IServiceCollection collection)
+        public async Task StartApplication(IServiceProvider provider)
         {
-            var processlist = Process.GetProcesses();
+            var factory = provider.GetRequiredService<IProcessCollectorFactory>();
 
-            foreach (Process process in processlist)
+            var info = factory.GetProcessCollector().GetProcesses();
+
+            foreach(var proc in info)
             {
-                if(process.MainWindowHandle != IntPtr.Zero)
-                {
-                    Console.WriteLine(process.ProcessName);
-                }
+                Console.WriteLine($"{proc.ProcessName} || {proc?.PrettyProccessTitle}");
             }
         }
     }
 }
+ 

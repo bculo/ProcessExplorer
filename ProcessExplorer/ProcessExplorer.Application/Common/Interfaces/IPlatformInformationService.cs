@@ -8,6 +8,5 @@ namespace ProcessExplorer.Application.Common.Interfaces
     public interface IPlatformInformationService
     {
         PlatformInformation PlatformInformation { get; }
-        void Set();
     }
 }

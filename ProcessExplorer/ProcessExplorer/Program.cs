@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Configurations;
+using ProcessExplorer.Configurations;
+using ProcessExplorer.Persistence.Configurations;
+using ProcessExplorer.Service.Configurations;
 using ProcessExplorer.Service.Services.System;
 
 namespace ProcessExplorer
@@ -15,6 +19,8 @@ namespace ProcessExplorer
             System.Console.WriteLine("Starting application...");
             MainAsync(args).Wait();
             System.Console.WriteLine("Closing application...");
+
+            Console.ReadLine();
         }
 
         /// <summary>
@@ -26,13 +32,13 @@ namespace ProcessExplorer
         {
             ConfigureLogger();
 
-            IServiceCollection collection = ConfigureStartUpDependencies();
             IConfiguration configuration = GetConfiguration();
+            IServiceCollection collection = ConfigureStartUpDependencies(configuration);
 
             #region CALL STARTUP POINT 
 
             IServiceProvider provider = collection.BuildServiceProvider();
-            await provider.GetRequiredService<Startup>().StartApplication(configuration, collection);
+            await provider.GetRequiredService<Startup>().StartApplication(provider);
 
             #endregion
         }
@@ -48,26 +54,26 @@ namespace ProcessExplorer
         /// <summary>
         /// Configure IServiceCollection and IConfiguration
         /// </summary>
-        private static IServiceCollection ConfigureStartUpDependencies()
+        private static IServiceCollection ConfigureStartUpDependencies(IConfiguration configuration)
         {
             IServiceCollection services = new ServiceCollection();
 
             //Add startup point
             services.AddTransient<Startup>();
 
-            //Platform information singleton
-            services.AddSingleton(GetPlatormInformationService());
+            //Configure current project
+            services.ApplyConfigurationConsole(configuration);
+
+            //Configure application layer
+            services.ApplyConfigurationApplication(configuration);
+
+            //Configure persistence layer
+            services.ApplyConfigurationPersistence(configuration);
+
+            //Configure service layer
+            services.ApplyConfigurationService(configuration);
 
             return services;
-        }
-
-        /// <summary>
-        /// Get operating system information (Linx or Windows)
-        /// </summary>
-        /// <returns></returns>
-        private static IPlatformInformationService GetPlatormInformationService()
-        {
-            return PlatformInformationServiceFactory.CreatePlatformInformationService();
         }
 
         /// <summary>

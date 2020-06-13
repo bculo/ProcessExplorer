@@ -1,4 +1,5 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Enums;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using System;
 
@@ -18,10 +19,15 @@ namespace ProcessExplorer.Service.Services.System
             } 
         }
 
+        public SystemInformationService()
+        {
+            Set();
+        }
+
         /// <summary>
         /// Set platform information
         /// </summary>
-        public void Set()
+        private void Set()
         {
             if (information != null)
                 throw new InvalidOperationException($"Operation { nameof(Set) } can be executed only once");
@@ -34,6 +40,28 @@ namespace ProcessExplorer.Service.Services.System
                 UserName = Environment.UserName,
                 UserDomainName = Environment.UserDomainName
             };
+
+            SetType();
+        }
+
+        /// <summary>
+        /// Set platform type
+        /// </summary>
+        private void SetType()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32NT:
+                    information.Type = Platform.Win;
+                    break;
+                case PlatformID.Unix:
+                    information.Type = Platform.Unix;
+                    break;
+                default:
+                    information.Type = Platform.Unknown;
+                    break;
+            }
+
         }
     }
 }
