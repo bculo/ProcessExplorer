@@ -1,38 +1,46 @@
 ﻿using Microsoft.Extensions.Options;
+using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Options;
+using ProcessExplorer.Application.Utils;
 using ProcessExplorer.Service.Interfaces;
 using ProcessExplorer.Service.Process.Windows;
 using System;
+using System.Collections.Generic;
 
 namespace ProcessExplorer.Service.Process
 {
     public class ProcessCollectorFactory : IProcessCollectorFactory
     {
-        private readonly IOptions<ProcessCollectorOptions> _options;
+        private static Dictionary<Platform, Func<IProcessCollector>> ExecutionMethods;
+
         private readonly IPlatformInformationService _platform;
         private readonly IPlatformProcessRecognizer _recognizer;
 
-        public ProcessCollectorFactory(IOptions<ProcessCollectorOptions> options, 
-            IPlatformInformationService platform,
+        public ProcessCollectorFactory(IPlatformInformationService platform,
             IPlatformProcessRecognizer recognizer)
         {
-            _options = options;
             _platform = platform;
             _recognizer = recognizer;
         }
 
+        private Dictionary<Platform, Func<IProcessCollector>> GetExecutionMethods()
+        {
+            if (ExecutionMethods != null)
+                return ExecutionMethods;
+
+            ExecutionMethods = new Dictionary<Platform, Func<IProcessCollector>>
+            {
+                { Platform.Win,  GetWindowsCollector },
+                { Platform.Unix,  GetLinuxCollector }
+            };
+
+            return ExecutionMethods;
+        }
+
         public IProcessCollector GetProcessCollector()
         {
-            switch (_platform.PlatformInformation.Type)
-            {
-                case Application.Common.Enums.Platform.Win:
-                    return GetWindowsCollector();
-                case Application.Common.Enums.Platform.Unix:
-                    return GetLinuxCollector();
-                default:
-                    throw new NotSupportedException("Platform not supported");
-            }
+            return _platform.PlatformInformation.ExecuteFunWithReturnValue(GetExecutionMethods());
         }
 
         private IProcessCollector GetWindowsCollector()
