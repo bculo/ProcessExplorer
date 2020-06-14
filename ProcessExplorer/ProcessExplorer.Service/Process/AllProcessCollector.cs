@@ -16,6 +16,11 @@ namespace ProcessExplorer.Service.Process
         {
         }
 
+        /// <summary>
+        /// Get all processes (WORKS ON LINUX AND WINDOWS 64 bit)
+        /// Problem with paths on 32 bit windows !!!
+        /// </summary>
+        /// <returns></returns>
         public IList<ProcessInformation> GetProcesses()
         {
             var processList = new List<ProcessInformation>();
@@ -26,6 +31,7 @@ namespace ProcessExplorer.Service.Process
                 {
                     processList.Add(new ProcessInformation
                     {
+                        ProcessId = proc.Id,
                         ProcessTitle = string.IsNullOrEmpty(proc.MainWindowTitle) ? null : proc.MainWindowTitle,
                         ProcessName = proc.ProcessName,
                         ProcessPath = proc.MainModule.FileName,
@@ -37,7 +43,7 @@ namespace ProcessExplorer.Service.Process
                 }
             }
 
-            return FilterPlatformProcesses(processList).ToList();
+            return FilterList(processList);
         }
     }
 }

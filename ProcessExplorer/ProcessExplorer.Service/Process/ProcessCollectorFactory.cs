@@ -24,6 +24,10 @@ namespace ProcessExplorer.Service.Process
             _recognizer = recognizer;
         }
 
+        /// <summary>
+        /// Define execution method for each platform
+        /// </summary>
+        /// <returns></returns>
         private Dictionary<Platform, Func<IProcessCollector>> GetExecutionMethods()
         {
             if (ExecutionMethods != null)
@@ -38,16 +42,28 @@ namespace ProcessExplorer.Service.Process
             return ExecutionMethods;
         }
 
+        /// <summary>
+        /// Get process collector based on platform and settings
+        /// </summary>
+        /// <returns></returns>
         public IProcessCollector GetProcessCollector()
         {
             return _platform.PlatformInformation.ExecuteFunWithReturnValue(GetExecutionMethods());
         }
 
+        /// <summary>
+        /// Get Collector for windows
+        /// </summary>
+        /// <returns></returns>
         private IProcessCollector GetWindowsCollector()
         {
             return new WMIProcessCollector(_recognizer);
         }
 
+        /// <summary>
+        /// Get Collector for Linux
+        /// </summary>
+        /// <returns></returns>
         private IProcessCollector GetLinuxCollector()
         {
             return new AllProcessCollector(_recognizer);

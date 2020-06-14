@@ -16,6 +16,11 @@ namespace ProcessExplorer.Service.Process.Windows
         {
         }
 
+        /// <summary>
+        /// Get all processes (Works only on Windows 32 and 64 bit)
+        /// Method use kernel32.dll
+        /// </summary>
+        /// <returns></returns>
         public IList<ProcessInformation> GetProcesses()
         {
             var processList = new List<ProcessInformation>();
@@ -32,6 +37,7 @@ namespace ProcessExplorer.Service.Process.Windows
                 {
                     processList.Add(new ProcessInformation
                     {
+                        ProcessId = proc.Id,
                         ProcessTitle = string.IsNullOrEmpty(proc.MainWindowTitle) ? null : proc.MainWindowTitle,
                         ProcessName = proc.ProcessName,
                         ProcessPath = GetMainModuleFileName(proc),
@@ -43,9 +49,8 @@ namespace ProcessExplorer.Service.Process.Windows
                 }
             }
 
-            return FilterPlatformProcesses(processList).ToList();
+            return FilterList(processList);
         }
-
 
         [DllImport("Kernel32.dll")]
         private static extern bool QueryFullProcessImageName([In] IntPtr hProcess, [In] uint dwFlags, [Out] StringBuilder lpExeName, [In, Out] ref uint lpdwSize);

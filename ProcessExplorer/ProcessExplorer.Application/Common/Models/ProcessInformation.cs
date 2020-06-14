@@ -4,6 +4,7 @@ namespace ProcessExplorer.Application.Common.Models
 {
     public class ProcessInformation
     {
+        public int ProcessId { get; set; }
         public string ProcessTitle { get; set; }
         public string PrettyProccessTitle 
         {

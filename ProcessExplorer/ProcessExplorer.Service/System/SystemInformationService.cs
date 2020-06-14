@@ -5,6 +5,9 @@ using System;
 
 namespace ProcessExplorer.Service.Services.System
 {
+    /// <summary>
+    /// Singleton
+    /// </summary>
     public class SystemInformationService : IPlatformInformationService
     {
         private PlatformInformation information;

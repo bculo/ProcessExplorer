@@ -6,7 +6,6 @@ using ProcessExplorer.Service.Interfaces;
 using ProcessExplorer.Service.Options;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace ProcessExplorer.Service.Process
 {
@@ -24,6 +23,10 @@ namespace ProcessExplorer.Service.Process
             _options = options.Value;
         }
 
+        /// <summary>
+        /// Get defiend execution method for each platform
+        /// </summary>
+        /// <returns></returns>
         private Dictionary<Platform, Func<string, bool>> GetExecutionMethods()
         {
             if (ExecutionMethods != null)
@@ -38,6 +41,11 @@ namespace ProcessExplorer.Service.Process
             return ExecutionMethods;
         }
         
+        /// <summary>
+        /// Check if process is platform standard process based on process path
+        /// </summary>
+        /// <param name="processPath"></param>
+        /// <returns></returns>
         public bool IsPlatfromProcess(string processPath)
         {
             if (!_options.UseRegex)
@@ -49,6 +57,11 @@ namespace ProcessExplorer.Service.Process
             return _platform.PlatformInformation.ExecuteFunWithReturnValue(GetExecutionMethods(), processPath);
         }
 
+        /// <summary>
+        /// Windows process (Regex usage)
+        /// </summary>
+        /// <param name="processPath"></param>
+        /// <returns></returns>
         public bool IsWindowsPath(string processPath)
         {
             if (RegexManager.ValidRegex(nameof(_options.WindowsRegex), processPath))
@@ -56,6 +69,11 @@ namespace ProcessExplorer.Service.Process
             return false;
         }
 
+        /// <summary>
+        /// Linux process (Regex usage)
+        /// </summary>
+        /// <param name="processPath"></param>
+        /// <returns></returns>
         public bool IsLinuxPath(string processPath)
         {
             return false;

@@ -18,6 +18,11 @@ namespace ProcessExplorer.Service.Process.Windows
         {
         }
 
+        /// <summary>
+        /// Get all processes (Works only on Windows 32 and 64 bit)
+        /// Method use WMI
+        /// </summary>
+        /// <returns></returns>
         public IList<ProcessInformation> GetProcesses()
         {
             var wmiQueryString = "SELECT ProcessId, ExecutablePath, Name, Description FROM Win32_Process";
@@ -31,6 +36,7 @@ namespace ProcessExplorer.Service.Process.Windows
                         where (mo.GetPropertyValue("ExecutablePath") != null)
                         select new ProcessInformation
                         {
+                            ProcessId = p.Id,
                             ProcessPath = (string)mo["ExecutablePath"],
                             ProcessTitle = string.IsNullOrEmpty(p.MainWindowTitle) ? null : p.MainWindowTitle,
                             ProcessName = p.ProcessName,
@@ -40,7 +46,7 @@ namespace ProcessExplorer.Service.Process.Windows
             filteredProcesses = filteredProcesses.GroupBy(i => i.ProcessName)
                                                 .Select(i => i.First());
 
-            return FilterPlatformProcesses(filteredProcesses).ToList();
+            return FilterList(filteredProcesses);
         }
     }
 }
