@@ -12,19 +12,23 @@ namespace ProcessExplorer.Service.Clients
         private readonly HttpClient _client;
         private readonly InternetCheckOptions _options;
 
-        public InternetConnectionChecker(HttpClient client, IOptions<InternetCheckOptions> options)
+        public InternetConnectionChecker(HttpClient client, 
+            IOptions<InternetCheckOptions> options)
         {
+            _options = options.Value;
+            _client = client;
 
+            _client.Timeout = TimeSpan.FromSeconds(_options.Timeout);
         }
 
-        public bool CheckForInternetConnection()
+        public async Task<bool> CheckForInternetConnectionAsync()
         {
-            throw new NotImplementedException();
-        }
+            var response = await _client.GetAsync(_options.Uri);
 
-        public Task<bool> CheckForInternetConnectionAsync()
-        {
-            throw new NotImplementedException();
+            if (response.IsSuccessStatusCode)
+                return true;
+
+            return false;
         }
     }
 }
