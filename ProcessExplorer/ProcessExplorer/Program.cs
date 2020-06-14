@@ -1,14 +1,15 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Configurations;
 using ProcessExplorer.Configurations;
 using ProcessExplorer.Persistence.Configurations;
 using ProcessExplorer.Service.Configurations;
-using ProcessExplorer.Service.Services.System;
+using ProcessExplorer.Service.Log;
+using System;
+using System.Threading.Tasks;
 
 namespace ProcessExplorer
 {
@@ -30,14 +31,14 @@ namespace ProcessExplorer
         /// <returns></returns>
         public static async Task MainAsync(string[] args)
         {
-            ConfigureLogger();
-
             IConfiguration configuration = GetConfiguration();
-            IServiceCollection collection = ConfigureStartUpDependencies(configuration);
+            IServiceCollection services = ConfigureStartUpDependencies(configuration);
+
+            ConfigureLogger(services, configuration);
 
             #region CALL STARTUP POINT 
 
-            IServiceProvider provider = collection.BuildServiceProvider();
+            IServiceProvider provider = services.BuildServiceProvider();
             await provider.GetRequiredService<Startup>().StartApplication(provider);
 
             #endregion
@@ -46,9 +47,17 @@ namespace ProcessExplorer
         /// <summary>
         /// Configure logger
         /// </summary>
-        private static void ConfigureLogger()
+        private static void ConfigureLogger(IServiceCollection services, IConfiguration configuration)
         {
-            
+            services.AddLogging(loggingBuilder =>
+            {
+                // configure Logging with NLog
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+                loggingBuilder.AddNLog(configuration);
+            });
+
+            services.AddTransient<ILoggerWrapper, LoggerWrapper>();
         }
 
         /// <summary>

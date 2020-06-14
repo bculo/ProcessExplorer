@@ -11,6 +11,7 @@ namespace ProcessExplorer.Service.Services.System
     public class SystemInformationService : IPlatformInformationService
     {
         private PlatformInformation information;
+        private readonly ILoggerWrapper _logger;
 
         public PlatformInformation PlatformInformation 
         { 
@@ -22,8 +23,10 @@ namespace ProcessExplorer.Service.Services.System
             } 
         }
 
-        public SystemInformationService()
+        public SystemInformationService(ILoggerWrapper logger)
         {
+            _logger = logger;
+
             Set();
         }
 
@@ -45,6 +48,8 @@ namespace ProcessExplorer.Service.Services.System
             };
 
             SetType();
+
+            _logger.LogInfo("Platform information _ {@data}", information);
         }
 
         /// <summary>
