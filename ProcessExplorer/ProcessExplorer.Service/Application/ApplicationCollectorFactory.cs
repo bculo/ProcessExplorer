@@ -1,10 +1,14 @@
-﻿using ProcessExplorer.Application.Common.Enums;
+﻿using Microsoft.Extensions.Options;
+using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Utils;
 using ProcessExplorer.Service.Application.Windows;
 using ProcessExplorer.Service.Interfaces;
+using ProcessExplorer.Service.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace ProcessExplorer.Service.Application
 {
@@ -14,13 +18,15 @@ namespace ProcessExplorer.Service.Application
 
         private readonly ILoggerWrapper _logger;
         private readonly IPlatformInformationService _platform;
-        private readonly IPlatformProcessRecognizer _recognizer;
+        private readonly ApplicationCollectorUsageOptions _options;
 
         public ApplicationCollectorFactory(ILoggerWrapper logger,
-            IPlatformInformationService platform)
+            IPlatformInformationService platform,
+            IOptions<ApplicationCollectorUsageOptions> options)
         {
             _logger = logger;
             _platform = platform;
+            _options = options.Value;
         }
 
         /// <summary>
@@ -53,7 +59,17 @@ namespace ProcessExplorer.Service.Application
 
         private IApplicationCollector GetWindowsApplicationCollector()
         {
-            return new WindowsViaProcessApplicationCollector(_logger);
+            var result = _options.GetActiveOptionFor(Platform.Win);
+
+            switch (result)
+            {
+                case nameof(WindowsViaProcessApplicationCollector):
+                    return new WindowsViaProcessApplicationCollector(_logger);
+                case nameof(DllUsageApplicationCollector):
+                    return new DllUsageApplicationCollector(_logger);
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }
