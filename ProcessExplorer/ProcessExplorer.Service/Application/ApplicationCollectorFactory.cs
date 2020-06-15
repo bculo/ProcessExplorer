@@ -2,6 +2,7 @@
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Utils;
 using ProcessExplorer.Service.Application.Windows;
+using ProcessExplorer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +14,7 @@ namespace ProcessExplorer.Service.Application
 
         private readonly ILoggerWrapper _logger;
         private readonly IPlatformInformationService _platform;
+        private readonly IPlatformProcessRecognizer _recognizer;
 
         public ApplicationCollectorFactory(ILoggerWrapper logger,
             IPlatformInformationService platform)
@@ -51,7 +53,7 @@ namespace ProcessExplorer.Service.Application
 
         private IApplicationCollector GetWindowsApplicationCollector()
         {
-            return new DllUsageApplicationCollector(_logger);
+            return new WindowsViaProcessApplicationCollector(_logger);
         }
     }
 }

@@ -15,6 +15,11 @@ namespace ProcessExplorer
             var factory = provider.GetRequiredService<IApplicationCollectorFactory>();
 
             var info = factory.GetApplicationCollector().GetApplications();
+
+            foreach(var item in info)
+            {
+                Console.WriteLine(item.ApplicationName);
+            }
         }
     }
 }
