@@ -6,5 +6,6 @@ namespace ProcessExplorer.Application.Common.Models
 {
     public class ApplicationInformation
     {
+        public string ApplicationName { get; set; }
     }
 }

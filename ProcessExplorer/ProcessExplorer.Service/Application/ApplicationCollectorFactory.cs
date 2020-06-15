@@ -1,6 +1,7 @@
 ﻿using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Utils;
+using ProcessExplorer.Service.Application.Windows;
 using System;
 using System.Collections.Generic;
 
@@ -50,7 +51,7 @@ namespace ProcessExplorer.Service.Application
 
         private IApplicationCollector GetWindowsApplicationCollector()
         {
-            throw new NotImplementedException();
+            return new DllUsageApplicationCollector(_logger);
         }
     }
 }

@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\Linux\" />
     <Folder Include="Process\Linux\" />
   </ItemGroup>
 
