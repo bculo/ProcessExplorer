@@ -21,7 +21,7 @@ namespace ProcessExplorer.Service.Application
             if (string.IsNullOrEmpty(fullTitle))
                 return string.Empty;
 
-            return fullTitle.Split("-").Select(i => i.Trim()).Last();
+            return fullTitle.Split(" - ").Select(i => i.Trim()).Last();
         }
     }
 }

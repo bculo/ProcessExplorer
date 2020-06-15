@@ -2,6 +2,7 @@
 using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Utils;
+using ProcessExplorer.Service.Application.Linux;
 using ProcessExplorer.Service.Application.Windows;
 using ProcessExplorer.Service.Interfaces;
 using ProcessExplorer.Service.Options;
@@ -54,7 +55,15 @@ namespace ProcessExplorer.Service.Application
 
         private IApplicationCollector GetLinuxApplicationCollector()
         {
-            throw new NotImplementedException();
+            var result = _options.GetActiveOptionFor(Platform.Unix);
+
+            switch (result)
+            {
+                case nameof(TerminalApplicationGetter):
+                    return new TerminalApplicationGetter(_logger);
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         private IApplicationCollector GetWindowsApplicationCollector()

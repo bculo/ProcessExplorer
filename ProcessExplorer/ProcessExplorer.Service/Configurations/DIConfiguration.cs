@@ -6,6 +6,7 @@ using ProcessExplorer.Service.Clients;
 using ProcessExplorer.Service.Interfaces;
 using ProcessExplorer.Service.Process;
 using ProcessExplorer.Service.Services.System;
+using ProcessExplorer.Service.Time;
 
 namespace ProcessExplorer.Service.Configurations
 {
@@ -18,6 +19,7 @@ namespace ProcessExplorer.Service.Configurations
             services.AddSingleton<IApplicationCollectorFactory, ApplicationCollectorFactory>();
             services.AddTransient<IPlatformProcessRecognizer, PlatformProcessRecognizer>();
             services.AddHttpClient<IInternet, InternetConnectionChecker>();
+            services.AddTransient<IDateTime, DateTimeService>();
         }
     }
 }
