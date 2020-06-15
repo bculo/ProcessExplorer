@@ -16,12 +16,18 @@ namespace ProcessExplorer.Service.Process
 
         private readonly IPlatformInformationService _platform;
         private readonly IPlatformProcessRecognizer _recognizer;
+        private readonly ILoggerWrapper _logger;
+        private readonly IOptions<ProcessCollectorOptions> _options;
 
         public ProcessCollectorFactory(IPlatformInformationService platform,
-            IPlatformProcessRecognizer recognizer)
+            IPlatformProcessRecognizer recognizer,
+            ILoggerWrapper logger,
+            IOptions<ProcessCollectorOptions> options)
         {
             _platform = platform;
             _recognizer = recognizer;
+            _logger = logger;
+            _options = options;
         }
 
         /// <summary>
@@ -57,7 +63,7 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         private IProcessCollector GetWindowsCollector()
         {
-            return new WMIProcessCollector(_recognizer);
+            return new WMIProcessCollector(_recognizer, _logger, _options);
         }
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         private IProcessCollector GetLinuxCollector()
         {
-            return new AllProcessCollector(_recognizer);
+            return new AllProcessCollector(_recognizer, _logger, _options);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using Microsoft.Extensions.Options;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Application.Common.Options;
 using ProcessExplorer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,9 @@ namespace ProcessExplorer.Service.Process.Windows
 {
     public class Kernel32ProcessCollector : RootCollector, IProcessCollector
     {
-        public Kernel32ProcessCollector(IPlatformProcessRecognizer recognizer) : base(recognizer)
+        public Kernel32ProcessCollector(IPlatformProcessRecognizer recognizer,
+            ILoggerWrapper logger,
+             IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
         {
         }
 
@@ -23,40 +27,36 @@ namespace ProcessExplorer.Service.Process.Windows
         /// <returns></returns>
         public IList<ProcessInformation> GetProcesses()
         {
+            _logger.LogInfo($"Started fetching processes in {nameof(Kernel32ProcessCollector)}");
+            
             var processList = new List<ProcessInformation>();
-
-            //remove duplicates
-            var allProcceses = System.Diagnostics.Process.GetProcesses()
-                .GroupBy(i => i.ProcessName)
-                .Select(i => i.First())
-                .ToArray();
-
-            foreach (var proc in allProcceses)
+            foreach (var proc in GetAllProcesses())
             {
                 try
                 {
                     processList.Add(new ProcessInformation
                     {
                         ProcessId = proc.Id,
-                        ProcessTitle = string.IsNullOrEmpty(proc.MainWindowTitle) ? null : proc.MainWindowTitle,
                         ProcessName = proc.ProcessName,
                         ProcessPath = GetMainModuleFileName(proc),
                     });
                 }
                 catch (Win32Exception e) //Not allowed to read MainModule (important file!!!)
                 {
-                    //TODO : LOG
+                    _logger.LogError(e);
                 }
             }
 
-            return FilterList(processList);
+            var filteredList = FilterList(processList);
+            _logger.LogInfo($"Processes fetched in {nameof(Kernel32ProcessCollector)} : {processList.Count}");
+            return filteredList;
         }
 
         [DllImport("Kernel32.dll")]
         private static extern bool QueryFullProcessImageName([In] IntPtr hProcess, [In] uint dwFlags, [Out] StringBuilder lpExeName, [In, Out] ref uint lpdwSize);
 
         /// <summary>
-        /// Get main module filename -> working on 32 and 64 system
+        /// Get main module filename using Windows API -> working on 32 and 64 system
         /// </summary>
         /// <param name="process"></param>
         /// <param name="buffer"></param>

@@ -17,12 +17,12 @@ namespace ProcessExplorer.Service.Log
             _options = options.Value;
         }
 
-        public void LogError(string content, Exception e)
+        public void LogError(Exception e)
         {
             if (!_options.UseLog)
                 return;
 
-            _logger.LogError(content, e);
+            _logger.LogError("{@error}", e);
         }
 
         public void LogInfo(string content, params object[] param)

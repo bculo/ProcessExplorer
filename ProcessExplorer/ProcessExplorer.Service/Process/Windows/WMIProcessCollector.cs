@@ -1,5 +1,7 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using Microsoft.Extensions.Options;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Application.Common.Options;
 using ProcessExplorer.Service.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,9 @@ namespace ProcessExplorer.Service.Process.Windows
     /// </summary>
     public class WMIProcessCollector : RootCollector, IProcessCollector
     {
-        public WMIProcessCollector(IPlatformProcessRecognizer recognizer) : base(recognizer)
+        public WMIProcessCollector(IPlatformProcessRecognizer recognizer, 
+            ILoggerWrapper logger,
+            IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
         {
         }
 
@@ -25,12 +29,13 @@ namespace ProcessExplorer.Service.Process.Windows
         /// <returns></returns>
         public IList<ProcessInformation> GetProcesses()
         {
+            _logger.LogInfo($"Started fetching processes in {nameof(WMIProcessCollector)}");
             var wmiQueryString = "SELECT ProcessId, ExecutablePath, Name, Description FROM Win32_Process";
 
             using var searcher = new ManagementObjectSearcher(wmiQueryString);
             using var results = searcher.Get();
 
-            var filteredProcesses = from p in System.Diagnostics.Process.GetProcesses()
+            var filteredProcesses = from p in GetAllProcesses()
                         join mo in results.Cast<ManagementObject>()
                         on p.Id equals (int)(uint)mo["ProcessId"]
                         where (mo.GetPropertyValue("ExecutablePath") != null)
@@ -38,15 +43,12 @@ namespace ProcessExplorer.Service.Process.Windows
                         {
                             ProcessId = p.Id,
                             ProcessPath = (string)mo["ExecutablePath"],
-                            ProcessTitle = string.IsNullOrEmpty(p.MainWindowTitle) ? null : p.MainWindowTitle,
                             ProcessName = p.ProcessName,
                         };
 
-            //remove duplicates
-            filteredProcesses = filteredProcesses.GroupBy(i => i.ProcessName)
-                                                .Select(i => i.First());
-
-            return FilterList(filteredProcesses);
+            var filteredList = FilterList(filteredProcesses);
+            _logger.LogInfo($"Processes fetched in {nameof(WMIProcessCollector)} : {filteredList.Count}");
+            return filteredList;
         }
     }
 }

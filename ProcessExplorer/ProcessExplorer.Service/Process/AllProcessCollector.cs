@@ -12,7 +12,9 @@ namespace ProcessExplorer.Service.Process
 {
     public class AllProcessCollector : RootCollector, IProcessCollector
     {
-        public AllProcessCollector(IPlatformProcessRecognizer recognizer) : base(recognizer)
+        public AllProcessCollector(IPlatformProcessRecognizer recognizer,
+            ILoggerWrapper logger,
+            IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
         {
         }
 
@@ -23,27 +25,32 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         public IList<ProcessInformation> GetProcesses()
         {
-            var processList = new List<ProcessInformation>();
+            _logger.LogInfo($"Started fetching processes in {nameof(AllProcessCollector)}");
 
-            foreach (var proc in System.Diagnostics.Process.GetProcesses())
+            var processList = new List<ProcessInformation>();
+            foreach (var proc in GetAllProcesses())
             {
+                
+                if(proc.MainModule == null) //Some Linux MainModule are null, so skip
+                    continue;
+
                 try
                 {
                     processList.Add(new ProcessInformation
                     {
                         ProcessId = proc.Id,
-                        ProcessTitle = string.IsNullOrEmpty(proc.MainWindowTitle) ? null : proc.MainWindowTitle,
+                        ProcessPath = proc.MainModule.ModuleName,
                         ProcessName = proc.ProcessName,
-                        ProcessPath = proc.MainModule.FileName,
                     });
                 }
-                catch (Win32Exception e) //Not allowed to read MainModule (important file!!!)
+                catch (Exception e) //Not allowed to read MainModule (windows permission)
                 {
-                    //TODO : LOG
+                    _logger.LogError(e);
                 }
             }
 
-            return FilterList(processList);
+            _logger.LogInfo($"Processes fetched in {nameof(AllProcessCollector)} : {processList.Count}");
+            return processList;
         }
     }
 }

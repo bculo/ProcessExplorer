@@ -18,7 +18,7 @@ namespace ProcessExplorer
 
             foreach(var proc in info)
             {
-                Console.WriteLine($"{proc.ProcessName} || {proc?.ProcessPath}");
+                Console.WriteLine($"{proc.ProcessName}");
             }
         }
     }
