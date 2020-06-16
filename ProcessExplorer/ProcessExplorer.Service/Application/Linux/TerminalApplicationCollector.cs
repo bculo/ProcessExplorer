@@ -7,15 +7,15 @@ using ProcessExplorer.Application.Common.Models;
 
 namespace ProcessExplorer.Service.Application.Linux
 {
-    public class TerminalApplicationGetter : RootAppCollector, IApplicationCollector
+    public class TerminalApplicationCollector : RootAppCollector, IApplicationCollector
     {
-        public TerminalApplicationGetter(ILoggerWrapper logger) : base(logger)
+        public TerminalApplicationCollector(ILoggerWrapper logger) : base(logger)
         { 
         }
 
         public IList<ApplicationInformation> GetApplications()
         {
-            _logger.LogInfo($"Started fetching applications in {nameof(TerminalApplicationGetter)}");
+            _logger.LogInfo($"Started fetching applications in {nameof(TerminalApplicationCollector)}");
 
             var startInfo = new ProcessStartInfo 
             {
@@ -35,7 +35,7 @@ namespace ProcessExplorer.Service.Application.Linux
 
             _logger.LogInfo($"Fetched content from terminal: {terminalContent ?? string.Empty}");
             var applicationNames = ParseApplicationNames(terminalContent).ToList();
-            _logger.LogInfo($"Application fetched in {nameof(TerminalApplicationGetter)} : {applicationNames.Count}");
+            _logger.LogInfo($"Application fetched in {nameof(TerminalApplicationCollector)} : {applicationNames.Count}");
             
             return applicationNames.Select(name => new ApplicationInformation 
             {

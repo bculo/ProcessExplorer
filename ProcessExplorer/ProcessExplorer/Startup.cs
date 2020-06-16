@@ -16,10 +16,6 @@ namespace ProcessExplorer
 
             var info = factory.GetApplicationCollector().GetApplications();
 
-            foreach(var item in info)
-            {
-                Console.WriteLine(item.ApplicationName);
-            }
         }
     }
 }

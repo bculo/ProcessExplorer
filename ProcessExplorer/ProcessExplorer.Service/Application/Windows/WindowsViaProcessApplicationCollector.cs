@@ -22,6 +22,7 @@ namespace ProcessExplorer.Service.Application.Windows
             {
                 appList.Add(new ApplicationInformation
                 {
+                    StartTime = item.StartTime,
                     ApplicationName = GetBasicApplicationTitle(item.MainWindowTitle)
                 });
             }

@@ -4,6 +4,7 @@ using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Options;
 using ProcessExplorer.Application.Utils;
 using ProcessExplorer.Service.Interfaces;
+using ProcessExplorer.Service.Options;
 using ProcessExplorer.Service.Process.Windows;
 using System;
 using System.Collections.Generic;
@@ -18,16 +19,19 @@ namespace ProcessExplorer.Service.Process
         private readonly IPlatformProcessRecognizer _recognizer;
         private readonly ILoggerWrapper _logger;
         private readonly IOptions<ProcessCollectorOptions> _options;
+        private readonly ProcessCollectorUsageOptions _usageOptions;
 
         public ProcessCollectorFactory(IPlatformInformationService platform,
             IPlatformProcessRecognizer recognizer,
             ILoggerWrapper logger,
-            IOptions<ProcessCollectorOptions> options)
+            IOptions<ProcessCollectorOptions> options,
+            IOptions<ProcessCollectorUsageOptions> usageOptions)
         {
             _platform = platform;
             _recognizer = recognizer;
             _logger = logger;
             _options = options;
+            _usageOptions = usageOptions.Value;
         }
 
         /// <summary>
@@ -63,7 +67,19 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         private IProcessCollector GetWindowsCollector()
         {
-            return new WMIProcessCollector(_recognizer, _logger, _options);
+            var result = _usageOptions.GetActiveOptionFor(Platform.Win);
+
+            switch (result)
+            {
+                case nameof(WMIProcessCollector):
+                    return new WMIProcessCollector(_recognizer, _logger, _options);
+                case nameof(Kernel32ProcessCollector):
+                    return new Kernel32ProcessCollector(_recognizer, _logger, _options);
+                case nameof(AllProcessCollector):
+                    return new Kernel32ProcessCollector(_recognizer, _logger, _options);
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         /// <summary>

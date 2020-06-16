@@ -21,8 +21,11 @@ namespace ProcessExplorer.Service.Application.Windows
             var appList = new List<ApplicationInformation>();
             foreach (KeyValuePair<IntPtr, string> window in GetOpenWindows())
             {
+                GetWindowThreadProcessId(window.Key, out uint processId);
+                var process = System.Diagnostics.Process.GetProcessById((int) processId);
                 appList.Add(new ApplicationInformation
                 {
+                    StartTime = process.StartTime,
                     ApplicationName = GetBasicApplicationTitle(window.Value)
                 });
             }
@@ -71,5 +74,8 @@ namespace ProcessExplorer.Service.Application.Windows
 
         [DllImport("USER32.DLL")]
         private static extern IntPtr GetShellWindow();
+
+        [DllImport("USER32.DLL")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
     }
 }

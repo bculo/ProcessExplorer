@@ -13,6 +13,7 @@ namespace ProcessExplorer.Service.Configurations
             services.Configure<InternetCheckOptions>(opt => configuration.GetSection(nameof(InternetCheckOptions)).Bind(opt));
             services.Configure<LoggerOptions>(opt => configuration.GetSection(nameof(LoggerOptions)).Bind(opt));
             services.Configure<ApplicationCollectorUsageOptions>(opt => configuration.GetSection(nameof(ApplicationCollectorUsageOptions)).Bind(opt));
+            services.Configure<ProcessCollectorUsageOptions>(opt => configuration.GetSection(nameof(ProcessCollectorUsageOptions)).Bind(opt));
         }
     }
 }

@@ -59,8 +59,8 @@ namespace ProcessExplorer.Service.Application
 
             switch (result)
             {
-                case nameof(TerminalApplicationGetter):
-                    return new TerminalApplicationGetter(_logger);
+                case nameof(WmctrlApplicationCollector):
+                    return new WmctrlApplicationCollector(_logger);
                 default:
                     throw new NotImplementedException();
             }
