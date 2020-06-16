@@ -17,17 +17,20 @@ namespace ProcessExplorer.Service.Application
     {
         private static Dictionary<Platform, Func<IApplicationCollector>> ExecutionMethods;
 
+        private readonly IDateTime _time;
         private readonly ILoggerWrapper _logger;
         private readonly IPlatformInformationService _platform;
         private readonly ApplicationCollectorUsageOptions _options;
 
         public ApplicationCollectorFactory(ILoggerWrapper logger,
             IPlatformInformationService platform,
-            IOptions<ApplicationCollectorUsageOptions> options)
+            IOptions<ApplicationCollectorUsageOptions> options,
+            IDateTime time)
         {
             _logger = logger;
             _platform = platform;
             _options = options.Value;
+            _time = time;
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace ProcessExplorer.Service.Application
             switch (result)
             {
                 case nameof(WmctrlApplicationCollector):
-                    return new WmctrlApplicationCollector(_logger);
+                    return new WmctrlApplicationCollector(_logger, _time);
                 default:
                     throw new NotImplementedException();
             }
