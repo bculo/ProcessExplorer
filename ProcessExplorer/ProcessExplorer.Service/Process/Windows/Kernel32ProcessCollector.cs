@@ -16,7 +16,7 @@ namespace ProcessExplorer.Service.Process.Windows
     {
         public Kernel32ProcessCollector(IPlatformProcessRecognizer recognizer,
             ILoggerWrapper logger,
-             IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
+            IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
         {
         }
 

@@ -12,10 +12,14 @@ namespace ProcessExplorer
     {
         public async Task StartApplication(IServiceProvider provider)
         {
-            var factory = provider.GetRequiredService<IApplicationCollectorFactory>();
+            var factory = provider.GetRequiredService<IProcessCollectorFactory>();
 
-            var info = factory.GetApplicationCollector().GetApplications();
+            var info = factory.GetProcessCollector().GetProcesses();
 
+
+            foreach(var item in info){
+                System.Console.WriteLine($"{item.ProcessName} | {item.ProcessId}");
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using ProcessExplorer.Application.Common.Options;
 using ProcessExplorer.Application.Utils;
 using ProcessExplorer.Service.Interfaces;
 using ProcessExplorer.Service.Options;
+using ProcessExplorer.Service.Process.Linux;
 using ProcessExplorer.Service.Process.Windows;
 using System;
 using System.Collections.Generic;
@@ -88,7 +89,18 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         private IProcessCollector GetLinuxCollector()
         {
-            return new AllProcessCollector(_recognizer, _logger, _options);
+            var result = _usageOptions.GetActiveOptionFor(Platform.Unix);
+
+            switch(result)
+            {
+                case nameof(AllProcessCollector):
+                    return new AllProcessCollector(_recognizer, _logger, _options);
+                case nameof(PsAuxProcessCollector):
+                    return new PsAuxProcessCollector(_logger, _platform, _recognizer, _options);
+                default:
+                    throw new NotImplementedException();
+            }
+
         }
     }
 }
