@@ -72,6 +72,7 @@ namespace ProcessExplorer.Service.Services.System
         private void SetSession()
         {
             sessionInformation = _sessionFactory.GetUserSessionCollector(systemInformation.Type).GetSession();
+            sessionInformation.User = systemInformation.UserName;
         }
 
         /// <summary>

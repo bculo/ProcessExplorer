@@ -14,13 +14,14 @@ namespace ProcessExplorer.Persistence
     {
         public ProcessExplorerDbContext CreateDbContext(string[] args)
         {
+            /*
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(System.IO.Directory.GetParent(AppContext.BaseDirectory).FullName)
                 .AddJsonFile("appsettingspersitence.json", false)
                 .Build();
             
-
             var connection = configuration.GetConnectionString("ProcessExplorerConnection");
+            */
 
             var builder = new DbContextOptionsBuilder<ProcessExplorerDbContext>();
             builder.UseSqlite("Data Source=processexplorer.db");

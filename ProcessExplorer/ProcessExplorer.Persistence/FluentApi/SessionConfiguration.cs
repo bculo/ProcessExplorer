@@ -11,6 +11,22 @@ namespace ProcessExplorer.Persistence.FluentApi
     {
         public void Configure(EntityTypeBuilder<Session> builder)
         {
+            builder.Property(i => i.UserName)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            builder.HasMany(i => i.ProcessEntities)
+                .WithOne(p => p.Session)
+                .HasForeignKey(i => i.SessionId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            builder.HasMany(i => i.Applications)
+                .WithOne(p => p.Session)
+                .HasForeignKey(i => i.SessionId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
             builder.ToTable(nameof(Session));
         }
     }
