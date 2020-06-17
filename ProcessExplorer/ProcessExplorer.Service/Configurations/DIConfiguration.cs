@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Service.Application;
+using ProcessExplorer.Service.Authentication;
 using ProcessExplorer.Service.Clients;
 using ProcessExplorer.Service.Interfaces;
 using ProcessExplorer.Service.Process;
@@ -23,9 +24,11 @@ namespace ProcessExplorer.Service.Configurations
             services.AddTransient<IUserSessionFactory, UserSessionFactory>();
             services.AddTransient<IPlatformProcessRecognizer, PlatformProcessRecognizer>();
             services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<ITokenService, AuthenticationTokenService>();
 
 
             services.AddHttpClient<IInternet, InternetConnectionChecker>();
+            services.AddHttpClient<IAuthenticationClient, AuthenticationClient>();
         }
     }
 }

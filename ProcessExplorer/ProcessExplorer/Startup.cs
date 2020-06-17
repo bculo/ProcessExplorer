@@ -6,14 +6,18 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer
 {
-    /*
-     * https://stackoverflow.com/questions/5071894/c-sharp-kill-all-processes-not-essential-to-running-windows
-     */
     public class Startup
     {
         public async Task StartApplication(IServiceProvider provider)
         {
-            
+            #region VALIDATE USER
+
+            ILoginBehaviour loginBehaviour = provider.GetRequiredService<ILoginBehaviour>();
+            await loginBehaviour.ValidateUser();
+
+            #endregion
+
+
         }
     }
 }
