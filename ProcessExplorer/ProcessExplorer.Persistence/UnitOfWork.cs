@@ -1,4 +1,5 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +11,14 @@ namespace ProcessExplorer.Persistence
     {
         private readonly ProcessExplorerDbContext _context;
 
+        public ISessionRepository Sessions { get; set; }
+        public IAuthenticationRepository Authentication { get; set; }
+
         public UnitOfWork(ProcessExplorerDbContext context)
         {
             _context = context;
+            Sessions = new SessionRepository(_context);
+            Authentication = new AuthenticationRepository(_context);
         }
 
         public int Commit()

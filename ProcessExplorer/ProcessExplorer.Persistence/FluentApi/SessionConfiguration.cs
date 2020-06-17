@@ -11,8 +11,6 @@ namespace ProcessExplorer.Persistence.FluentApi
     {
         public void Configure(EntityTypeBuilder<Session> builder)
         {
-
-
             builder.ToTable(nameof(Session));
         }
     }

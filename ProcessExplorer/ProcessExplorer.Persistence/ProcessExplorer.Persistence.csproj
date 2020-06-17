@@ -16,8 +16,4 @@
     <ProjectReference Include="..\ProcessExplorer.Application\ProcessExplorer.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
 </Project>

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProcessExplorer.Persistence;
 
 namespace ProcessExplorer.Persistence.Migrations
 {
     [DbContext(typeof(ProcessExplorerDbContext))]
-    partial class ProcessExplorerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200617083100_Authentication table added")]
+    partial class Authenticationtableadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
