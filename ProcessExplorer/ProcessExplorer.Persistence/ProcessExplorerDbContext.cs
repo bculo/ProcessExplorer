@@ -17,16 +17,18 @@ namespace ProcessExplorer.Persistence
     {
         public DbSet<Session> Sessions { get; set; }
 
-        public ProcessExplorerDbContext()
+        public ProcessExplorerDbContext(DbContextOptions<ProcessExplorerDbContext> options) : base(options)
         {
-            //JsonDump.Dump(this); //dump instance info, TODO: remove this when you finish
+            Console.WriteLine("---------------------CONTEXT-------------------------");
+            Console.WriteLine(JsonObjectDump.Dump(options));
         }
 
         /// <summary>
         /// Define that we use Sqlite
+        /// DBContext configuration moved to DatabaseConfiguration.cs (we can use IConfiguration there)
         /// </summary>
         /// <param name="options"></param>
-        protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite("Data Source=processexplorer.db");
+        //protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite("Data Source=processexplorer.db");
 
         /// <summary>
         /// Define entity relationship (Relationships are defiend with FluentApi)

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Common.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        void Commit();
-        Task CommitAsync();
+        int Commit();
+        Task<int> CommitAsync();
     }
 }

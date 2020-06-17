@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Persistence;
 using System;
 using System.Threading.Tasks;
 
@@ -12,14 +13,7 @@ namespace ProcessExplorer
     {
         public async Task StartApplication(IServiceProvider provider)
         {
-            var factory = provider.GetRequiredService<IProcessCollectorFactory>();
-
-            var info = factory.GetProcessCollector().GetProcesses();
-
-
-            foreach(var item in info){
-                System.Console.WriteLine($"{item.ProcessName} | {item.ProcessId}");
-            }
+            
         }
     }
 }

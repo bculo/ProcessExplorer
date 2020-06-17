@@ -8,14 +8,42 @@ namespace ProcessExplorer.Persistence
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public void Commit()
+        private readonly ProcessExplorerDbContext _context;
+
+        public UnitOfWork(ProcessExplorerDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task CommitAsync()
+        public int Commit()
         {
-            throw new NotImplementedException();
+            return _context.SaveChanges();
+        }
+
+        public async Task<int> CommitAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

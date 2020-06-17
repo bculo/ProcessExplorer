@@ -5,6 +5,7 @@ using NLog.Extensions.Logging;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Configurations;
 using ProcessExplorer.Configurations;
+using ProcessExplorer.Persistence;
 using ProcessExplorer.Persistence.Configurations;
 using ProcessExplorer.Service.Configurations;
 using ProcessExplorer.Service.Log;
@@ -39,9 +40,21 @@ namespace ProcessExplorer
             #region CALL STARTUP POINT 
 
             IServiceProvider provider = services.BuildServiceProvider();
+
+            ApplyDatabaseMigrations(provider);
+
             await provider.GetRequiredService<Startup>().StartApplication(provider);
 
             #endregion
+        }
+
+        /// <summary>
+        /// Apply database migrations or create database if doesnt exist
+        /// </summary>
+        /// <param name="provider"></param>
+        private static void ApplyDatabaseMigrations(IServiceProvider provider)
+        {
+            ProcessDbContextHelper.ApplyMigrations(provider);
         }
 
         /// <summary>
