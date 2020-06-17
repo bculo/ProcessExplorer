@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProcessExplorer.Application.Login
+namespace ProcessExplorer.Application.Behaviours
 {
-    public class LoginBehaviour : ILoginBehaviour
+    public class LoginConsoleBehaviour : ILoginBehaviour
     {
         private readonly ILoggerWrapper _logger;
         private readonly IDateTime _time;
@@ -15,7 +15,7 @@ namespace ProcessExplorer.Application.Login
 
         private bool FreshToken { get; set; } = false;
 
-        public LoginBehaviour(ILoggerWrapper logger,
+        public LoginConsoleBehaviour(ILoggerWrapper logger,
             IDateTime time,
             ITokenService tokenService,
             IAuthenticationClient client)
