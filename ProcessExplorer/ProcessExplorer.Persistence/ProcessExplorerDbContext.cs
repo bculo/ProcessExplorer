@@ -17,11 +17,15 @@ namespace ProcessExplorer.Persistence
     {
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Authentication> Authentications { get; set; }
+        public DbSet<ApplicationEntity> Applications { get; set; }
+        public DbSet<ProcessEntity> Processes { get; set; }
 
         public ProcessExplorerDbContext(DbContextOptions<ProcessExplorerDbContext> options) : base(options)
         {
+            /*
             Console.WriteLine("---------------------CONTEXT-------------------------");
             Console.WriteLine(JsonObjectDump.Dump(options));
+            */
         }
 
         /// <summary>

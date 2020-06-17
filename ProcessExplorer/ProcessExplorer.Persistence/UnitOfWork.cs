@@ -13,12 +13,16 @@ namespace ProcessExplorer.Persistence
 
         public ISessionRepository Sessions { get; set; }
         public IAuthenticationRepository Authentication { get; set; }
+        public IProcessRepository Process { get; set; }
+        public IApplicationRepository Application { get; set; }
 
         public UnitOfWork(ProcessExplorerDbContext context)
         {
             _context = context;
             Sessions = new SessionRepository(_context);
             Authentication = new AuthenticationRepository(_context);
+            Process = new ProcessRepository(_context);
+            Application = new ApplicationRepository(_context);
         }
 
         public int Commit()

@@ -23,7 +23,8 @@ namespace ProcessExplorer.Persistence.Repositories
         /// <returns></returns>
         public async Task<Authentication> GetLastToken()
         {
-            return await ProcessExplorerDbContext.Authentications.LastAsync();
+            return await ProcessExplorerDbContext.Authentications.OrderByDescending(i => i.Id)
+                .FirstOrDefaultAsync();
         }
     }
 }
