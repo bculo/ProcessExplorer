@@ -14,9 +14,6 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Configurations
             builder.HasIndex(u => u.UserName).IsUnique();
             builder.HasIndex(u => u.Email).IsUnique();
 
-            builder.Property(u => u.ProfilePicture)
-                .IsRequired(false);
-
             builder.HasMany(e => e.UserRoles)
                 .WithOne(e => e.User)
                 .HasForeignKey(ur => ur.UserId)

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using ProcessExplorerWeb.Infrastructure;
 
 namespace ProcessExplorer.Api
 {
@@ -19,14 +20,14 @@ namespace ProcessExplorer.Api
             IHost host = CreateHostBuilder(args).Build();
 
             using var scope = host.Services.CreateScope();
-
             try
             {
-                //Configuration actions
+                await DLLInfrastructureConfiguration.ConfigureStorage(scope.ServiceProvider);
             }
-            catch (Exception e)
+            catch (Exception error)
             {
-                logger.Error(e);
+                logger.Error(error);
+                throw error;
             }
 
             await host.RunAsync();

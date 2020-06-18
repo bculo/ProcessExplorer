@@ -36,16 +36,16 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence
 
         private async static Task AddApplicationAdmin(IConfiguration config, UserManager<IdentityAppUser> userManager, RoleManager<IdentityAppRole> roleManager)
         {
-            IdentityAppUser admin = config.GetSection(nameof(IdentityAppUser)).Get<IdentityAppUser>();
+            IdentityAppUser explorerAdmin = config.GetSection(nameof(IdentityAppUser)).Get<IdentityAppUser>();
 
-            var adminTask = await userManager.Users.AllAsync(u => u.UserName != admin.UserName);
+            var adminTask = await userManager.Users.AllAsync(u => u.UserName != explorerAdmin.UserName);
             var roleTask = await roleManager.Roles.FirstOrDefaultAsync(r => r.Name == RoleConstants.ADMIN);
 
             if (!adminTask)
                 return;
 
-            admin.UserRoles.Add(new IdentityAppUserRole { Role = roleTask });
-            IdentityResult result = await userManager.CreateAsync(admin, nameof(admin));
+            explorerAdmin.UserRoles.Add(new IdentityAppUserRole { Role = roleTask });
+            IdentityResult result = await userManager.CreateAsync(explorerAdmin, nameof(explorerAdmin));
 
             if (!result.Succeeded)
                 throw new Exception("Admin seed exception");

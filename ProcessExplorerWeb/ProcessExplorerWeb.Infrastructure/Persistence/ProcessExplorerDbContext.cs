@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ProcessExplorerWeb.Core.Entities;
 using ProcessExplorerWeb.Infrastructure.Identity;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProcessExplorerWeb.Infrastructure.Persistence
 {
@@ -16,6 +15,8 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence
         public ProcessExplorerDbContext(DbContextOptions<ProcessExplorerDbContext> options) : base(options)
         {
         }
+
+        public DbSet<ProcessExplorerUser> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -23,7 +23,7 @@ namespace ProcessExplorerWeb.Infrastructure
             return services;
         }
 
-        public static async Task ConfigureDatabase(IServiceProvider provider)
+        public static async Task ConfigureStorage(IServiceProvider provider)
         {
             //get database instance
             var dbContext = provider.GetRequiredService<ProcessExplorerDbContext>();

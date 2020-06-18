@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using ProcessExplorerWeb.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ProcessExplorerWeb.Infrastructure.Identity
 {
-    public class IdentityAppUser : IdentityUser<Guid>
+    /// <summary>
+    /// For authentication prupose only
+    /// </summary>
+    public class IdentityAppUser : IdentityUser<Guid>, IProcessExplorerUser
     {
         public virtual ICollection<IdentityAppUserRole> UserRoles { get; set; }
         public virtual ICollection<IdentityUserClaim<Guid>> Claims { get; set; }
-        public string ProfilePicture { get; set; }
 
         public IdentityAppUser()
         {
