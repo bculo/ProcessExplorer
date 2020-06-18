@@ -43,6 +43,15 @@ namespace ProcessExplorer.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json","Process Explorer API V1");
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
