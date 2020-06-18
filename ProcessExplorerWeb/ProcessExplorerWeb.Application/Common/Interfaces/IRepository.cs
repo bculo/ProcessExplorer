@@ -13,6 +13,8 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);
+        TEntity Single(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate);
         void RemoveRange(IEnumerable<TEntity> entities);
     }
 }

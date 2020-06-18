@@ -4,6 +4,7 @@ using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Core.Interfaces;
 using ProcessExplorerWeb.Infrastructure.Identity.Services;
 using ProcessExplorerWeb.Infrastructure.Interfaces;
+using ProcessExplorerWeb.Infrastructure.Persistence;
 using ProcessExplorerWeb.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace ProcessExplorerWeb.Infrastructure.Configurations
 
             #region TRANSIENT
 
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<ITokenManager, TokenManager>();
             services.AddTransient<IDateTime, DateTimeService>();
 

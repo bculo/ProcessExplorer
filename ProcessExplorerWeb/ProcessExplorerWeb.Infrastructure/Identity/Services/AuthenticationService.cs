@@ -30,13 +30,15 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
         private readonly AuthenticationOptions _authOptions;
         private readonly ILogger<AuthenticationService> _log;
         private readonly RoleManager<IdentityAppRole> _roleManager;
+        private readonly IUnitOfWork _work;
 
         public AuthenticationService(ProcessExplorerDbContext context,
             UserManager<IdentityAppUser> userManager,
              ITokenManager tokenManager,
              IOptions<AuthenticationOptions> authOptions,
              ILogger<AuthenticationService> log,
-             RoleManager<IdentityAppRole> roleManager)
+             RoleManager<IdentityAppRole> roleManager,
+             IUnitOfWork work)
         {
             _context = context;
             _userManager = userManager;
@@ -44,6 +46,7 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
             _authOptions = authOptions.Value;
             _log = log;
             _roleManager = roleManager;
+            _work = work;
         }
 
         #region HELPER METHODS
@@ -183,8 +186,8 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
 
                 //Create new ProcessExplorerUser instance and add it to database
                 var user = new ProcessExplorerUser(newUser.Id, newUser.Email, newUser.UserName);
-
-                //TODO -> use user repo
+                _work.User.Add(user);
+                await _work.CommitAsync();
 
                 //commit transaction
                 await transaction.CommitAsync();

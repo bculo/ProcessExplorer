@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
@@ -65,6 +64,26 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
         public virtual ValueTask<TEntity> GetAsync(object id)
         {
             return _entities.FindAsync(id);
+        }
+
+        /// <summary>
+        /// Get specific entity for given predicate
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public TEntity Single(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _entities.SingleOrDefault(predicate);
+        }
+
+        /// <summary>
+        /// Get specific entity for given predicate async
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _entities.SingleOrDefaultAsync(predicate);
         }
 
         /// <summary>
