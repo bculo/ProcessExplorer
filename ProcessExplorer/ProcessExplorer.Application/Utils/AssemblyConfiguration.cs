@@ -9,7 +9,7 @@ namespace ProcessExplorer.Application.Utils
 {
     public static class AssemblyConfiguration
     {
-        public static void ApplyAssemblyConfigration(IServiceCollection services, IConfiguration configuration, Assembly assembly)
+        public static void ApplyAssemblyConfigration(this IServiceCollection services, IConfiguration configuration, Assembly assembly)
         {
             var configs = assembly.ExportedTypes.Where(x =>
                         typeof(IInstallation).IsAssignableFrom(x)

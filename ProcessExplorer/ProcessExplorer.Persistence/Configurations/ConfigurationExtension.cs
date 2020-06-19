@@ -9,7 +9,7 @@ namespace ProcessExplorer.Persistence.Configurations
     {
         public static void ApplyConfigurationPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            AssemblyConfiguration.ApplyAssemblyConfigration(services, configuration, Assembly.GetExecutingAssembly());
+            services.ApplyAssemblyConfigration(configuration, Assembly.GetExecutingAssembly());
         }
     }
 }

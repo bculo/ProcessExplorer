@@ -12,7 +12,7 @@ namespace ProcessExplorer.Service.Configurations
     {
         public static void ApplyConfigurationService(this IServiceCollection services, IConfiguration configuration)
         {
-            AssemblyConfiguration.ApplyAssemblyConfigration(services, configuration, Assembly.GetExecutingAssembly());
+            services.ApplyAssemblyConfigration(configuration, Assembly.GetExecutingAssembly());
         }
     }
 }

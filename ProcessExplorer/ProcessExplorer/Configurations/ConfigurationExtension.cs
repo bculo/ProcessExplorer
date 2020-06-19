@@ -9,7 +9,7 @@ namespace ProcessExplorer.Configurations
     {
         public static void ApplyConfigurationConsoleApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            AssemblyConfiguration.ApplyAssemblyConfigration(services, configuration, Assembly.GetExecutingAssembly());
+            services.ApplyAssemblyConfigration(configuration, Assembly.GetExecutingAssembly());
         }
     }
 }
