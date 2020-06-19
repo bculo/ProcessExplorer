@@ -43,6 +43,12 @@ namespace ProcessExplorer.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("v1/swagger.json", "MyAPI V1");
+                });
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
