@@ -5,6 +5,7 @@ using ProcessExplorer.Service.Application;
 using ProcessExplorer.Service.Authentication;
 using ProcessExplorer.Service.Clients;
 using ProcessExplorer.Service.Interfaces;
+using ProcessExplorer.Service.Log;
 using ProcessExplorer.Service.Process;
 using ProcessExplorer.Service.Services.System;
 using ProcessExplorer.Service.Session;
@@ -21,6 +22,7 @@ namespace ProcessExplorer.Service.Configurations
             services.AddSingleton<IProcessCollectorFactory, ProcessCollectorFactory>();
             services.AddSingleton<IApplicationCollectorFactory, ApplicationCollectorFactory>();
 
+            services.AddTransient<ILoggerWrapper, LoggerWrapper>();
             services.AddTransient<IUserSessionFactory, UserSessionFactory>();
             services.AddTransient<IPlatformProcessRecognizer, PlatformProcessRecognizer>();
             services.AddTransient<IDateTime, DateTimeService>();

@@ -47,7 +47,7 @@ namespace ProcessExplorer.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("v1/swagger.json", "MyAPI V1");
+                    c.SwaggerEndpoint("v1/swagger.json", "Process Explorer API V1");
                 });
             }
 

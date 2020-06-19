@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using NLog.Web;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Configurations;
 using ProcessExplorer.Configurations;
@@ -10,6 +12,7 @@ using ProcessExplorer.Persistence.Configurations;
 using ProcessExplorer.Service.Configurations;
 using ProcessExplorer.Service.Log;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer
@@ -25,6 +28,27 @@ namespace ProcessExplorer
             Console.ReadLine();
         }
 
+        /*
+         *    var builder = new HostBuilder()
+    .ConfigureAppConfiguration((hostingContext, config) =>
+    {
+        config.SetBasePath(Directory.GetCurrentDirectory());
+        config.AddJsonFile("appsettings.json", true);
+        if (args != null) config.AddCommandLine(args);
+    })
+    .ConfigureServices((hostingContext, services) =>
+    {
+        services.AddHostedService<MyHostedService>();
+    })
+    .ConfigureLogging((hostingContext, logging) =>
+    {
+        logging.AddConfiguration(hostingContext.Configuration);
+        logging.AddConsole();
+    });
+
+await builder.RunConsoleAsync();
+         */
+
         /// <summary>
         /// Startup configration
         /// </summary>
@@ -32,20 +56,21 @@ namespace ProcessExplorer
         /// <returns></returns>
         public static async Task MainAsync(string[] args)
         {
-            IConfiguration configuration = GetConfiguration();
-            IServiceCollection services = ConfigureStartUpDependencies(configuration);
+            IHostBuilder hostBuilder = Host.CreateDefaultBuilder()
+                  .ConfigureServices((hostContext, services) =>
+                  {
+                      IConfiguration configuration = GetConfiguration();
+                      ConfigureStartUpDependencies(services, configuration);
+                      ApplyDatabaseMigrations(services.BuildServiceProvider());
+                  })
+                  .ConfigureLogging(logging =>
+                  {
+                      logging.ClearProviders();
+                      logging.SetMinimumLevel(LogLevel.Trace);
+                  })
+                  .UseNLog();
 
-            ConfigureLogger(services, configuration);
-
-            #region CALL STARTUP POINT 
-
-            IServiceProvider provider = services.BuildServiceProvider();
-
-            ApplyDatabaseMigrations(provider);
-
-            await provider.GetRequiredService<Startup>().StartApplication(provider);
-
-            #endregion
+            await hostBuilder.RunConsoleAsync();
         }
 
         /// <summary>
@@ -58,33 +83,12 @@ namespace ProcessExplorer
         }
 
         /// <summary>
-        /// Configure logger
-        /// </summary>
-        private static void ConfigureLogger(IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddLogging(loggingBuilder =>
-            {
-                // configure Logging with NLog
-                loggingBuilder.ClearProviders();
-                loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-                loggingBuilder.AddNLog(configuration);
-            });
-
-            services.AddTransient<ILoggerWrapper, LoggerWrapper>();
-        }
-
-        /// <summary>
         /// Configure IServiceCollection and IConfiguration
         /// </summary>
-        private static IServiceCollection ConfigureStartUpDependencies(IConfiguration configuration)
+        private static void ConfigureStartUpDependencies(IServiceCollection services, IConfiguration configuration)
         {
-            IServiceCollection services = new ServiceCollection();
-
-            //Add startup point
-            services.AddTransient<Startup>();
-
             //Configure current project
-            services.ApplyConfigurationConsole(configuration);
+            services.ApplyConfigurationConsoleApplication(configuration);
 
             //Configure application layer
             services.ApplyConfigurationApplication(configuration);
@@ -94,8 +98,6 @@ namespace ProcessExplorer
 
             //Configure service layer
             services.ApplyConfigurationService(configuration);
-
-            return services;
         }
 
         /// <summary>

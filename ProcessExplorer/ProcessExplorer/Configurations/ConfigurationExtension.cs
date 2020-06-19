@@ -7,7 +7,7 @@ namespace ProcessExplorer.Configurations
 {
     public static class ConfigurationExtension
     {
-        public static void ApplyConfigurationConsole(this IServiceCollection services, IConfiguration configuration)
+        public static void ApplyConfigurationConsoleApplication(this IServiceCollection services, IConfiguration configuration)
         {
             AssemblyConfiguration.ApplyAssemblyConfigration(services, configuration, Assembly.GetExecutingAssembly());
         }
