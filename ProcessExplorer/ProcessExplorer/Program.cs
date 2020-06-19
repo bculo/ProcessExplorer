@@ -7,6 +7,7 @@ using ProcessExplorer.Application.Configurations;
 using ProcessExplorer.Configurations;
 using ProcessExplorer.Interfaces;
 using ProcessExplorer.Persistence.Configurations;
+using ProcessExplorer.Service.Background;
 using ProcessExplorer.Service.Configurations;
 using System;
 using System.Threading.Tasks;

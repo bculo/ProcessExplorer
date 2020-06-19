@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Exceptions\" />
+    <Compile Remove="Common\Exceptions\**" />
+    <EmbeddedResource Remove="Common\Exceptions\**" />
+    <None Remove="Common\Exceptions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Common\MappingProfiles\" />
   </ItemGroup>
 
