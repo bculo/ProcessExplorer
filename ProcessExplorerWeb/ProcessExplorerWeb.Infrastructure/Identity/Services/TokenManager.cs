@@ -20,6 +20,7 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
 
         public TokenManager(IDateTime time, IOptions<AuthenticationOptions> jwtOptions)
         {
+            _time = time;
             _jwtOptions = jwtOptions.Value.JwtTokenOptions;
         }
 
