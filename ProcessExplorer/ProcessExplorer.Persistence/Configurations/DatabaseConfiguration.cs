@@ -16,6 +16,16 @@ namespace ProcessExplorer.Persistence.Configurations
             {
                 options.UseSqlite(configuration.GetConnectionString("ProcessExplorerConnection"));
             });
+
+            IServiceProvider provider = services.BuildServiceProvider();
+            var context = provider.GetRequiredService<ProcessExplorerDbContext>();
+            context.Database.Migrate();
+
+            #region DISPOSE
+
+            context.Dispose();
+
+            #endregion
         }
     }
 }

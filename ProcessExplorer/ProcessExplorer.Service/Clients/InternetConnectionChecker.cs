@@ -29,16 +29,24 @@ namespace ProcessExplorer.Service.Clients
 
         public async Task<bool> CheckForInternetConnectionAsync()
         {
-            var response = await _client.GetAsync(_options.Uri);
-
-            if (response.IsSuccessStatusCode) 
+            try
             {
-                _logger.LogInfo($"Internet connection available on {_time.Now}");
-                return true;
-            }
+                var response = await _client.GetAsync(_options.Uri);
 
-            _logger.LogInfo($"Internet connection unvailable on {_time.Now}");
-            return false;
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInfo($"Internet connection available on {_time.Now}");
+                    return true;
+                }
+
+                _logger.LogInfo($"Internet connection unvailable on {_time.Now}");
+                return false;
+            }
+            catch(Exception e)
+            {
+                _logger.LogInfo($"Internet connection unvailable on {_time.Now}");
+                return false;
+            }
         }
     }
 }

@@ -3,17 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessExplorer", "ProcessExplorer\ProcessExplorer.csproj", "{F55FE7AC-25A3-4048-AAE5-127067E27A45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessExplorer", "ProcessExplorer\ProcessExplorer.csproj", "{F55FE7AC-25A3-4048-AAE5-127067E27A45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{C8410385-7329-40B5-83A6-86F579B5A2A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessExplorer.Application", "ProcessExplorer.Application\ProcessExplorer.Application.csproj", "{9162E303-652A-4EC4-A89F-E7C77A339DFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessExplorer.Application", "ProcessExplorer.Application\ProcessExplorer.Application.csproj", "{9162E303-652A-4EC4-A89F-E7C77A339DFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessExplorer.Core", "ProcessExplorer.Core\ProcessExplorer.Core.csproj", "{20FCB2EB-75EA-4776-AC4B-748C6D0E9AD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessExplorer.Core", "ProcessExplorer.Core\ProcessExplorer.Core.csproj", "{20FCB2EB-75EA-4776-AC4B-748C6D0E9AD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessExplorer.Service", "ProcessExplorer.Service\ProcessExplorer.Service.csproj", "{E23200B0-1853-4894-9DD9-C38D983D24E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessExplorer.Service", "ProcessExplorer.Service\ProcessExplorer.Service.csproj", "{E23200B0-1853-4894-9DD9-C38D983D24E5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessExplorer.Persistence", "ProcessExplorer.Persistence\ProcessExplorer.Persistence.csproj", "{558DB261-0F46-4E42-8D62-2DA4EBDBDB7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessExplorer.Persistence", "ProcessExplorer.Persistence\ProcessExplorer.Persistence.csproj", "{558DB261-0F46-4E42-8D62-2DA4EBDBDB7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{F55FE7AC-25A3-4048-AAE5-127067E27A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F55FE7AC-25A3-4048-AAE5-127067E27A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F55FE7AC-25A3-4048-AAE5-127067E27A45}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8410385-7329-40B5-83A6-86F579B5A2A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8410385-7329-40B5-83A6-86F579B5A2A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8410385-7329-40B5-83A6-86F579B5A2A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8410385-7329-40B5-83A6-86F579B5A2A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9162E303-652A-4EC4-A89F-E7C77A339DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9162E303-652A-4EC4-A89F-E7C77A339DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9162E303-652A-4EC4-A89F-E7C77A339DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU

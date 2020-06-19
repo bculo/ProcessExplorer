@@ -1,10 +1,7 @@
 ﻿using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
-using ProcessExplorer.Application.Utils;
-using ProcessExplorer.Service.Session.Windows;
 using System;
-using System.Collections.Generic;
 
 namespace ProcessExplorer.Service.Services.System
 {
@@ -13,8 +10,6 @@ namespace ProcessExplorer.Service.Services.System
     /// </summary>
     public class SystemInformationService : IPlatformInformationService
     {
-        private static Dictionary<Platform, Func<IUserSession>> ExecutionMethods;
-
         private readonly ILoggerWrapper _logger;
         private readonly IUserSessionFactory _sessionFactory;
 

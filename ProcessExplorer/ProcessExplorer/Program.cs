@@ -2,17 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using NLog.Web;
-using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Configurations;
 using ProcessExplorer.Configurations;
-using ProcessExplorer.Persistence;
+using ProcessExplorer.Interfaces;
 using ProcessExplorer.Persistence.Configurations;
 using ProcessExplorer.Service.Configurations;
-using ProcessExplorer.Service.Log;
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer
@@ -21,33 +17,10 @@ namespace ProcessExplorer
     {
         public static void Main(string[] args)
         {
-            System.Console.WriteLine("Starting application...");
+            Console.WriteLine("Starting application...");
             MainAsync(args).Wait();
-            System.Console.WriteLine("Closing application...");
-
-            Console.ReadLine();
+            Console.WriteLine("Closing application...");
         }
-
-        /*
-         *    var builder = new HostBuilder()
-    .ConfigureAppConfiguration((hostingContext, config) =>
-    {
-        config.SetBasePath(Directory.GetCurrentDirectory());
-        config.AddJsonFile("appsettings.json", true);
-        if (args != null) config.AddCommandLine(args);
-    })
-    .ConfigureServices((hostingContext, services) =>
-    {
-        services.AddHostedService<MyHostedService>();
-    })
-    .ConfigureLogging((hostingContext, logging) =>
-    {
-        logging.AddConfiguration(hostingContext.Configuration);
-        logging.AddConsole();
-    });
-
-await builder.RunConsoleAsync();
-         */
 
         /// <summary>
         /// Startup configration
@@ -56,30 +29,44 @@ await builder.RunConsoleAsync();
         /// <returns></returns>
         public static async Task MainAsync(string[] args)
         {
-            IHostBuilder hostBuilder = Host.CreateDefaultBuilder()
-                  .ConfigureServices((hostContext, services) =>
-                  {
-                      IConfiguration configuration = GetConfiguration();
-                      ConfigureStartUpDependencies(services, configuration);
-                      ApplyDatabaseMigrations(services.BuildServiceProvider());
-                  })
-                  .ConfigureLogging(logging =>
-                  {
-                      logging.ClearProviders();
-                      logging.SetMinimumLevel(LogLevel.Trace);
-                  })
-                  .UseNLog();
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            IHost host = CreateHostBuilder(args).Build();
 
-            await hostBuilder.RunConsoleAsync();
+            using var scope = host.Services.CreateScope();
+            try
+            {
+                await scope.ServiceProvider.GetRequiredService<IStartupPoint>().Start();
+                await host.RunAsync();
+            }
+            catch (Exception error)
+            {
+                logger.Error(error);
+                Console.WriteLine(error.Message);
+            }
         }
 
         /// <summary>
-        /// Apply database migrations or create database if doesnt exist
+        /// Create IHostBuilder instance
         /// </summary>
-        /// <param name="provider"></param>
-        private static void ApplyDatabaseMigrations(IServiceProvider provider)
+        /// <param name="args">input arguments for console application</param>
+        /// <returns></returns>
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            ProcessDbContextHelper.ApplyMigrations(provider);
+            IHostBuilder hostBuilder = Host.CreateDefaultBuilder()
+                .ConfigureServices((hostContext, services) =>
+                {
+                    IConfiguration configuration = GetConfiguration();
+                    ConfigureStartUpDependencies(services, configuration);
+                })
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                })
+                .UseConsoleLifetime()
+                .UseNLog();
+
+            return hostBuilder;
         }
 
         /// <summary>

@@ -1,33 +1,42 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Interfaces;
+using ProcessExplorer.Persistence;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace ProcessExplorer.Application.Behaviours
+namespace ProcessExplorer
 {
-    public class LoginConsoleBehaviour : ILoginBehaviour
+    public class LoginBehaviour : IStartupPoint
     {
         private readonly ILoggerWrapper _logger;
-        private readonly IDateTime _time;
         private readonly ITokenService _tokenService;
         private readonly IAuthenticationClient _client;
+        private readonly IInternet _internet;
 
         private bool FreshToken { get; set; } = false;
 
-        public LoginConsoleBehaviour(ILoggerWrapper logger,
-            IDateTime time,
+        public LoginBehaviour(ILoggerWrapper logger,
             ITokenService tokenService,
-            IAuthenticationClient client)
+            IAuthenticationClient client,
+            IInternet internet)
         {
             _logger = logger;
-            _time = time;
             _tokenService = tokenService;
             _client = client;
+            _internet = internet;
         }
 
-        public async Task ValidateUser()
+        public async Task Start()
         {
+            PromptMessage("Authenticaiton process started", true);
+
+            if (!await _internet.CheckForInternetConnectionAsync())
+            {
+                PromptMessage("Internet access not available", true);
+                throw new Exception("Internet acces not available");
+            }
+
             if (!await _tokenService.TokenAvailable())
                 await GetUserCredentials();
 
@@ -39,13 +48,15 @@ namespace ProcessExplorer.Application.Behaviours
                 if (!valid) //invalid token, force user to enter username and password
                     await GetUserCredentials();
             }
+
+            PromptMessage("Authenticaiton process finished", true);
         }
 
         private async Task GetUserCredentials()
         {
             _logger.LogInfo("Forcing user to enter username and password");
 
-            while(true)
+            while (true)
             {
                 PromptMessage("Enter username: ");
                 string username = Console.ReadLine();
@@ -53,21 +64,26 @@ namespace ProcessExplorer.Application.Behaviours
                 string password = Console.ReadLine();
 
                 var response = await _client.Login(username, password);
-                if(!string.IsNullOrEmpty(response)) //valid user
+                if (response != null) //valid user
                 {
                     _logger.LogInfo($"User{username} loged in");
-                    await _tokenService.SetNewToken(response);
+                    await _tokenService.SetNewToken(response.JwtToken);
                     FreshToken = true;
                     break;
                 }
 
                 Console.Clear();
+                PromptMessage("Wrong credentials", true);
             }
         }
 
-        private void PromptMessage(string message)
+        private void PromptMessage(string message, bool useNewLine = false)
         {
-            Console.Write(message);
+            if(!useNewLine)
+                Console.Write(message);
+            else
+                Console.WriteLine(message);
         }
     }
 }
+ 
