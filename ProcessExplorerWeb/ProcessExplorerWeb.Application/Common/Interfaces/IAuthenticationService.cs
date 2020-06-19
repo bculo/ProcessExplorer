@@ -43,5 +43,12 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         /// <param name="password">password</param>
         /// <returns>Instance of IResult and IProcessExplorerUser</returns>
         Task<(Result, IProcessExplorerUser)> RegisterUser(string username, string email, string password, string profileImage);
+
+        /// <summary>
+        /// Check is JWT token valid 
+        /// </summary>
+        /// <param name="jwtToken">jwt token</param>
+        /// <returns>true if valid, otherwise false</returns>
+        Task<bool> IsTokenValid(string jwtToken);
     }
 }

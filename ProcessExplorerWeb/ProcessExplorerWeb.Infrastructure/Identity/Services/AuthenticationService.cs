@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Common.Models.Security;
 using ProcessExplorerWeb.Application.Common.Models.Service;
@@ -13,7 +14,10 @@ using ProcessExplorerWeb.Infrastructure.Options;
 using ProcessExplorerWeb.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Infrastructure.Identity.Services
@@ -110,7 +114,7 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
 
             _log.LogInformation("Generating JWT token for user {@user}", user);
 
-            var (jwtToken, expiration) = await _tokenManager.GenerateToken(userClaims);
+            var (jwtToken, expiration) = _tokenManager.GenerateToken(userClaims);
 
             return new TokenInfo(user, jwtToken, expiration);
         }
@@ -217,6 +221,16 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
 
             bool validPassword = await _userManager.CheckPasswordAsync(user as IdentityAppUser, password);
             return validPassword ? Result.Success() : Result.Failure("Invalid credentials");
+        }
+
+        /// <summary>
+        /// Check is JWT token valid 
+        /// </summary>
+        /// <param name="jwtToken">jwt token</param>
+        /// <returns>true if valid, otherwise false</returns>
+        public Task<bool> IsTokenValid(string jwtToken)
+        {
+            return Task.FromResult(_tokenManager.TokenValid(jwtToken));
         }
 
         #endregion
