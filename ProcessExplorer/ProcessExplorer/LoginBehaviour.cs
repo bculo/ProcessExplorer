@@ -13,18 +13,21 @@ namespace ProcessExplorer
         private readonly ITokenService _tokenService;
         private readonly IAuthenticationClient _client;
         private readonly IInternet _internet;
+        private readonly IPlatformInformationService _systemService;
 
         private bool FreshToken { get; set; } = false;
 
         public LoginBehaviour(ILoggerWrapper logger,
             ITokenService tokenService,
             IAuthenticationClient client,
-            IInternet internet)
+            IInternet internet,
+            IPlatformInformationService systemService)
         {
             _logger = logger;
             _tokenService = tokenService;
             _client = client;
             _internet = internet;
+            _systemService = systemService;
         }
 
         public async Task Start()
@@ -43,7 +46,7 @@ namespace ProcessExplorer
             if (!FreshToken) //using old token
             {
                 _logger.LogInfo("Token available in storage");
-                string oldJwtToken = await _tokenService.GetToken();
+                string oldJwtToken = await _tokenService.GetLastToken();
                 bool valid = await _client.ValidateToken(oldJwtToken);
                 if (!valid) //invalid token, force user to enter username and password
                     await GetUserCredentials();
@@ -67,7 +70,7 @@ namespace ProcessExplorer
                 if (response != null) //valid user
                 {
                     _logger.LogInfo($"User{username} loged in");
-                    await _tokenService.SetNewToken(response.JwtToken);
+                    await _tokenService.AddNewToken(response.JwtToken);
                     FreshToken = true;
                     break;
                 }

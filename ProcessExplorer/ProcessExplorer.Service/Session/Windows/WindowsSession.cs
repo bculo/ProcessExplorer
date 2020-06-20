@@ -9,10 +9,12 @@ namespace ProcessExplorer.Service.Session.Windows
     public class WindowsSession : IUserSession
     {
         private readonly ILoggerWrapper _logger;
+        private readonly IPlatformInformationService _platformInformation;
 
-        public WindowsSession(ILoggerWrapper logger)
+        public WindowsSession(ILoggerWrapper logger, IPlatformInformationService platformInformation)
         {
             _logger = logger;
+            _platformInformation = platformInformation;
         }
 
         public SessionInformation GetSession()
@@ -40,7 +42,8 @@ namespace ProcessExplorer.Service.Session.Windows
             var sessionInstance = new SessionInformation
             {
                 SessionId = Guid.NewGuid(),
-                SessionStarted = logonTime
+                SessionStarted = logonTime,
+                User = _platformInformation.PlatformInformation.UserName
             };
 
             _logger.LogInfo("User session created {@data} | WindowsSession", sessionInstance);

@@ -19,15 +19,15 @@ namespace ProcessExplorer.Service.Configurations
         public void Install(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IPlatformInformationService, SystemInformationService>();
-            services.AddSingleton<IProcessCollectorFactory, ProcessCollectorFactory>();
-            services.AddSingleton<IApplicationCollectorFactory, ApplicationCollectorFactory>();
+            services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<ITokenService, AuthenticationTokenService>();
 
-            services.AddTransient<ILoggerWrapper, LoggerWrapper>();
+            services.AddTransient<IProcessCollectorFactory, ProcessCollectorFactory>();
+            services.AddTransient<IApplicationCollectorFactory, ApplicationCollectorFactory>();
             services.AddTransient<IUserSessionFactory, UserSessionFactory>();
+            services.AddTransient<ILoggerWrapper, LoggerWrapper>();
             services.AddTransient<IPlatformProcessRecognizer, PlatformProcessRecognizer>();
             services.AddTransient<IDateTime, DateTimeService>();
-            services.AddTransient<ITokenService, AuthenticationTokenService>();
-
 
             services.AddHttpClient<IInternet, InternetConnectionChecker>();
             services.AddHttpClient<IAuthenticationClient, AuthenticationClient>();

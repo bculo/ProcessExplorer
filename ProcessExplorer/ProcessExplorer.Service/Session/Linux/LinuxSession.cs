@@ -9,10 +9,12 @@ namespace ProcessExplorer.Service.Session.Linux
     public class LinuxSession : IUserSession
     {
         private readonly ILoggerWrapper _logger;
+        private readonly IPlatformInformationService _platformInformation;
 
-        public LinuxSession(ILoggerWrapper logger)
+        public LinuxSession(ILoggerWrapper logger, IPlatformInformationService platformInformation)
         {
             _logger = logger;
+            _platformInformation = platformInformation;
         }
 
         public SessionInformation GetSession()
@@ -42,7 +44,8 @@ namespace ProcessExplorer.Service.Session.Linux
             return new SessionInformation 
             {
                 SessionId = Guid.NewGuid(),
-                SessionStarted = logonTime
+                SessionStarted = logonTime,
+                User = _platformInformation.PlatformInformation.UserName
             };
         }
 

@@ -14,9 +14,9 @@ namespace ProcessExplorer.Service.Clients
     public class AuthenticationClient : RootClient, IAuthenticationClient
     {
         private readonly HttpClient _client;
-        private readonly AuthenticationClientOptions _options;
+        private readonly ProcessExplorerWebClientOptions _options;
 
-        public AuthenticationClient(HttpClient http, IOptions<AuthenticationClientOptions> options)
+        public AuthenticationClient(HttpClient http, IOptions<ProcessExplorerWebClientOptions> options)
         {
             _options = options.Value;
             _client = http;
@@ -38,12 +38,23 @@ namespace ProcessExplorer.Service.Clients
                 Password = password,
             };
 
-            var response = await _client.PostAsync($"{_options.LoginMethod}", CreateContent(requestModel));
+            var response = await _client.PostAsync("/authentication/login", CreateContent(requestModel));
 
             if (response.IsSuccessStatusCode)
                 return await GetInstanceFromBody<LoginResponseDto>(response);
 
             return null;
+        }
+
+        /// <summary>
+        /// Register user session
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public async Task RegisterSession(Guid sessionId, string username)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -56,7 +67,7 @@ namespace ProcessExplorer.Service.Clients
         {
             var requestModel = new CheckTokenDto { Token = jwtToken };
 
-            var response = await _client.PostAsync($"{_options.ValidateTokenMethod}", CreateContent(requestModel));
+            var response = await _client.PostAsync($"/authentication/checktoken", CreateContent(requestModel));
 
             if (response.IsSuccessStatusCode)
                 return true;

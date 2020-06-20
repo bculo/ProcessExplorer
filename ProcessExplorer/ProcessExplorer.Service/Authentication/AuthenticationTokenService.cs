@@ -11,6 +11,7 @@ namespace ProcessExplorer.Service.Authentication
     {
         private readonly IUnitOfWork _work;
         private readonly IDateTime _time;
+        private string Token { get; set; }
 
         public AuthenticationTokenService(IUnitOfWork work, IDateTime time)
         {
@@ -18,7 +19,7 @@ namespace ProcessExplorer.Service.Authentication
             _time = time;
         }
 
-        public async Task<string> GetToken()
+        public async Task<string> GetLastToken()
         {
             var result = await _work.Authentication.GetLastToken();
 
@@ -28,7 +29,7 @@ namespace ProcessExplorer.Service.Authentication
             return result.Content;
         }
 
-        public async Task SetNewToken(string token)
+        public async Task AddNewToken(string token)
         {
             if (string.IsNullOrEmpty(token))
                 return;
@@ -48,6 +49,19 @@ namespace ProcessExplorer.Service.Authentication
             if (_work.Authentication.GetAll().Count() > 0)
                 return Task.FromResult(true);
             return Task.FromResult(false);
+        }
+
+        public string GetValidToken()
+        {
+            if (Token == null)
+                throw new ArgumentNullException(nameof(Token));
+
+            return Token;
+        }
+
+        public void SetValidToken(string token)
+        {
+            Token = token;
         }
     }
 }

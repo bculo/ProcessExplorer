@@ -11,20 +11,22 @@ namespace ProcessExplorer.Service.Session
     public class UserSessionFactory : IUserSessionFactory
     {
         private readonly ILoggerWrapper _logger;
+        private readonly IPlatformInformationService _platformInformation;
 
-        public UserSessionFactory(ILoggerWrapper logger)
+        public UserSessionFactory(ILoggerWrapper logger, IPlatformInformationService platformInformation)
         {
             _logger = logger;
+            _platformInformation = platformInformation;
         }
 
-        public IUserSession GetUserSessionCollector(Platform platform)
+        public IUserSession GetUserSessionCollector()
         {
-            switch (platform)
+            switch (_platformInformation.PlatformInformation.Type)
             {
                 case Platform.Unix:
-                    return new LinuxSession(_logger);
+                    return new LinuxSession(_logger, _platformInformation);
                 case Platform.Win:
-                    return new WindowsSession(_logger);
+                    return new WindowsSession(_logger, _platformInformation);
                 default:
                     throw new NotImplementedException();
             }

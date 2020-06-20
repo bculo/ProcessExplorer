@@ -11,10 +11,8 @@ namespace ProcessExplorer.Service.Services.System
     public class SystemInformationService : IPlatformInformationService
     {
         private readonly ILoggerWrapper _logger;
-        private readonly IUserSessionFactory _sessionFactory;
 
         private PlatformInformation systemInformation;
-        private SessionInformation sessionInformation;
 
         public PlatformInformation PlatformInformation 
         { 
@@ -26,20 +24,9 @@ namespace ProcessExplorer.Service.Services.System
             } 
         }
 
-        public SessionInformation SessionInformation
-        {
-            get
-            {
-                if (sessionInformation == null)
-                    throw new ArgumentNullException(nameof(SessionInformation));
-                return sessionInformation;
-            }
-        }
-
-        public SystemInformationService(ILoggerWrapper logger, IUserSessionFactory sessionFactory)
+        public SystemInformationService(ILoggerWrapper logger)
         {
             _logger = logger;
-            _sessionFactory = sessionFactory;
 
             Set();
         }
@@ -59,15 +46,8 @@ namespace ProcessExplorer.Service.Services.System
             };
 
             SetType();
-            SetSession();
 
             _logger.LogInfo("Platform information _ {@data}", systemInformation);
-        }
-
-        private void SetSession()
-        {
-            sessionInformation = _sessionFactory.GetUserSessionCollector(systemInformation.Type).GetSession();
-            sessionInformation.User = systemInformation.UserName;
         }
 
         /// <summary>
