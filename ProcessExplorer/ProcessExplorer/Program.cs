@@ -3,11 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Configurations;
 using ProcessExplorer.Configurations;
 using ProcessExplorer.Interfaces;
 using ProcessExplorer.Persistence.Configurations;
-using ProcessExplorer.Service.Background;
 using ProcessExplorer.Service.Configurations;
 using System;
 using System.Threading.Tasks;
@@ -37,6 +37,7 @@ namespace ProcessExplorer
             try
             {
                 await scope.ServiceProvider.GetRequiredService<IStartupPoint>().Start();
+                await scope.ServiceProvider.GetRequiredService<IUpdateBehaviour>().Update();
                 await host.RunAsync();
             }
             catch (Exception error)

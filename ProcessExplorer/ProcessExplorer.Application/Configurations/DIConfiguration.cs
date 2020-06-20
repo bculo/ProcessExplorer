@@ -11,6 +11,7 @@ namespace ProcessExplorer.Application.Configurations
         {
             services.AddScoped<IApplicationCollectorBehaviour, ApplicationCollectorBehaviour>();
             services.AddScoped<IProcessBehaviour, ProcessBehaviour>();
+            services.AddScoped<IUpdateBehaviour, UpdateServerBehaviour>();
         }
     }
 }
