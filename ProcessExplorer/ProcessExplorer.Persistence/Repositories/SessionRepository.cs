@@ -3,7 +3,7 @@ using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Core.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Persistence.Repositories
@@ -19,6 +19,22 @@ namespace ProcessExplorer.Persistence.Repositories
         public async Task<Session> GetCurrentSession(DateTime logonTime)
         {
             return await ProcessExplorerDbContext.Sessions.SingleOrDefaultAsync(i => i.Started == logonTime);
+        }
+
+        public IEnumerable<Session> GetAllWithIncludes()
+        {
+            return ProcessExplorerDbContext.Sessions.Include(i => i.Applications)
+                            .Include(i => i.ProcessEntities)
+                            .AsNoTracking()
+                            .AsEnumerable();
+        }
+
+        public async Task<List<Session>> GetAllWithIncludesAsync()
+        {
+            return  await ProcessExplorerDbContext.Sessions.Include(i => i.Applications)
+                            .Include(i => i.ProcessEntities)
+                            .AsNoTracking()
+                            .ToListAsync();
         }
     }
 }

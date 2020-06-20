@@ -1,6 +1,8 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using Mapster;
+using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Dtos.Requests.Update;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,14 +20,17 @@ namespace ProcessExplorer.Application.Behaviours
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Update()
+        public async Task CheckForUpdates()
         {
             //Check for internet connection
             if (!await _internet.CheckForInternetConnectionAsync())
                 return;
 
             //Get all sessions
-            var sessions = _unitOfWork.Sessions.GetAll().ToList();
+            var sessions = await _unitOfWork.Sessions.GetAllWithIncludesAsync();
+
+            //map to Dtos
+            var result = sessions.Adapt<List<UserSessionDto>>();
 
             Parallel.ForEach(sessions, s =>
             {

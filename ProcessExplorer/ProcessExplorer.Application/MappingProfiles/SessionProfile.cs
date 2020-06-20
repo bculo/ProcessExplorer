@@ -1,24 +1,25 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProcessExplorer.Application.MappingProfiles
 {
     /// <summary>
     /// Profile for session entity
     /// </summary>
-    public class SessionProfile : Profile
+    public class SessionProfile : IRegister
     {
-        public SessionProfile()
+        public void Register(TypeAdapterConfig config)
         {
-            //SessionInformation -> Session
-            CreateMap<SessionInformation, Session>()
-                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.SessionId))
-                .ForMember(dst => dst.Started, opt => opt.MapFrom(src => src.SessionStarted))
-                .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.User));
-        }  
+            config.ForType<SessionInformation, Session>()
+                .Map(dst => dst.Id, src => src.SessionId)
+                .Map(dst => dst.Started, src => src.SessionStarted)
+                .Map(dst => dst.UserName, src => src.User);
+
+            config.ForType<Session, UserSessionDto>()
+                .Map(dst => dst.SessionId, src => src.Id)
+                .Map(dst => dst.StartTime, src => src.Started);
+        }
     }
 }

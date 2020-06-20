@@ -42,6 +42,9 @@ namespace ProcessExplorer.Service.Clients
             if (response.IsSuccessStatusCode)
                 return await GetInstanceFromBody<LoginResponseDto>(response);
 
+            if (response.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)
+                throw new HttpRequestException("Server not available");
+
             return null;
         }
 
@@ -66,6 +69,9 @@ namespace ProcessExplorer.Service.Clients
             if (response.IsSuccessStatusCode)
                 return true;
 
+            if (response.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)
+                throw new HttpRequestException("Server not available");
+
             return false;
         }
 
@@ -83,6 +89,9 @@ namespace ProcessExplorer.Service.Clients
 
             if (response.IsSuccessStatusCode)
                 return true;
+
+            if (response.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)
+                throw new HttpRequestException("Server not available");
 
             return false;
         }

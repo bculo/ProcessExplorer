@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Mapster;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Core.Entities;
 using ProcessExplorer.Interfaces;
-using ProcessExplorer.Persistence;
 using System;
 using System.Threading.Tasks;
 
@@ -17,7 +15,6 @@ namespace ProcessExplorer
         private readonly IInternet _internet;
         private readonly ISessionService _session;
         private readonly IUnitOfWork _work;
-        private readonly IMapper _mapper;
 
         private bool FreshToken { get; set; } = false;
 
@@ -26,7 +23,6 @@ namespace ProcessExplorer
             IAuthenticationClient client,
             IInternet internet,
             ISessionService session,
-            IMapper mapper,
             IUnitOfWork work)
         {
             _logger = logger;
@@ -35,7 +31,6 @@ namespace ProcessExplorer
             _internet = internet;
             _session = session;
             _work = work;
-            _mapper = mapper;
         }
 
         public async Task Start()
@@ -108,7 +103,7 @@ namespace ProcessExplorer
             else
             {
                 //store new session localy
-                var sessionEntity = _mapper.Map<Session>(_session.SessionInformation);
+                var sessionEntity = _session.SessionInformation.Adapt<Session>();
                 _work.Sessions.Add(sessionEntity);
                 await _work.CommitAsync();
             }

@@ -37,7 +37,7 @@ namespace ProcessExplorer
             try
             {
                 await scope.ServiceProvider.GetRequiredService<IStartupPoint>().Start();
-                await scope.ServiceProvider.GetRequiredService<IUpdateBehaviour>().Update();
+                await scope.ServiceProvider.GetRequiredService<IUpdateBehaviour>().CheckForUpdates();
                 await host.RunAsync();
             }
             catch (Exception error)

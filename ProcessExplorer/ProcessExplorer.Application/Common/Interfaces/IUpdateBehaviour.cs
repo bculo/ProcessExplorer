@@ -4,6 +4,6 @@ namespace ProcessExplorer.Application.Common.Interfaces
 {
     public interface IUpdateBehaviour
     {
-        Task Update();
+        Task CheckForUpdates();
     }
 }
