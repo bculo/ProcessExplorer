@@ -13,7 +13,7 @@ namespace ProcessExplorer
         private readonly ITokenService _tokenService;
         private readonly IAuthenticationClient _client;
         private readonly IInternet _internet;
-        private readonly IPlatformInformationService _systemService;
+        private readonly ISessionService _session;
 
         private bool FreshToken { get; set; } = false;
 
@@ -21,13 +21,13 @@ namespace ProcessExplorer
             ITokenService tokenService,
             IAuthenticationClient client,
             IInternet internet,
-            IPlatformInformationService systemService)
+            ISessionService session)
         {
             _logger = logger;
             _tokenService = tokenService;
             _client = client;
             _internet = internet;
-            _systemService = systemService;
+            _session = session;
         }
 
         public async Task Start()
@@ -47,9 +47,17 @@ namespace ProcessExplorer
             {
                 _logger.LogInfo("Token available in storage");
                 string oldJwtToken = await _tokenService.GetLastToken();
-                bool valid = await _client.ValidateToken(oldJwtToken);
+                var valid = await _client.ValidateToken(oldJwtToken);
                 if (!valid) //invalid token, force user to enter username and password
                     await GetUserCredentials();
+                else
+                    _tokenService.SetValidToken(oldJwtToken);
+            }
+
+            if(!await _client.RegisterSession(_session.SessionInformation))
+            {
+                PromptMessage("Coludnt start session", true);
+                throw new Exception("Coludnt start session");
             }
 
             PromptMessage("Authenticaiton process finished", true);

@@ -1,7 +1,6 @@
 ﻿using Dtos.Responses.Authentication;
+using ProcessExplorer.Application.Common.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Common.Interfaces
@@ -29,6 +28,6 @@ namespace ProcessExplorer.Application.Common.Interfaces
         /// <param name="sessionId"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public Task RegisterSession(Guid sessionId, string username);
+        public Task<bool> RegisterSession(SessionInformation session);
     }
 }

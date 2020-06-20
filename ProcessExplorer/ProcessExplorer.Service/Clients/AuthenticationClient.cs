@@ -2,6 +2,8 @@
 using Dtos.Responses.Authentication;
 using Microsoft.Extensions.Options;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Application.Dtos.Requests.Authentication;
 using ProcessExplorer.Service.Options;
 using System;
 using System.Collections.Generic;
@@ -13,16 +15,13 @@ namespace ProcessExplorer.Service.Clients
 {
     public class AuthenticationClient : RootClient, IAuthenticationClient
     {
-        private readonly HttpClient _client;
-        private readonly ProcessExplorerWebClientOptions _options;
+        private readonly ITokenService _tokenService;
 
-        public AuthenticationClient(HttpClient http, IOptions<ProcessExplorerWebClientOptions> options)
+        public AuthenticationClient(HttpClient http, 
+            IOptions<ProcessExplorerWebClientOptions> options,
+            ITokenService tokenService) : base(http, options)
         {
-            _options = options.Value;
-            _client = http;
-
-            _client.BaseAddress = new Uri(_options.BaseUri);
-            _client.Timeout = TimeSpan.FromSeconds(_options.TimeOut);
+            _tokenService = tokenService;
         }
 
         /// <summary>
@@ -38,7 +37,7 @@ namespace ProcessExplorer.Service.Clients
                 Password = password,
             };
 
-            var response = await _client.PostAsync("/authentication/login", CreateContent(requestModel));
+            var response = await _http.PostAsync("authentication/login", CreateContent(requestModel));
 
             if (response.IsSuccessStatusCode)
                 return await GetInstanceFromBody<LoginResponseDto>(response);
@@ -52,9 +51,22 @@ namespace ProcessExplorer.Service.Clients
         /// <param name="sessionId"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public async Task RegisterSession(Guid sessionId, string username)
+        public async Task<bool> RegisterSession(SessionInformation session)
         {
-            throw new NotImplementedException();
+            var requestModel = new SessionDto
+            {
+                SesssionId = session.SessionId,
+                UserName = session.User,
+                Started = session.SessionStarted
+            };
+
+            AddBearerToken(_tokenService.GetValidToken());
+            var response = await _http.PostAsync("authentication/sessionregistration", CreateContent(requestModel));
+
+            if (response.IsSuccessStatusCode)
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -67,7 +79,7 @@ namespace ProcessExplorer.Service.Clients
         {
             var requestModel = new CheckTokenDto { Token = jwtToken };
 
-            var response = await _client.PostAsync($"/authentication/checktoken", CreateContent(requestModel));
+            var response = await _http.PostAsync($"authentication/checktoken", CreateContent(requestModel));
 
             if (response.IsSuccessStatusCode)
                 return true;

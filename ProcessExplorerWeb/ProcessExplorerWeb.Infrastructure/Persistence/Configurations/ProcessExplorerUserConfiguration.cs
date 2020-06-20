@@ -22,6 +22,12 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200)
                 .IsRequired();
 
+            builder.HasMany(i => i.Sessions)
+                .WithOne(i => i.ProcessExplorerUser)
+                .HasForeignKey(i => i.ExplorerUserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.ToTable(nameof(ProcessExplorerUser));
         }
     }

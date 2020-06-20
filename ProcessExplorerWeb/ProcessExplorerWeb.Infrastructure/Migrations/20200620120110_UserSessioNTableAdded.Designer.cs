@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProcessExplorerWeb.Infrastructure.Persistence;
 
 namespace ProcessExplorerWeb.Infrastructure.Migrations
 {
     [DbContext(typeof(ProcessExplorerDbContext))]
-    partial class ProcessExplorerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200620120110_UserSessioNTableAdded")]
+    partial class UserSessioNTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

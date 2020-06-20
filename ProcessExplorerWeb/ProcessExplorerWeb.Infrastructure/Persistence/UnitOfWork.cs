@@ -11,12 +11,14 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence
     {
         private readonly ProcessExplorerDbContext _context;
 
-        public IProcessExplorerUserRepository User { get; }
+        public IProcessExplorerUserRepository User { get; set; }
+        public IProcessExplorerUserSessionRepository Session { get; set; }
 
         public UnitOfWork(ProcessExplorerDbContext context)
         {
             _context = context;
             User = new ProcessExplorerUserRepository(_context);
+            Session = new ProcessExplorerUserSessionRepository(_context);
         }
 
         public int Commit()

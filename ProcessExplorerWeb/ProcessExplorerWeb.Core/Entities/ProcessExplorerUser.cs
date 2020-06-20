@@ -9,6 +9,7 @@ namespace ProcessExplorerWeb.Core.Entities
     {
         public string UserName { get; set; }
         public string Email { get; set; }
+        public virtual ICollection<ProcessExplorerUserSession> Sessions { get; set; }
 
         public ProcessExplorerUser(Guid id, string email, string userName)
         {

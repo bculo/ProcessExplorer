@@ -7,6 +7,7 @@ using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Infrastructure.Identity;
 using ProcessExplorerWeb.Infrastructure.Options;
 using ProcessExplorerWeb.Infrastructure.Persistence;
+using System;
 using System.Text;
 
 namespace ProcessExplorerWeb.Infrastructure.Configurations
@@ -65,8 +66,13 @@ namespace ProcessExplorerWeb.Infrastructure.Configurations
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
                 };
+            });
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromDays(30);
             });
 
             return services;

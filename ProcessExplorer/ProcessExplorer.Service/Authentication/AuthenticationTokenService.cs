@@ -42,6 +42,8 @@ namespace ProcessExplorer.Service.Authentication
 
             _work.Authentication.Add(authInstance);
             await _work.CommitAsync();
+
+            Token = token;
         }
 
         public Task<bool> TokenAvailable()

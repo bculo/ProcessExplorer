@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProcessExplorer.Api.Models.Authentication;
@@ -56,6 +57,14 @@ namespace ProcessExplorer.Api.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("sessionregistration")]
+        public async Task<IActionResult> RegisterSession([FromBody] SessionModel model)
+        {
+            await _service.RegisterSession(model.UserName, model.SesssionId, model.Started);
             return Ok();
         }
     }

@@ -34,6 +34,7 @@ namespace ProcessExplorer.Api
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddInfrastructureLayer(Configuration);
             services.AddApplicationLayer(Configuration);
+            services.AddHttpContextAccessor();
             services.AddControllers();
         }
 
@@ -63,6 +64,8 @@ namespace ProcessExplorer.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
