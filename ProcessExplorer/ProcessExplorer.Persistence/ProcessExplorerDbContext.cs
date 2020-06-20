@@ -17,8 +17,8 @@ namespace ProcessExplorer.Persistence
     {
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Authentication> Authentications { get; set; }
-        public DbSet<ApplicationEntity> Applications { get; set; }
-        public DbSet<ProcessEntity> Processes { get; set; }
+        public DbSet<ApplicationEntity> ApplicationEntities { get; set; }
+        public DbSet<ProcessEntity> ProcessEntities { get; set; }
 
         public ProcessExplorerDbContext(DbContextOptions<ProcessExplorerDbContext> options) : base(options)
         {

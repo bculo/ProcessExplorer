@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Core.Entities;
 using ProcessExplorer.Interfaces;
 using ProcessExplorer.Persistence;
 using System;
@@ -14,6 +16,8 @@ namespace ProcessExplorer
         private readonly IAuthenticationClient _client;
         private readonly IInternet _internet;
         private readonly ISessionService _session;
+        private readonly IUnitOfWork _work;
+        private readonly IMapper _mapper;
 
         private bool FreshToken { get; set; } = false;
 
@@ -21,13 +25,17 @@ namespace ProcessExplorer
             ITokenService tokenService,
             IAuthenticationClient client,
             IInternet internet,
-            ISessionService session)
+            ISessionService session,
+            IMapper mapper,
+            IUnitOfWork work)
         {
             _logger = logger;
             _tokenService = tokenService;
             _client = client;
             _internet = internet;
             _session = session;
+            _work = work;
+            _mapper = mapper;
         }
 
         public async Task Start()
@@ -37,32 +45,79 @@ namespace ProcessExplorer
             if (!await _internet.CheckForInternetConnectionAsync())
             {
                 PromptMessage("Internet access not available", true);
-                throw new Exception("Internet acces not available");
+                PromptMessage("Starting work in offline mode", true);
+                await RegisterSessionLocally();
             }
 
+            // token not available in database
             if (!await _tokenService.TokenAvailable())
                 await GetUserCredentials();
 
             if (!FreshToken) //using old token
             {
-                _logger.LogInfo("Token available in storage");
-                string oldJwtToken = await _tokenService.GetLastToken();
-                var valid = await _client.ValidateToken(oldJwtToken);
+                var (valid, token) = await CheckOldToken();
+
                 if (!valid) //invalid token, force user to enter username and password
                     await GetUserCredentials();
-                else
-                    _tokenService.SetValidToken(oldJwtToken);
+                else //set token for authentication
+                    _tokenService.SetValidToken(token);
             }
 
-            if(!await _client.RegisterSession(_session.SessionInformation))
-            {
-                PromptMessage("Coludnt start session", true);
-                throw new Exception("Coludnt start session");
-            }
+            await SessionRegistrationWithServer();
 
             PromptMessage("Authenticaiton process finished", true);
         }
 
+        /// <summary>
+        /// Check if old token is valid
+        /// </summary>
+        /// <returns>(valid, jwttoken)</returns>
+        private async Task<(bool, string)> CheckOldToken()
+        {
+            _logger.LogInfo("Token available in storage");
+            string oldJwtToken = await _tokenService.GetLastToken();
+            return (await _client.ValidateToken(oldJwtToken), oldJwtToken);
+        }
+
+        /// <summary>
+        /// Register session first locally then on server
+        /// This method should only be called if internet access is available
+        /// Method throws exception if session is not registered on server
+        /// </summary>
+        /// <returns></returns>
+        private async Task SessionRegistrationWithServer()
+        {
+            await RegisterSessionLocally();
+
+            //Server session registration
+            if (!await _client.RegisterSession(_session.SessionInformation))
+                throw new Exception("Coludnt start session");
+        }
+
+        /// <summary>
+        /// Register ssesion only localy
+        /// </summary>
+        /// <returns></returns>
+        private async Task RegisterSessionLocally()
+        {
+            //Check if there is an session in database with same statring time
+            var savedSession = await _work.Sessions.GetCurrentSession(_session.SessionInformation.SessionStarted);
+
+            if (savedSession != null) //session with same start time is already in database
+                _session.ChangeSessionId(savedSession.Id);
+            else
+            {
+                //store new session localy
+                var sessionEntity = _mapper.Map<Session>(_session.SessionInformation);
+                _work.Sessions.Add(sessionEntity);
+                await _work.CommitAsync();
+            }
+        }
+
+        /// <summary>
+        /// Force user to type identifier and password
+        /// </summary>
+        /// <returns></returns>
         private async Task GetUserCredentials()
         {
             _logger.LogInfo("Forcing user to enter username and password");
@@ -88,6 +143,11 @@ namespace ProcessExplorer
             }
         }
 
+        /// <summary>
+        /// Prompt message to console
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="useNewLine"></param>
         private void PromptMessage(string message, bool useNewLine = false)
         {
             if(!useNewLine)

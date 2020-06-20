@@ -1,9 +1,9 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Diagnostics;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ProcessExplorer.Service.Application.Linux
 {
@@ -11,7 +11,9 @@ namespace ProcessExplorer.Service.Application.Linux
     {
         private readonly IDateTime _time;
 
-        public WmctrlApplicationCollector(ILoggerWrapper logger, IDateTime time) : base(logger)
+        public WmctrlApplicationCollector(ILoggerWrapper logger, 
+            IDateTime time,
+            ISessionService sessionService) : base(logger, sessionService)
         { 
             _time = time;
         }
@@ -79,7 +81,8 @@ namespace ProcessExplorer.Service.Application.Linux
             return new ApplicationInformation
             {
                 ApplicationName = GetBasicApplicationTitle(longName),
-                StartTime = processStarted
+                StartTime = processStarted,
+                Session = _sessionService.SessionInformation.SessionId
             };
         }
 

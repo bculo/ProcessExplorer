@@ -1,19 +1,18 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace ProcessExplorer.Service.Application
 {
     public abstract class RootAppCollector
     {
         protected readonly ILoggerWrapper _logger;
+        protected readonly ISessionService _sessionService;
 
-        public RootAppCollector(ILoggerWrapper logger)
+        public RootAppCollector(ILoggerWrapper logger, 
+            ISessionService sessionService)
         {
             _logger = logger;
+            _sessionService = sessionService;
         }
 
         public string GetBasicApplicationTitle(string fullTitle)

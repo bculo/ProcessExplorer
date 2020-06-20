@@ -14,6 +14,9 @@ namespace ProcessExplorer.Persistence.FluentApi
             builder.Property(i => i.ProcessName)
                 .HasMaxLength(300)
                 .IsRequired();
+
+            builder.ToTable(nameof(ProcessEntity));
+
         }
     }
 }

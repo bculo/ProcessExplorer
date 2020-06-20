@@ -18,6 +18,7 @@ namespace ProcessExplorer.Service.Application
         private static Dictionary<Platform, Func<IApplicationCollector>> ExecutionMethods;
 
         private readonly IDateTime _time;
+        private readonly ISessionService _sessionService;
         private readonly ILoggerWrapper _logger;
         private readonly IPlatformInformationService _platform;
         private readonly ApplicationCollectorUsageOptions _options;
@@ -25,12 +26,14 @@ namespace ProcessExplorer.Service.Application
         public ApplicationCollectorFactory(ILoggerWrapper logger,
             IPlatformInformationService platform,
             IOptions<ApplicationCollectorUsageOptions> options,
-            IDateTime time)
+            IDateTime time,
+            ISessionService sessionService)
         {
             _logger = logger;
             _platform = platform;
             _options = options.Value;
             _time = time;
+            _sessionService = sessionService;
         }
 
         /// <summary>
@@ -63,7 +66,7 @@ namespace ProcessExplorer.Service.Application
             switch (result)
             {
                 case nameof(WmctrlApplicationCollector):
-                    return new WmctrlApplicationCollector(_logger, _time);
+                    return new WmctrlApplicationCollector(_logger, _time, _sessionService);
                 default:
                     throw new NotImplementedException();
             }
@@ -76,9 +79,9 @@ namespace ProcessExplorer.Service.Application
             switch (result)
             {
                 case nameof(WindowsViaProcessApplicationCollector):
-                    return new WindowsViaProcessApplicationCollector(_logger);
+                    return new WindowsViaProcessApplicationCollector(_logger, _sessionService);
                 case nameof(DllUsageApplicationCollector):
-                    return new DllUsageApplicationCollector(_logger);
+                    return new DllUsageApplicationCollector(_logger, _sessionService);
                 default:
                     throw new NotImplementedException();
             }

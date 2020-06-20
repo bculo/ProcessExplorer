@@ -31,7 +31,7 @@ namespace ProcessExplorer.Service.Background
 
                 using (var scope = _provider.CreateScope())
                 {
-                    var behaviour = scope.ServiceProvider.GetRequiredService<IApplicationBehaviour>();
+                    var behaviour = scope.ServiceProvider.GetRequiredService<IApplicationCollectorBehaviour>();
                     await behaviour.Collect();
                 }
 

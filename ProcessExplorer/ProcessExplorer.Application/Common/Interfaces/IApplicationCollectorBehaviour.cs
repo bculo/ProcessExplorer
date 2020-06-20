@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Common.Interfaces
 {
-    public interface IApplicationBehaviour
+    public interface IApplicationCollectorBehaviour
     {
         Task Collect();
     }

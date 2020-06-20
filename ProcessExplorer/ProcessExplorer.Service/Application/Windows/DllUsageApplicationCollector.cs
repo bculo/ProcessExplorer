@@ -10,7 +10,8 @@ namespace ProcessExplorer.Service.Application.Windows
 {
     public class DllUsageApplicationCollector : RootAppCollector, IApplicationCollector
     {
-        public DllUsageApplicationCollector(ILoggerWrapper logger) : base(logger)
+        public DllUsageApplicationCollector(ILoggerWrapper logger, ISessionService sessionService) 
+            : base(logger, sessionService)
         {
         }
 
@@ -26,7 +27,8 @@ namespace ProcessExplorer.Service.Application.Windows
                 appList.Add(new ApplicationInformation
                 {
                     StartTime = process.StartTime,
-                    ApplicationName = GetBasicApplicationTitle(window.Value)
+                    ApplicationName = GetBasicApplicationTitle(window.Value),
+                    Session = _sessionService.SessionInformation.SessionId
                 });
             }
 

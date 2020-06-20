@@ -9,7 +9,7 @@ namespace ProcessExplorer.Application.Configurations
     {
         public void Install(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IApplicationBehaviour, ApplicationBehaviour>();
+            services.AddScoped<IApplicationCollectorBehaviour, ApplicationCollectorBehaviour>();
             services.AddScoped<IProcessBehaviour, ProcessBehaviour>();
         }
     }
