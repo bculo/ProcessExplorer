@@ -59,7 +59,6 @@ namespace ProcessExplorer.Behaviours.Login
             if (!await _tokenService.TokenAvailable())
                 await GetUserCredentials();
 
-
             if (!FreshToken) //using old token
             {
                 var (valid, token) = await CheckOldToken();

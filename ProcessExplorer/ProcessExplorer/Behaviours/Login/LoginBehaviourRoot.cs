@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Behaviours.Login
 {
+    /// <summary>
+    /// Abstract class for Authentication
+    /// </summary>
     public abstract class LoginBehaviourRoot : IStartupPoint
     {
         protected readonly ILoggerWrapper _logger;
@@ -72,6 +75,15 @@ namespace ProcessExplorer.Behaviours.Login
         }
 
         /// <summary>
+        /// Read user input
+        /// </summary>
+        /// <returns></returns>
+        protected string ReadInput()
+        {
+            return Console.ReadLine();
+        }
+
+        /// <summary>
         /// Force user to type identifier and password
         /// </summary>
         /// <returns></returns>
@@ -82,9 +94,9 @@ namespace ProcessExplorer.Behaviours.Login
             while (Validating)
             {
                 PromptMessage("Enter username: ");
-                string username = Console.ReadLine();
+                string username = ReadInput();
                 PromptMessage("Enter password: ");
-                string password = Console.ReadLine();
+                string password = ReadInput();
 
                 try
                 {
