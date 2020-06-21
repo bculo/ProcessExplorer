@@ -79,9 +79,9 @@ namespace ProcessExplorer.Service.Application
             switch (result)
             {
                 case nameof(WindowsViaProcessApplicationCollector):
-                    return new WindowsViaProcessApplicationCollector(_logger, _sessionService);
+                    return new WindowsViaProcessApplicationCollector(_logger, _sessionService, _time);
                 case nameof(DllUsageApplicationCollector):
-                    return new DllUsageApplicationCollector(_logger, _sessionService);
+                    return new DllUsageApplicationCollector(_logger, _sessionService, _time);
                 default:
                     throw new NotImplementedException();
             }

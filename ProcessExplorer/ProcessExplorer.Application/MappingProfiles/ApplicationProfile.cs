@@ -13,7 +13,7 @@ namespace ProcessExplorer.Application.MappingProfiles
             //ApplicationInformation -> ApplicationEntity
             config.ForType<ApplicationInformation, ApplicationEntity>()
                 .Map(dst => dst.SessionId, src => src.Session)
-                .Map(dst => dst.Saved, src => DateTime.Now);
+                .Map(dst => dst.Saved, src => src.FetchTime);
 
             //ApplicationEntity -> ApplicationDto
             config.ForType<ApplicationEntity, ApplicationDto>()

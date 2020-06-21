@@ -10,12 +10,12 @@ namespace ProcessExplorer.Service.Application.Windows
 {
     public class DllUsageApplicationCollector : RootAppCollector, IApplicationCollector
     {
-        public DllUsageApplicationCollector(ILoggerWrapper logger, ISessionService sessionService) 
-            : base(logger, sessionService)
+        public DllUsageApplicationCollector(ILoggerWrapper logger, ISessionService sessionService, IDateTime time) 
+            : base(logger, sessionService, time)
         {
         }
 
-        public IList<ApplicationInformation> GetApplications()
+        public List<ApplicationInformation> GetApplications()
         {
             _logger.LogInfo($"Started fetching applications in {nameof(DllUsageApplicationCollector)}");
 
@@ -28,7 +28,8 @@ namespace ProcessExplorer.Service.Application.Windows
                 {
                     StartTime = process.StartTime,
                     ApplicationName = GetBasicApplicationTitle(window.Value),
-                    Session = _sessionService.SessionInformation.SessionId
+                    Session = _sessionService.SessionInformation.SessionId,
+                    FetchTime = _dateTime.Now
                 });
             }
 

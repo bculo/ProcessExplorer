@@ -7,12 +7,15 @@ namespace ProcessExplorer.Service.Application
     {
         protected readonly ILoggerWrapper _logger;
         protected readonly ISessionService _sessionService;
+        protected readonly IDateTime _dateTime;
 
         public RootAppCollector(ILoggerWrapper logger, 
-            ISessionService sessionService)
+            ISessionService sessionService,
+            IDateTime dateTime)
         {
             _logger = logger;
             _sessionService = sessionService;
+            _dateTime = dateTime;
         }
 
         public string GetBasicApplicationTitle(string fullTitle)

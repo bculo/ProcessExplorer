@@ -5,6 +5,6 @@ namespace ProcessExplorer.Service.Time
 {
     public class DateTimeService : IDateTime
     {
-        public DateTime Now => DateTime.UtcNow;
+        public DateTime Now => DateTime.Now;
     }
 }

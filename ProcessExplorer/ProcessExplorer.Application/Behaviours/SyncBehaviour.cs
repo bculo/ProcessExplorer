@@ -43,6 +43,7 @@ namespace ProcessExplorer.Application.Behaviours
             //bool update status from server
             var dictionary = new ConcurrentDictionary<Guid, bool>();
 
+            /*
             //Synchronize with backend
             Parallel.ForEach(dtos, async s =>
             {
@@ -50,6 +51,7 @@ namespace ProcessExplorer.Application.Behaviours
                 bool success = await syncClient.SyncSession(s);
                 dictionary.TryAdd(s.SessionId, success);
             });
+            */
 
             Console.WriteLine();
         }

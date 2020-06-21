@@ -10,7 +10,7 @@ namespace ProcessExplorer.Application.Common.Interfaces
     {
         void BulkAdd(IList<ApplicationEntity> applicationEntities);
         void BulkRemove(IList<ApplicationEntity> applicationEntities);
-        Task BulkAddAsync(IList<ApplicationEntity> applicationEntities);
-        Task BulkRemoveAsync(IList<ApplicationEntity> applicationEntities);
+        void BulkUpdate(IList<ApplicationEntity> applicationEntities);
+        Task<List<ApplicationEntity>> GetEntitesForSession(Guid sessionId);
     }
 }

@@ -7,6 +7,6 @@ namespace ProcessExplorer.Application.Common.Interfaces
 {
     public interface IApplicationCollector
     {
-        IList<ApplicationInformation> GetApplications();
+        List<ApplicationInformation> GetApplications();
     }
 }

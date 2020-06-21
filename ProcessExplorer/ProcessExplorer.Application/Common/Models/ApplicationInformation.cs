@@ -9,5 +9,6 @@ namespace ProcessExplorer.Application.Common.Models
         public DateTime StartTime { get; set; }
         public string ApplicationName { get; set; }
         public Guid Session { get; set; }
+        public DateTime FetchTime { get; set; }
     }
 }

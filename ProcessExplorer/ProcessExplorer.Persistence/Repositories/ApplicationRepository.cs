@@ -4,6 +4,7 @@ using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Core.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,14 +28,16 @@ namespace ProcessExplorer.Persistence.Repositories
             ProcessExplorerDbContext.BulkDelete(applicationEntities);
         }
 
-        public async Task BulkAddAsync(IList<ApplicationEntity> applicationEntities)
+        public void BulkUpdate(IList<ApplicationEntity> applicationEntities)
         {
-            await ProcessExplorerDbContext.BulkInsertAsync(applicationEntities);
+            ProcessExplorerDbContext.BulkUpdate(applicationEntities);
         }
 
-        public async Task BulkRemoveAsync(IList<ApplicationEntity> applicationEntities)
+        public async Task<List<ApplicationEntity>> GetEntitesForSession(Guid sessionId)
         {
-            await ProcessExplorerDbContext.BulkDeleteAsync(applicationEntities);
+            return await ProcessExplorerDbContext.ApplicationEntities
+                            .Where(i => i.SessionId == sessionId)
+                            .ToListAsync();
         }
     }
 }
