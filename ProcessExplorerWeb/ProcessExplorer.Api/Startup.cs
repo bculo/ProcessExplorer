@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ProcessExplorer.Api.Filters;
 using ProcessExplorerWeb.Application;
 using ProcessExplorerWeb.Application.Extensions;
 using ProcessExplorerWeb.Infrastructure;
@@ -31,11 +32,10 @@ namespace ProcessExplorer.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureIInstallationCofigurations(Configuration, Assembly.GetExecutingAssembly());
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddInfrastructureLayer(Configuration);
             services.AddApplicationLayer(Configuration);
             services.AddHttpContextAccessor();
-            services.AddControllers();
+            services.AddControllers(opt => opt.Filters.Add(new ExceptionFilter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

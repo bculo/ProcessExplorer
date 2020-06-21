@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProcessExplorer.Api.Models.Authentication;
 using ProcessExplorerWeb.Application.Common.Interfaces;
+using System.Threading.Tasks;
 
 namespace ProcessExplorer.Api.Controllers
 {
@@ -17,7 +11,6 @@ namespace ProcessExplorer.Api.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _service;
-        private readonly IMapper _mapper;
 
         public AuthenticationController(IAuthenticationService service)
         {
@@ -32,7 +25,13 @@ namespace ProcessExplorer.Api.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            var dtoModel = _mapper.Map<LoginResponseModel>(await _service.GenerateJwtToken(model.Identifier));
+            var tokenInfo = await _service.GenerateJwtToken(model.Identifier);
+
+            var dtoModel = new LoginResponseModel
+            {
+                JwtToken = tokenInfo.JwtToken,
+                UserId = tokenInfo.User.Id
+            };
 
             return Ok(dtoModel);
         }

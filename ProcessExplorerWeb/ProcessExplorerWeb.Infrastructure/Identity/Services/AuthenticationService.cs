@@ -203,7 +203,7 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
             catch(Exception e) // if transaction fails
             {
                 await transaction.RollbackAsync();
-                _log.LogInformation("User registration failed");
+                _log.LogError(e, "Transaction error");
                 return (Result.Failure("Ann error occurred"), null);
             }
         }
