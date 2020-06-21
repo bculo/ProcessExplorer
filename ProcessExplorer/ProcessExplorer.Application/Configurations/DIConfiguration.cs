@@ -10,7 +10,7 @@ namespace ProcessExplorer.Application.Configurations
         public void Install(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IApplicationCollectorBehaviour, ApplicationCollectorBehaviour>();
-            services.AddScoped<IProcessBehaviour, ProcessBehaviour>();
+            services.AddScoped<IProcessBehaviour, ProcessCollectorBehaviour>();
             services.AddScoped<IUpdateBehaviour, UpdateServerBehaviour>();
         }
     }

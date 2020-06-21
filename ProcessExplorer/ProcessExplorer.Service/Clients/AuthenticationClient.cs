@@ -13,15 +13,18 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Service.Clients
 {
-    public class AuthenticationClient : RootClient, IAuthenticationClient
+    public class AuthenticationClient : RootHttpClient, IAuthenticationClient
     {
         private readonly ITokenService _tokenService;
+        private readonly ILoggerWrapper _logger;
 
         public AuthenticationClient(HttpClient http, 
             IOptions<ProcessExplorerWebClientOptions> options,
-            ITokenService tokenService) : base(http, options)
+            ITokenService tokenService,
+            ILoggerWrapper logger) : base(http, options)
         {
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -42,8 +45,11 @@ namespace ProcessExplorer.Service.Clients
             if (response.IsSuccessStatusCode)
                 return await GetInstanceFromBody<LoginResponseDto>(response);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)
-                throw new HttpRequestException("Server not available");
+            if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+            {
+                _logger.LogInfo("Server not available!!!");
+                throw new HttpRequestException("Server not available!!!");
+            }
 
             return null;
         }
@@ -69,8 +75,12 @@ namespace ProcessExplorer.Service.Clients
             if (response.IsSuccessStatusCode)
                 return true;
 
-            if (response.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)
-                throw new HttpRequestException("Server not available");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+            {
+                _logger.LogInfo("Server not available!!!");
+                throw new HttpRequestException("Server not available!!!");
+            }
 
             return false;
         }
@@ -90,8 +100,12 @@ namespace ProcessExplorer.Service.Clients
             if (response.IsSuccessStatusCode)
                 return true;
 
-            if (response.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)
-                throw new HttpRequestException("Server not available");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+            {
+                _logger.LogInfo("Server not available!!!");
+                throw new HttpRequestException("Server not available!!!");
+            }
 
             return false;
         }

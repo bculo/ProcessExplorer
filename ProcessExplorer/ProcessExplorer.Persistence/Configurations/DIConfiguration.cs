@@ -8,7 +8,7 @@ namespace ProcessExplorer.Persistence.Configurations
     {
         public void Install(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

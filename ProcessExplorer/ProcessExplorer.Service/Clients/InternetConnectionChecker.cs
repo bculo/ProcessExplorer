@@ -42,7 +42,7 @@ namespace ProcessExplorer.Service.Clients
                 _logger.LogInfo($"Internet connection unvailable on {_time.Now}");
                 return false;
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 _logger.LogInfo($"Internet connection unvailable on {_time.Now}");
                 return false;

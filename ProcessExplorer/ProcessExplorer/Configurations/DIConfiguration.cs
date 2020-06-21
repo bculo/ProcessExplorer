@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Behaviours.Login;
 using ProcessExplorer.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProcessExplorer.Configurations
 {
@@ -13,7 +10,7 @@ namespace ProcessExplorer.Configurations
     {
         public void Install(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IStartupPoint, LoginBehaviour>();
+            services.AddTransient<IStartupPoint, LoginEveryTimeBehaviour>();
         }
     }
 }

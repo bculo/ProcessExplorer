@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Service.Clients
 {
-    public abstract class RootClient
+    public abstract class RootHttpClient
     {
         protected readonly HttpClient _http;
         private readonly ProcessExplorerWebClientOptions _options;
 
-        public RootClient(HttpClient client, IOptions<ProcessExplorerWebClientOptions> options)
+        public RootHttpClient(HttpClient client, IOptions<ProcessExplorerWebClientOptions> options)
         {
             _http = client;
             _options = options.Value;

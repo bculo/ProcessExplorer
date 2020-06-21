@@ -2,6 +2,7 @@
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,13 +31,18 @@ namespace ProcessExplorer.Application.Behaviours
             var sessions = await _unitOfWork.Sessions.GetAllWithIncludesAsync();
 
             //map to Dtos
-            var result = sessions.Adapt<List<UserSessionDto>>();
+            var dtos = sessions.Adapt<List<UserSessionDto>>();
 
-            Parallel.ForEach(sessions, s =>
+            //guid is sessionId
+            //bool update status from server
+            var dictionary = new ConcurrentDictionary<Guid, bool>();
+
+
+            Parallel.ForEach(dtos, s =>
             {
-                //TODO push each session to backend
 
-                Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+
+                dictionary.TryAdd(s.SessionId, false);
             });
         }
     }

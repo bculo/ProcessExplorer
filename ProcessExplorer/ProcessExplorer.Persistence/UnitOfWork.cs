@@ -1,8 +1,6 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Persistence.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Persistence

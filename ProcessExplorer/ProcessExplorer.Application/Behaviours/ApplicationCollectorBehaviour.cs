@@ -1,4 +1,5 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using Mapster;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Core.Entities;
 using System;
@@ -38,10 +39,10 @@ namespace ProcessExplorer.Application.Behaviours
             if(!await _internet.CheckForInternetConnectionAsync())
             {
                 //store records to local database
-                await StoreRecords(apps);
+
             }
 
-
+            await StoreRecords(apps);
         }
 
         /// <summary>
@@ -50,15 +51,11 @@ namespace ProcessExplorer.Application.Behaviours
         /// <param name="apps"></param>
         /// <returns></returns>
         private async Task StoreRecords(IList<ApplicationInformation> apps)
-        {
-            var entites = apps.Select(i => new ApplicationEntity
-            {
-                SessionId = i.Session,
-                StartTime = i.StartTime,
-                ApplicationName = i.ApplicationName,
-                Saved = DateTime.Now
-            }).ToList();
+        { 
+            //map
+            var entites = apps.Adapt<List<ApplicationEntity>>();
 
+            //update db
             _unitOfWork.Application.BulkAdd(entites.ToList());
             await _unitOfWork.CommitAsync();
         }

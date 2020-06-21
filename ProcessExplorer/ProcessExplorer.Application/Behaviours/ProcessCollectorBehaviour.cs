@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Behaviours
 {
-    public class ProcessBehaviour : IProcessBehaviour
+    public class ProcessCollectorBehaviour : IProcessBehaviour
     {
-        public ProcessBehaviour()
+        public ProcessCollectorBehaviour()
         {
 
         }
