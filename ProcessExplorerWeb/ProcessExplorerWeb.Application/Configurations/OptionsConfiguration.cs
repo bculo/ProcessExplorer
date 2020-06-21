@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProcessExplorer.Api.Services;
 using ProcessExplorerWeb.Application.Common.Interfaces;
+using ProcessExplorerWeb.Application.Common.Options;
 
-namespace ProcessExplorer.Api.Configurations
+namespace ProcessExplorerWeb.Application.Configurations
 {
-    public class DIConfiguration : IInstallation
+    public class OptionsConfiguration : IInstallation
     {
         public IServiceCollection Configure(IServiceCollection services, IConfiguration config)
         {
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.Configure<PerformanceOptions>(opt => config.GetSection(nameof(PerformanceOptions)).Bind(opt));
 
             return services;
         }

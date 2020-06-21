@@ -19,10 +19,9 @@ namespace ProcessExplorer.Api.Controllers
         private readonly IAuthenticationService _service;
         private readonly IMapper _mapper;
 
-        public AuthenticationController(IAuthenticationService service, IMapper mapper)
+        public AuthenticationController(IAuthenticationService service)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         [HttpPost("login")]

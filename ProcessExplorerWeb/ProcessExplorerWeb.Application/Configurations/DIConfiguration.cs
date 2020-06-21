@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProcessExplorer.Api.Services;
 using ProcessExplorerWeb.Application.Common.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace ProcessExplorer.Api.Configurations
+namespace ProcessExplorerWeb.Application.Configurations
 {
     public class DIConfiguration : IInstallation
     {
         public IServiceCollection Configure(IServiceCollection services, IConfiguration config)
         {
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
-
             return services;
         }
     }
