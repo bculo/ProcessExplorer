@@ -61,11 +61,21 @@ namespace ProcessExplorer.Behaviours.Login
 
             if (!FreshToken) //using old token
             {
-                var (valid, token) = await CheckOldToken();
-                if (!valid) //invalid token, force user to enter username and password
-                    await GetUserCredentials();
-                else //set token for authentication
-                    _tokenService.SetValidToken(token);
+                try
+                {
+                    var (valid, token) = await CheckOldToken();
+                    if (!valid) //invalid token, force user to enter username and password
+                        await GetUserCredentials();
+                    else //set token for authentication
+                        _tokenService.SetValidToken(token);
+                }
+                catch
+                {
+                    //catch for CheckOldToken
+                    PromptMessage("Service not available", true);
+                    PromptMessage("Starting work in offline mode", true);
+                    Validating = false;
+                }
             }
 
             PromptMessage("Authenticaiton process finished", true);
@@ -79,6 +89,8 @@ namespace ProcessExplorer.Behaviours.Login
         {
             _logger.LogInfo("Token available in storage");
             string oldJwtToken = await _tokenService.GetLastToken();
+
+            //Mehtod can trow exception for timeoit or code HTTP code 503
             return (await _client.ValidateToken(oldJwtToken), oldJwtToken);
         }
     }

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Common.Interfaces
 {
-    public interface IUpdateClient
+    public interface ISyncClient
     {
-        Task<bool> UpdateSession(UserSessionDto sessionDto);
+        Task<bool> SyncSession(UserSessionDto sessionDto);
     }
 }

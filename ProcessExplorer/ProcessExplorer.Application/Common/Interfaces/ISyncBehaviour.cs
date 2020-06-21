@@ -2,8 +2,8 @@
 
 namespace ProcessExplorer.Application.Common.Interfaces
 {
-    public interface IUpdateBehaviour
+    public interface ISyncBehaviour
     {
-        Task CheckForUpdates();
+        Task Synchronize();
     }
 }

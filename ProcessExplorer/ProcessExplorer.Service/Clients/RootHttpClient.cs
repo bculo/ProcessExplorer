@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Service.Options;
 using System;
 using System.ComponentModel;
@@ -14,6 +15,8 @@ namespace ProcessExplorer.Service.Clients
     {
         protected readonly HttpClient _http;
         private readonly ProcessExplorerWebClientOptions _options;
+        
+        protected bool TimeOccurred { get; private set; }
 
         public RootHttpClient(HttpClient client, IOptions<ProcessExplorerWebClientOptions> options)
         {
@@ -42,5 +45,36 @@ namespace ProcessExplorer.Service.Clients
         {
             _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
+
+        #region CONSOLE APPLICATION
+
+        /// <summary>
+        /// Wrapper for POST REQUEST
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public async Task<HttpResponseMessage> Post(string uri, object content, string jwttoken)
+        {
+            try
+            {
+                if (jwttoken != null)
+                    AddBearerToken(jwttoken);
+
+                var response = await _http.PostAsync(uri, CreateContent(content));
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    throw new Exception("Unauthorized");
+
+                return response;
+            }
+            catch(TimeoutException) //timeout
+            {
+                TimeOccurred = true;
+                return null;
+            }
+        }
+
+        #endregion
     }
 }

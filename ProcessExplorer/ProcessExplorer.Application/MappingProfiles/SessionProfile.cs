@@ -12,14 +12,18 @@ namespace ProcessExplorer.Application.MappingProfiles
     {
         public void Register(TypeAdapterConfig config)
         {
+            //SessionInformation -> Session
             config.ForType<SessionInformation, Session>()
                 .Map(dst => dst.Id, src => src.SessionId)
                 .Map(dst => dst.Started, src => src.SessionStarted)
                 .Map(dst => dst.UserName, src => src.User);
 
+            //Session -> UserSessionDto
             config.ForType<Session, UserSessionDto>()
                 .Map(dst => dst.SessionId, src => src.Id)
-                .Map(dst => dst.StartTime, src => src.Started);
+                .Map(dst => dst.Started, src => src.Started)
+                .Map(dst => dst.Applications, src => src.Applications)
+                .Map(dst => dst.Processes, src => src.ProcessEntities);
         }
     }
 }

@@ -28,7 +28,9 @@ namespace ProcessExplorer.Service.Configurations
             services.AddTransient<ILoggerWrapper, LoggerWrapper>();
             services.AddTransient<IPlatformProcessRecognizer, PlatformProcessRecognizer>();
             services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<ISynchronizationClientFactory, SyncClientFactory>();
 
+            services.AddHttpClient();
             services.AddHttpClient<IInternet, InternetConnectionChecker>();
             services.AddHttpClient<IAuthenticationClient, AuthenticationClient>();
         }
