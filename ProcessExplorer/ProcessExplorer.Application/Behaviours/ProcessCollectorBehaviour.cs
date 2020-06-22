@@ -56,12 +56,10 @@ namespace ProcessExplorer.Application.Behaviours
             if (!await _internet.CheckForInternetConnectionAsync())
             {
                 //store records to local database
-
+                await StoreRecords(processes);
             }
 
             //TODO: Push to backend
-
-            await StoreRecords(processes);
             _logger.LogInfo($"Finished collecting processes: {_time.Now} with status: {CollectStatus}");
         }
 
@@ -83,7 +81,6 @@ namespace ProcessExplorer.Application.Behaviours
                 {
                     var newProcesses = fetchedApps.Adapt<List<ProcessEntity>>();
                     _unitOfWork.Process.BulkAdd(newProcesses);
-                    await _unitOfWork.CommitAsync();
                     return;
                 }
 
@@ -97,9 +94,11 @@ namespace ProcessExplorer.Application.Behaviours
                 if (processesToStore.Count == 0)
                     return;
 
+                //save changes of modified entites
+                await _unitOfWork.CommitAsync();
+
                 //Store them
                 _unitOfWork.Process.BulkAdd(processesToStore);
-                await _unitOfWork.CommitAsync();
             }
             catch (Exception e)
             {

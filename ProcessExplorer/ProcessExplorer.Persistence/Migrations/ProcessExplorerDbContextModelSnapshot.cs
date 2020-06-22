@@ -97,6 +97,9 @@ namespace ProcessExplorer.Persistence.Migrations
                     b.Property<DateTime?>("Finished")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("OS")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Started")
                         .HasColumnType("TEXT");
 

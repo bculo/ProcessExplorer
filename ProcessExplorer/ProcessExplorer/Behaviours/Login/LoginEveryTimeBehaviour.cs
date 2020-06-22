@@ -1,4 +1,5 @@
 ﻿using Dtos.Responses.Authentication;
+using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using System.Threading.Tasks;
 
@@ -42,6 +43,7 @@ namespace ProcessExplorer.Behaviours.Login
 
             if (!internetAvailable)
             {
+                _session.SetMode(WorkMode.OFFLINE);
                 PromptMessage("Internet access not available", true);
                 PromptMessage("Starting work in offline mode", true);
             }
@@ -49,6 +51,7 @@ namespace ProcessExplorer.Behaviours.Login
             {
                 await GetUserCredentials();
             }
+
 
             PromptMessage("Authenticaiton process finished", true);
         }

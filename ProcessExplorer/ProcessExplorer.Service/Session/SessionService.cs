@@ -1,4 +1,5 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Enums;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using System;
 
@@ -10,19 +11,22 @@ namespace ProcessExplorer.Service.Session
 
         public SessionInformation SessionInformation { get; private set; }
 
-        public SessionService(IUserSessionFactory sessionFactory)
+        public SessionService(IUserSessionFactory sessionFactory,
+            IPlatformInformationService service)
         {
             _sessionFactory = sessionFactory;
 
-            SetSession();
+            SetSession(service.PlatformInformation.Type);
         }
 
         /// <summary>
         /// Set session
         /// </summary>
-        private void SetSession()
+        private void SetSession(Platform type)
         {
             SessionInformation = _sessionFactory.GetUserSessionCollector().GetSession();
+            SessionInformation.OS = type.ToString();
+            SessionInformation.Offline = false;
         }
 
         /// <summary>
@@ -32,6 +36,15 @@ namespace ProcessExplorer.Service.Session
         public void ChangeSessionId(Guid sessionId)
         {
             SessionInformation.SessionId = sessionId;
+        }
+
+        /// <summary>
+        /// Set current mode
+        /// </summary>
+        /// <param name="mode"></param>
+        public void SetMode(WorkMode mode)
+        {
+            SessionInformation.Offline = (mode == WorkMode.OFFLINE) ? true : false;
         }
     }
 }

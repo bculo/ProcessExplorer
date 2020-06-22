@@ -1,4 +1,5 @@
 ﻿using Dtos.Responses.Authentication;
+using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Interfaces;
 using System;
@@ -49,6 +50,7 @@ namespace ProcessExplorer.Behaviours.Login
 
             if (!internetAvailable)
             {
+                _session.SetMode(WorkMode.OFFLINE);
                 PromptMessage("Internet access not available", true);
                 PromptMessage("Starting work in offline mode", true);
                 PromptMessage("Authenticaiton process finished", true);
@@ -74,6 +76,7 @@ namespace ProcessExplorer.Behaviours.Login
                     //catch for CheckOldToken
                     PromptMessage("Service not available", true);
                     PromptMessage("Starting work in offline mode", true);
+                    _session.SetMode(WorkMode.OFFLINE);
                     Validating = false;
                 }
             }

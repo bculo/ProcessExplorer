@@ -3,16 +3,38 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProcessExplorer.Persistence.Migrations
 {
-    public partial class ProccesTableAndApplicationTableAdded : Migration
+    public partial class ProcessExplorerDbSqlLite : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "UserName",
-                table: "Session",
-                maxLength: 100,
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.CreateTable(
+                name: "Authentication",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Content = table.Column<string>(maxLength: 1000, nullable: true),
+                    Inserted = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authentication", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Session",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 100, nullable: false),
+                    Started = table.Column<DateTime>(nullable: false),
+                    OS = table.Column<string>(nullable: true),
+                    Finished = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Session", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "ApplicationEntity",
@@ -22,8 +44,8 @@ namespace ProcessExplorer.Persistence.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ApplicationName = table.Column<string>(maxLength: 300, nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
-                    Saved = table.Column<DateTime>(nullable: false),
-                    SessionId = table.Column<Guid>(nullable: false)
+                    SessionId = table.Column<Guid>(nullable: false),
+                    Saved = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +65,7 @@ namespace ProcessExplorer.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ProcessId = table.Column<int>(nullable: false),
-                    ProcessName = table.Column<int>(maxLength: 300, nullable: false),
+                    ProcessName = table.Column<string>(maxLength: 300, nullable: false),
                     Saved = table.Column<DateTime>(nullable: false),
                     SessionId = table.Column<Guid>(nullable: false)
                 },
@@ -75,11 +97,13 @@ namespace ProcessExplorer.Persistence.Migrations
                 name: "ApplicationEntity");
 
             migrationBuilder.DropTable(
+                name: "Authentication");
+
+            migrationBuilder.DropTable(
                 name: "ProcessEntity");
 
-            migrationBuilder.DropColumn(
-                name: "UserName",
-                table: "Session");
+            migrationBuilder.DropTable(
+                name: "Session");
         }
     }
 }

@@ -10,6 +10,7 @@ namespace ProcessExplorer.Core.Entities
     {
         public string UserName { get; set; }
         public DateTime Started { get; set; }
+        public string OS { get; set; }
         public DateTime? Finished { get; set; }
         public virtual ICollection<ProcessEntity> ProcessEntities { get; set; }
         public virtual ICollection<ApplicationEntity> Applications { get; set; }

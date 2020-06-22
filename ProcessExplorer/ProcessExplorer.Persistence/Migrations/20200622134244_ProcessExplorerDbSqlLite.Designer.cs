@@ -9,8 +9,8 @@ using ProcessExplorer.Persistence;
 namespace ProcessExplorer.Persistence.Migrations
 {
     [DbContext(typeof(ProcessExplorerDbContext))]
-    [Migration("20200622091835_ProcessEntityFixed")]
-    partial class ProcessEntityFixed
+    [Migration("20200622134244_ProcessExplorerDbSqlLite")]
+    partial class ProcessExplorerDbSqlLite
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -97,6 +97,9 @@ namespace ProcessExplorer.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("Finished")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OS")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Started")

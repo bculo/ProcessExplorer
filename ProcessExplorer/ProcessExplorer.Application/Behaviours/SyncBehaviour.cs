@@ -13,20 +13,26 @@ namespace ProcessExplorer.Application.Behaviours
     public class SyncBehaviour : ISyncBehaviour
     {
         private readonly IInternet _internet;
+        private readonly ISessionService _sessionService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISynchronizationClientFactory _factory;
 
         public SyncBehaviour(IInternet internet,
             IUnitOfWork unitOfWork,
-            ISynchronizationClientFactory factory)
+            ISynchronizationClientFactory factory,
+            ISessionService sessionService)
         {
             _internet = internet;
             _unitOfWork = unitOfWork;
             _factory = factory;
+            _sessionService = sessionService;
         }
 
         public async Task Synchronize()
         {
+            if (_sessionService.SessionInformation.Offline)
+                return;
+
             //Check for internet connection
             if (!await _internet.CheckForInternetConnectionAsync())
                 return;
@@ -41,7 +47,13 @@ namespace ProcessExplorer.Application.Behaviours
 
             //guid is sessionId
             //bool update status from server
-            var dictionary = new ConcurrentDictionary<Guid, bool>();
+            //var dictionary = new ConcurrentDictionary<Guid, bool>();
+
+            foreach(var session in dtos)
+            {
+                var syncClient = _factory.GetClient();
+                bool success = await syncClient.SyncSessionAll(session);
+            }
 
             /*
             //Synchronize with backend

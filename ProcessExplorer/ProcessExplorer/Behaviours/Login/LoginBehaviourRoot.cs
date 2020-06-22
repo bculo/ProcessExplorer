@@ -1,5 +1,6 @@
 ﻿using Dtos.Responses.Authentication;
 using Mapster;
+using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Core.Entities;
 using ProcessExplorer.Interfaces;
@@ -108,6 +109,7 @@ namespace ProcessExplorer.Behaviours.Login
                     //Error are thrown only if service not available or timeout happend
                     PromptMessage("Service not available", true);
                     PromptMessage("Starting work in offline mode", true);
+                    _session.SetMode(WorkMode.OFFLINE);
                     Validating = false;
                 }
             }

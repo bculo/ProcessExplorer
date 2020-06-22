@@ -4,6 +4,7 @@ using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Core.Entities;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -79,14 +80,17 @@ namespace ProcessExplorer.Application.Behaviours
                 {
                     var newApps = fetchedApps.Adapt<List<ApplicationEntity>>();
                     _unitOfWork.Application.BulkAdd(newApps);
-                    await _unitOfWork.CommitAsync();
                     return;
                 }
 
                 //update old and add new apps
-                var (oldApps, newApplications) = GetModifiedAndNewApps(fetchedApps, applications);
-                _unitOfWork.Application.BulkAdd(newApplications);
+                var newApplications = ModifyOldAndGetNewApps(fetchedApps, applications);
+
+                //Modife old aps
                 await _unitOfWork.CommitAsync();
+
+                //add new apps
+                _unitOfWork.Application.BulkAdd(newApplications);
             }
             catch(Exception e)
             {
@@ -101,11 +105,9 @@ namespace ProcessExplorer.Application.Behaviours
         /// <param name="fetchedApps">apps fetched from collector</param>
         /// <param name="storedApps">apps for this session fetched from store</param>
         /// <returns></returns>
-        private (List<ApplicationEntity> oldAps, List<ApplicationEntity> newApps) GetModifiedAndNewApps(List<ApplicationInformation> fetchedApps, List<ApplicationEntity> storedApps)
+        private List<ApplicationEntity> ModifyOldAndGetNewApps(List<ApplicationInformation> fetchedApps, List<ApplicationEntity> storedApps)
         {
-            List<ApplicationEntity> oldApps = new List<ApplicationEntity>();
             List<ApplicationEntity> newApps = new List<ApplicationEntity>();
-            Guid sessionId = _session.SessionInformation.SessionId;
 
             foreach (var fetchedApp in fetchedApps)
             {
@@ -117,7 +119,6 @@ namespace ProcessExplorer.Application.Behaviours
                     {
                         //change last active time of app
                         storedApp.Saved = fetchedApp.FetchTime;
-                        oldApps.Add(storedApp);
                         newApp = false;
                         break;
                     }
@@ -128,7 +129,7 @@ namespace ProcessExplorer.Application.Behaviours
                     newApps.Add(fetchedApp.Adapt<ApplicationEntity>());
             }
 
-            return (oldApps, newApps);
+            return newApps;
         }
     }
 }

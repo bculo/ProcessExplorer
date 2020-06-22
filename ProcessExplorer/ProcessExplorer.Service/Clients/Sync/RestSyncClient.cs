@@ -20,7 +20,17 @@ namespace ProcessExplorer.Service.Clients.Sync
             _tokenService = tokenService;
         }
 
-        public async Task<bool> SyncSession(UserSessionDto sessionDto)
+        public Task<bool> SyncApplications(UserSessionDto sessionDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> SyncProcesses(UserSessionDto sessionDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> SyncSessionAll(UserSessionDto sessionDto)
         {
             var response = await Post("Synchronization/sync", CreateContent(sessionDto), _tokenService.GetValidToken());
 
