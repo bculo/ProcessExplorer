@@ -9,7 +9,7 @@ using System.Text;
 
 namespace ProcessExplorerWeb.Application.Extensions
 {
-    public static class ServicesConfigurationExtension
+    public static class ServicesConfigurationExtensions
     {
         public static void ConfigureIInstallationCofigurations(this IServiceCollection services, IConfiguration configuration, Assembly assembly)
         {

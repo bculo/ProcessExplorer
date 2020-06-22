@@ -9,5 +9,6 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
     public interface IProcessEntityRepository : IRepository<ProcessEntity>
     {
         Task<List<ProcessEntity>> GetProcessesForSession(Guid sessionId);
+        void BulkAdd(IList<ProcessEntity> processEntities);
     }
 }
