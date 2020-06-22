@@ -15,8 +15,6 @@ namespace ProcessExplorer.Service.Application
 {
     public class ApplicationCollectorFactory : IApplicationCollectorFactory
     {
-        private static Dictionary<Platform, Func<IApplicationCollector>> ExecutionMethods;
-
         private readonly IDateTime _time;
         private readonly ISessionService _sessionService;
         private readonly ILoggerWrapper _logger;
@@ -42,16 +40,11 @@ namespace ProcessExplorer.Service.Application
         /// <returns></returns>
         private Dictionary<Platform, Func<IApplicationCollector>> GetExecutionMethods()
         {
-            if (ExecutionMethods != null)
-                return ExecutionMethods;
-
-            ExecutionMethods = new Dictionary<Platform, Func<IApplicationCollector>>
+            return new Dictionary<Platform, Func<IApplicationCollector>>
             {
                 { Platform.Win,  GetWindowsApplicationCollector },
                 { Platform.Unix,  GetLinuxApplicationCollector }
             };
-
-            return ExecutionMethods;
         }
 
         public IApplicationCollector GetApplicationCollector()

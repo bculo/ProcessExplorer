@@ -7,6 +7,10 @@ namespace ProcessExplorer.Application.Common.Interfaces
 {
     public interface IApplicationCollector
     {
+        /// <summary>
+        /// Get currently opened applications
+        /// </summary>
+        /// <returns></returns>
         List<ApplicationInformation> GetApplications();
     }
 }

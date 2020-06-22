@@ -1,4 +1,8 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ProcessExplorer.Service.Application
@@ -9,7 +13,12 @@ namespace ProcessExplorer.Service.Application
         protected readonly ISessionService _sessionService;
         protected readonly IDateTime _dateTime;
 
-        public RootAppCollector(ILoggerWrapper logger, 
+        /// <summary>
+        /// Standard app title separator
+        /// </summary>
+        private static string STANDARD_APP_SEPARATOR = " - ";
+
+        public RootAppCollector(ILoggerWrapper logger,
             ISessionService sessionService,
             IDateTime dateTime)
         {
@@ -18,12 +27,71 @@ namespace ProcessExplorer.Service.Application
             _dateTime = dateTime;
         }
 
-        public string GetBasicApplicationTitle(string fullTitle)
+        public abstract string PlatformSpecificTitleHandler(string fullTitle, string processName);
+
+        /// <summary>
+        /// Handler logic for application titles (make them readable)
+        /// </summary>
+        /// <param name="fullTitle"></param>
+        /// <param name="processName"></param>
+        /// <returns></returns>
+        public string GetBasicApplicationTitle(string fullTitle, string processName)
         {
+            //if title null or empty return empty string
             if (string.IsNullOrEmpty(fullTitle))
                 return string.Empty;
 
-            return fullTitle.Split(" - ").Select(i => i.Trim()).Last();
+            //Format example: D:\\test\\test\\hello.exe
+            //get only hello.exe
+            if (!fullTitle.Contains(STANDARD_APP_SEPARATOR) && fullTitle.Contains(Path.DirectorySeparatorChar))
+                return fullTitle.Split(Path.DirectorySeparatorChar).Last();
+
+            //Format example: DB Browser - D:\\test\\test\\tekst.db
+            //Get DB Browser
+            if (fullTitle.Contains(STANDARD_APP_SEPARATOR) && fullTitle.Contains(Path.DirectorySeparatorChar))
+                return FormatName(fullTitle);
+
+            //Format example: Unit test - Google Chrome
+            //Get Google Chrome
+            if (fullTitle.Contains(STANDARD_APP_SEPARATOR))
+                return fullTitle.Split(STANDARD_APP_SEPARATOR).Select(i => i.Trim()).Last();
+
+            //Handle platform specific title
+            return PlatformSpecificTitleHandler(fullTitle, processName);
+        }
+
+        /// <summary>
+        /// Make first letter of word uppercase, other chars lowercase
+        /// 
+        /// Input: explorer
+        /// Output: Explorer
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        protected string FirstLetterToUppercase(string word)
+        {
+            if (string.IsNullOrEmpty(word))
+                return string.Empty;
+
+            if (word.Length > 1)
+                return char.ToUpper(word[0]) + word.Substring(1).ToLower();
+
+            return word.ToUpper();
+        }
+
+        /// <summary>
+        /// Use case for example: DB Browser - D:\\test\\test\\tekst.db
+        /// Get inly DB Browser
+        /// </summary>
+        /// <returns></returns>
+        private string FormatName(string title)
+        {
+            var firstPartOfTitle = title.Split(STANDARD_APP_SEPARATOR).First();
+
+            if(firstPartOfTitle.Contains(Path.DirectorySeparatorChar))
+                title.Split(Path.DirectorySeparatorChar).Last();
+
+            return firstPartOfTitle;
         }
     }
 }

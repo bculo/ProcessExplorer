@@ -17,9 +17,21 @@ namespace ProcessExplorer.Service.Session
             SetSession();
         }
 
+        /// <summary>
+        /// Set session
+        /// </summary>
         private void SetSession()
         {
             SessionInformation = _sessionFactory.GetUserSessionCollector().GetSession();
+        }
+
+        /// <summary>
+        /// Change session id
+        /// </summary>
+        /// <param name="sessionId"></param>
+        public void ChangeSessionId(Guid sessionId)
+        {
+            SessionInformation.SessionId = sessionId;
         }
     }
 }

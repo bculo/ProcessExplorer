@@ -7,9 +7,6 @@ namespace ProcessExplorer.Application.Common.Interfaces
     {
         SessionInformation SessionInformation { get; }
 
-        public void ChangeSessionId(Guid sessionId)
-        {
-            SessionInformation.SessionId = sessionId;
-        }
+        void ChangeSessionId(Guid sessionId);
     }
 }

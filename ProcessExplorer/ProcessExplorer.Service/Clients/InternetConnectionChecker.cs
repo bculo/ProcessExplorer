@@ -27,6 +27,10 @@ namespace ProcessExplorer.Service.Clients
             _client.Timeout = TimeSpan.FromSeconds(_options.Timeout);
         }
 
+        /// <summary>
+        /// Is internet connection available =
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> CheckForInternetConnectionAsync()
         {
             try

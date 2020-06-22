@@ -19,6 +19,10 @@ namespace ProcessExplorer.Service.Session
             _platformInformation = platformInformation;
         }
 
+        /// <summary>
+        /// Get session collector based on platform
+        /// </summary>
+        /// <returns></returns>
         public IUserSession GetUserSessionCollector()
         {
             switch (_platformInformation.PlatformInformation.Type)

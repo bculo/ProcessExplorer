@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ProcessExplorer.Service.Application.Windows
 {
-    public class WindowsViaProcessApplicationCollector : RootAppCollector, IApplicationCollector
+    public class WindowsViaProcessApplicationCollector : WindowsRootAppCollector, IApplicationCollector
     {
         public WindowsViaProcessApplicationCollector(ILoggerWrapper logger, ISessionService sessionService, IDateTime date) 
             : base(logger, sessionService, date)
@@ -24,7 +24,7 @@ namespace ProcessExplorer.Service.Application.Windows
                 appList.Add(new ApplicationInformation
                 {
                     StartTime = item.StartTime,
-                    ApplicationName = GetBasicApplicationTitle(item.MainWindowTitle),
+                    ApplicationName = GetBasicApplicationTitle(item.MainWindowTitle, item.ProcessName),
                     Session = _sessionService.SessionInformation.SessionId,
                     FetchTime = _dateTime.Now
                 });
@@ -34,7 +34,10 @@ namespace ProcessExplorer.Service.Application.Windows
             return appList;
         }
 
-
+        /// <summary>
+        /// Get all processes that containts windows title title
+        /// </summary>
+        /// <returns></returns>
         private IEnumerable<System.Diagnostics.Process> GetProcesses()
         {
             return System.Diagnostics.Process.GetProcesses()

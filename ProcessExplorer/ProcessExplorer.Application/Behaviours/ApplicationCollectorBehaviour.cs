@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Core.Entities;
@@ -16,22 +17,32 @@ namespace ProcessExplorer.Application.Behaviours
         private readonly IUnitOfWork _unitOfWork;
         private readonly IInternet _internet;
         private readonly ISessionService _session;
+        private readonly ILoggerWrapper _logger;
+        private readonly IDateTime _time;
+
+        private CollectStatus CollectStatus { get; set; } = CollectStatus.SUCCESS;
 
         public ApplicationCollectorBehaviour(IApplicationCollectorFactory appFactory,
             ITokenService tokenService,
             IUnitOfWork unitOfWork,
             IInternet internet,
-            ISessionService session)
+            ISessionService session,
+            ILoggerWrapper wrapper,
+            IDateTime dateTime)
         {
             _appFactory = appFactory;
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
             _internet = internet;
             _session = session;
+            _logger = wrapper;
+            _time = dateTime;
         }
 
         public async Task Collect()
         {
+            _logger.LogInfo($"Started collecting apps: {_time.Now}");
+
             //get app collector
             IApplicationCollector collector = _appFactory.GetApplicationCollector();
 
@@ -42,10 +53,12 @@ namespace ProcessExplorer.Application.Behaviours
             if(!await _internet.CheckForInternetConnectionAsync())
             {
                 //store records to local database
-                await StoreRecords(apps);
             }
 
             //TODO: Push to backend
+            await StoreRecords(apps);
+
+            _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
         }
 
         /// <summary>
@@ -57,21 +70,29 @@ namespace ProcessExplorer.Application.Behaviours
         {
             //get all applications records for this session
             //we are working here with max 200 records
-            var applications = await _unitOfWork.Application.GetEntitesForSession(_session.SessionInformation.SessionId);
-
-            //no records for this session so enter everything
-            if(applications.Count == 0)
+            try
             {
-                var newApps = fetchedApps.Adapt<List<ApplicationEntity>>();
-                _unitOfWork.Application.BulkAdd(newApps);
-                await _unitOfWork.CommitAsync();
-                return;
-            }
+                var applications = await _unitOfWork.Application.GetEntitesForSession(_session.SessionInformation.SessionId);
 
-            //update old and add new apps
-            var (oldApps, newApplications) = GetModifiedAndNewApps(fetchedApps, applications);
-            _unitOfWork.Application.BulkAdd(newApplications);
-            await _unitOfWork.CommitAsync();
+                //no records for this session so enter everything
+                if (applications.Count == 0)
+                {
+                    var newApps = fetchedApps.Adapt<List<ApplicationEntity>>();
+                    _unitOfWork.Application.BulkAdd(newApps);
+                    await _unitOfWork.CommitAsync();
+                    return;
+                }
+
+                //update old and add new apps
+                var (oldApps, newApplications) = GetModifiedAndNewApps(fetchedApps, applications);
+                _unitOfWork.Application.BulkAdd(newApplications);
+                await _unitOfWork.CommitAsync();
+            }
+            catch(Exception e)
+            {
+                CollectStatus = CollectStatus.FAILURE;
+                _logger.LogError(e);
+            }
         }
 
         /// <summary>

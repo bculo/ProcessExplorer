@@ -23,6 +23,11 @@ namespace ProcessExplorer.Service.Background
             _logger = logger;
         }
 
+        /// <summary>
+        /// Collect application
+        /// </summary>
+        /// <param name="stoppingToken"></param>
+        /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)

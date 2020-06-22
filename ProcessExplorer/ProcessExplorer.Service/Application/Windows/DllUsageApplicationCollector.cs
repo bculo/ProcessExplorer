@@ -8,13 +8,17 @@ using HWND = System.IntPtr;
 
 namespace ProcessExplorer.Service.Application.Windows
 {
-    public class DllUsageApplicationCollector : RootAppCollector, IApplicationCollector
+    public class DllUsageApplicationCollector : WindowsRootAppCollector, IApplicationCollector
     {
         public DllUsageApplicationCollector(ILoggerWrapper logger, ISessionService sessionService, IDateTime time) 
             : base(logger, sessionService, time)
         {
         }
 
+        /// <summary>
+        /// Get currently opened applications
+        /// </summary>
+        /// <returns></returns>
         public List<ApplicationInformation> GetApplications()
         {
             _logger.LogInfo($"Started fetching applications in {nameof(DllUsageApplicationCollector)}");
@@ -27,7 +31,7 @@ namespace ProcessExplorer.Service.Application.Windows
                 appList.Add(new ApplicationInformation
                 {
                     StartTime = process.StartTime,
-                    ApplicationName = GetBasicApplicationTitle(window.Value),
+                    ApplicationName = GetBasicApplicationTitle(window.Value, process?.ProcessName),
                     Session = _sessionService.SessionInformation.SessionId,
                     FetchTime = _dateTime.Now
                 });
@@ -37,6 +41,10 @@ namespace ProcessExplorer.Service.Application.Windows
             return appList;
         }
 
+        /// <summary>
+        /// Get all applications that are opened using defiend DLL-s
+        /// </summary>
+        /// <returns></returns>
         public IDictionary<HWND, string> GetOpenWindows()
         {
             HWND shellWindow = GetShellWindow();
@@ -61,6 +69,8 @@ namespace ProcessExplorer.Service.Application.Windows
             return windows;
         }
 
+        #region Defiend methods from DLL
+
         private delegate bool EnumWindowsProc(HWND hWnd, int lParam);
 
         [DllImport("USER32.DLL")]
@@ -80,5 +90,7 @@ namespace ProcessExplorer.Service.Application.Windows
 
         [DllImport("USER32.DLL")]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        #endregion
     }
 }
