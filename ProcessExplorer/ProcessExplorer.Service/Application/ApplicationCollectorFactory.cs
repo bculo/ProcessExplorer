@@ -4,12 +4,9 @@ using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Utils;
 using ProcessExplorer.Service.Application.Linux;
 using ProcessExplorer.Service.Application.Windows;
-using ProcessExplorer.Service.Interfaces;
 using ProcessExplorer.Service.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace ProcessExplorer.Service.Application
 {

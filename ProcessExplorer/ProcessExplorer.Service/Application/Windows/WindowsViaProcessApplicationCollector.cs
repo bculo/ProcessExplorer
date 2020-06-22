@@ -1,6 +1,5 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
-using ProcessExplorer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,9 @@ namespace ProcessExplorer.Service.Application.Windows
 {
     public class WindowsViaProcessApplicationCollector : WindowsRootAppCollector, IApplicationCollector
     {
-        public WindowsViaProcessApplicationCollector(ILoggerWrapper logger, ISessionService sessionService, IDateTime date) 
+        public WindowsViaProcessApplicationCollector(ILoggerWrapper logger,
+            ISessionService sessionService,
+            IDateTime date) 
             : base(logger, sessionService, date)
         {
         }

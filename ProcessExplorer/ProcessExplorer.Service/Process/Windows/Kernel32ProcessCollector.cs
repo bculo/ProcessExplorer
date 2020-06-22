@@ -2,11 +2,9 @@
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Common.Options;
-using ProcessExplorer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -14,9 +12,9 @@ namespace ProcessExplorer.Service.Process.Windows
 {
     public class Kernel32ProcessCollector : RootCollector, IProcessCollector
     {
-        public Kernel32ProcessCollector(IPlatformProcessRecognizer recognizer,
-            ILoggerWrapper logger,
-            IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
+        public Kernel32ProcessCollector(ILoggerWrapper logger,
+            IOptions<ProcessCollectorOptions> options) 
+            : base(logger, options)
         {
         }
 
@@ -25,7 +23,7 @@ namespace ProcessExplorer.Service.Process.Windows
         /// Method use kernel32.dll
         /// </summary>
         /// <returns></returns>
-        public IList<ProcessInformation> GetProcesses()
+        public List<ProcessInformation> GetProcesses()
         {
             _logger.LogInfo($"Started fetching processes in {nameof(Kernel32ProcessCollector)}");
             

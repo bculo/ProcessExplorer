@@ -22,7 +22,7 @@ namespace ProcessExplorer.Service.Application.Windows
         {
             ///User is using goingh throught folders
             if (processName == WINDOWS_EXPLORER)
-                return string.Join(" ", FirstLetterToUppercase(WINDOWS_EXPLORER), "(", fullTitle, ")");
+                return FirstLetterToUppercase(WINDOWS_EXPLORER);
 
             return fullTitle;
         }  

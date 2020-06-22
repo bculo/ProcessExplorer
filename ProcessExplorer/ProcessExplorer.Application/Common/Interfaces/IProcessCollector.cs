@@ -6,6 +6,6 @@ namespace ProcessExplorer.Application.Common.Interfaces
 {
     public interface IProcessCollector
     {
-        IList<ProcessInformation> GetProcesses();
+        List<ProcessInformation> GetProcesses();
     }
 }

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using System;
-using ProcessExplorer.Service.Interfaces;
 using Microsoft.Extensions.Options;
 using ProcessExplorer.Application.Common.Options;
 
@@ -16,13 +15,13 @@ namespace ProcessExplorer.Service.Process.Linux
 
         public PsAuxProcessCollector(ILoggerWrapper logger, 
             IPlatformInformationService info,
-            IPlatformProcessRecognizer recognizer,
-            IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
+            IOptions<ProcessCollectorOptions> options) 
+            : base(logger, options)
         {
             _info = info;
         }
         
-        public IList<ProcessInformation> GetProcesses()
+        public List<ProcessInformation> GetProcesses()
         {
             _logger.LogInfo($"Started fetching processes in {nameof(PsAuxProcessCollector)}");
 

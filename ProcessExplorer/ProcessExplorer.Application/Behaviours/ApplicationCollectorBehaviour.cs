@@ -5,7 +5,6 @@ using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Core.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Behaviours
@@ -53,10 +52,11 @@ namespace ProcessExplorer.Application.Behaviours
             if(!await _internet.CheckForInternetConnectionAsync())
             {
                 //store records to local database
+                await StoreRecords(apps);
             }
 
             //TODO: Push to backend
-            await StoreRecords(apps);
+
 
             _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
         }

@@ -2,19 +2,16 @@
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Common.Options;
-using ProcessExplorer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
 namespace ProcessExplorer.Service.Process
 {
     public class AllProcessCollector : RootCollector, IProcessCollector
     {
-        public AllProcessCollector(IPlatformProcessRecognizer recognizer,
-            ILoggerWrapper logger,
-            IOptions<ProcessCollectorOptions> options) : base(recognizer, logger, options)
+        public AllProcessCollector(ILoggerWrapper logger,
+            IOptions<ProcessCollectorOptions> options) 
+            : base(logger, options)
         {
         }
 
@@ -23,7 +20,7 @@ namespace ProcessExplorer.Service.Process
         /// Problem with paths on 32 bit windows !!!
         /// </summary>
         /// <returns></returns>
-        public IList<ProcessInformation> GetProcesses()
+        public List<ProcessInformation> GetProcesses()
         {
             _logger.LogInfo($"Started fetching processes in {nameof(AllProcessCollector)}");
 

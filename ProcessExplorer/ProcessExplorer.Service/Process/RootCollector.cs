@@ -2,9 +2,7 @@
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Common.Options;
-using ProcessExplorer.Service.Interfaces;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace ProcessExplorer.Service.Process
@@ -14,15 +12,12 @@ namespace ProcessExplorer.Service.Process
     /// </summary>
     public abstract class RootCollector
     {
-        protected readonly IPlatformProcessRecognizer _recognizer;
         protected readonly ILoggerWrapper _logger;
         protected readonly ProcessCollectorOptions _options;
 
-        protected RootCollector(IPlatformProcessRecognizer recognizer,
-            ILoggerWrapper logger,
+        protected RootCollector(ILoggerWrapper logger,
             IOptions<ProcessCollectorOptions> options)
         {
-            _recognizer = recognizer;
             _logger = logger;
             _options = options.Value;
         }
@@ -32,7 +27,7 @@ namespace ProcessExplorer.Service.Process
         /// </summary>
         /// <param name="processes">All fetched processes</param>
         /// <returns></returns>
-        protected virtual IList<ProcessInformation> FilterList(IEnumerable<ProcessInformation> processes)
+        protected virtual List<ProcessInformation> FilterList(IEnumerable<ProcessInformation> processes)
         {
             var filteredList = FilterPlatformProcesses(processes);
             filteredList = RemoveCurrentProcess(filteredList);
@@ -56,11 +51,7 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         protected IEnumerable<ProcessInformation> FilterPlatformProcesses(IEnumerable<ProcessInformation> processes)
         {
-            foreach(var process in processes)
-            {
-                if (!_recognizer.IsPlatfromProcess(process.ProcessPath))
-                    yield return process;
-            }
+            return processes;
         }
 
         /// <summary>
