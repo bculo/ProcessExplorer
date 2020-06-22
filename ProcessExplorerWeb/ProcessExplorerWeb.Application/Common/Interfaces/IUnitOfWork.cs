@@ -9,6 +9,8 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
     {
         IProcessExplorerUserRepository User { get; }
         IProcessExplorerUserSessionRepository Session { get; }
+        IApplicationEntityRepository Applications { get; }
+        IProcessEntityRepository Process { get; }
         int Commit();
         Task<int> CommitAsync();
     }

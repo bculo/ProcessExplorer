@@ -1,8 +1,6 @@
 ﻿using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Infrastructure.Persistence.Repos;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Infrastructure.Persistence
@@ -13,12 +11,16 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence
 
         public IProcessExplorerUserRepository User { get; set; }
         public IProcessExplorerUserSessionRepository Session { get; set; }
+        public IApplicationEntityRepository Applications { get; set; }
+        public IProcessEntityRepository Process { get; set; }
 
         public UnitOfWork(ProcessExplorerDbContext context)
         {
             _context = context;
             User = new ProcessExplorerUserRepository(_context);
             Session = new ProcessExplorerUserSessionRepository(_context);
+            Applications = new ApplicationEntityRepository(_context);
+            Process = new ProcessEntityRepository(_context);
         }
 
         public int Commit()

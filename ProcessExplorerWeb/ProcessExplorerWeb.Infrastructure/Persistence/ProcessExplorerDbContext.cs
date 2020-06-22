@@ -18,6 +18,8 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence
 
         public DbSet<ProcessExplorerUser> ExplorerUsers { get; set; }
         public DbSet<ProcessExplorerUserSession> Sessions { get; set; }
+        public DbSet<ProcessEntity> Processes { get; set; }
+        public DbSet<ApplicationEntity> Applications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

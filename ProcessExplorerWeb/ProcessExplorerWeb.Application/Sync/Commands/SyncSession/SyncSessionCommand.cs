@@ -10,16 +10,19 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
         public string UserName { get; set; }
         public DateTime Started { get; set; }
         public List<SynSessionApplicationInfoCommand> Applications { get; set; }
+        public List<SynSessionProcessInfoCommand> Processes { get; set; }
     }
 
     public class SynSessionApplicationInfoCommand
     {
         public string Name { get; set; }
         public DateTime Started { get; set; }
+        public DateTime Saved { get; set; }
     }
 
     public class SynSessionProcessInfoCommand
     {
         public string Name { get; set; }
+        public DateTime Saved { get; set; }
     }
 }

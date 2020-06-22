@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200622113841_ProcessAndApplicaitonTablesAddded.cs" />
+    <Compile Remove="Migrations\20200622113841_ProcessAndApplicaitonTablesAddded.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ProcessExplorerWeb.Application\ProcessExplorerWeb.Application.csproj" />
   </ItemGroup>
 

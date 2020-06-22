@@ -9,6 +9,8 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 {
     public class ProcessExplorerUserRepository : Repository<ProcessExplorerUser>, IProcessExplorerUserRepository
     {
+        private ProcessExplorerDbContext ProcessExplorerDbContext => _context as ProcessExplorerDbContext;
+
         public ProcessExplorerUserRepository(DbContext context) : base(context)
         {
         }
