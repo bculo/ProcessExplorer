@@ -24,6 +24,13 @@ namespace ProcessExplorer.Application.MappingProfiles
                 .Map(dst => dst.Started, src => src.Started)
                 .Map(dst => dst.Applications, src => src.Applications)
                 .Map(dst => dst.Processes, src => src.ProcessEntities);
+
+            //Session -> UserSessionDto
+            config.ForType<SessionInformation, UserSessionDto>()
+                .Map(dst => dst.SessionId, src => src.SessionId)
+                .Map(dst => dst.Started, src => src.SessionStarted)
+                .Map(dst => dst.UserName, src => src.User)
+                .Map(dst => dst.OS, src => src.OS);
         }
     }
 }

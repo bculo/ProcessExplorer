@@ -18,6 +18,7 @@ namespace ProcessExplorer.Application.MappingProfiles
             //ApplicationEntity -> ApplicationDto
             config.ForType<ApplicationEntity, ApplicationDto>()
                 .Map(dst => dst.Started, src => src.StartTime)
+                .Map(dst => dst.LastUse, src => src.Saved)
                 .Map(dst => dst.Name, src => src.ApplicationName);
         }
     }

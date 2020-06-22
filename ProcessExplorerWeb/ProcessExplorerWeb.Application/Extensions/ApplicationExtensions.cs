@@ -1,15 +1,16 @@
 ﻿using Mapster;
 using ProcessExplorerWeb.Application.Dtos.Shared;
 using ProcessExplorerWeb.Core.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace ProcessExplorerWeb.Application.Extensions
 {
     public static class ApplicationExtensions
     {
-        public static List<ApplicationEntity> ModifyExistingAndGetNewApps(this ICollection<ApplicationEntity> storedApps, IEnumerable<ApplicationExplorerModel> fetchedApps)
+        public static List<ApplicationEntity> ModifyExistingAndGetNewApps(this ICollection<ApplicationEntity> storedApps, IEnumerable<ApplicationExplorerModel> fetchedApps, Guid sessionId)
         {
-            List<ApplicationExplorerModel> newApps = new List<ApplicationExplorerModel>();
+            List<ApplicationEntity> newApps = new List<ApplicationEntity>();
 
             foreach (var fetchedApp in fetchedApps)
             {
@@ -28,11 +29,15 @@ namespace ProcessExplorerWeb.Application.Extensions
 
                 // new app
                 if (newApp)
-                    newApps.Add(fetchedApp);
+                {
+                    var newInstance = fetchedApp.Adapt<ApplicationEntity>();
+                    newInstance.Id = Guid.NewGuid();
+                    newInstance.SessionId = sessionId;
+                    newApps.Add(newInstance);
+                }
             }
 
-            //map
-            return newApps.Adapt<List<ApplicationEntity>>();
+            return newApps;
         }
     }
 }

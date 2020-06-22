@@ -18,6 +18,10 @@ namespace ProcessExplorer.Application.MappingProfiles
             config.ForType<ProcessInformation, ProcessEntity>()
                 .Map(dst => dst.Saved, src => src.Fetched)
                 .Map(dst => dst.SessionId, src => src.Session);
+
+            //ProcessInformation -> ProcessEntity
+            config.ForType<ProcessInformation, ProcessDto>()
+                .Map(dst => dst.Name, src => src.ProcessName);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using ProcessExplorer.Application.Dtos.Requests.Update;
+﻿using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Application.Dtos.Requests.Update;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Common.Interfaces
@@ -10,20 +12,7 @@ namespace ProcessExplorer.Application.Common.Interfaces
         /// </summary>
         /// <param name="sessionDto"></param>
         /// <returns></returns>
-        Task<bool> SyncSessionAll(UserSessionDto sessionDto);
+        Task<bool> Sync(UserSessionDto sessionDto);
 
-        /// <summary>
-        /// Sync only applications
-        /// </summary>
-        /// <param name="sessionDto"></param>
-        /// <returns></returns>
-        Task<bool> SyncApplications(UserSessionDto sessionDto);
-
-        /// <summary>
-        /// Sync only processes
-        /// </summary>
-        /// <param name="sessionDto"></param>
-        /// <returns></returns>
-        Task<bool> SyncProcesses(UserSessionDto sessionDto);
     }
 }

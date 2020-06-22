@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace ProcessExplorer.Application.Behaviours
 {
     public class ProcessCollectorBehaviour : IProcessBehaviour
     {
+        private readonly ISynchronizationClientFactory _syncFactory;
         private readonly IProcessCollectorFactory _processFactory;
-        private readonly ITokenService _tokenService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IInternet _internet;
         private readonly ISessionService _session;
@@ -24,7 +25,7 @@ namespace ProcessExplorer.Application.Behaviours
         private CollectStatus CollectStatus { get; set; } = CollectStatus.SUCCESS;
 
         public ProcessCollectorBehaviour(IProcessCollectorFactory processFactory,
-            ITokenService tokenService,
+            ISynchronizationClientFactory syncFactory,
             IUnitOfWork unitOfWork,
             IInternet internet,
             ISessionService session,
@@ -32,7 +33,7 @@ namespace ProcessExplorer.Application.Behaviours
             IDateTime dateTime)
         {
             _processFactory = processFactory;
-            _tokenService = tokenService;
+            _syncFactory = syncFactory;
             _unitOfWork = unitOfWork;
             _internet = internet;
             _session = session;
@@ -42,6 +43,9 @@ namespace ProcessExplorer.Application.Behaviours
 
         public async Task Collect()
         {
+            if (_session.SessionInformation.Offline)
+                return;
+
             _logger.LogInfo($"Started collecting processes: {_time.Now}");
 
             //get processes collector
@@ -50,10 +54,22 @@ namespace ProcessExplorer.Application.Behaviours
             //get running applications
             List<ProcessInformation> processes = collector.GetProcesses();
 
-            var result = JsonConvert.SerializeObject(processes, Formatting.Indented);
-
             //check internet connection
             if (!await _internet.CheckForInternetConnectionAsync())
+            {
+                //store records to local database
+                await StoreRecords(processes);
+            }
+
+            //get sync client
+            var syncClient = _syncFactory.GetClient();
+
+            //create user session dto
+            var dto = _session.SessionInformation.Adapt<UserSessionDto>();
+            dto.Processes = processes.Adapt<IEnumerable<ProcessDto>>();
+
+            //send to server
+            if (!await syncClient.Sync(dto))
             {
                 //store records to local database
                 await StoreRecords(processes);

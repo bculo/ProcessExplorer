@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Core.Entities;
 using System;
@@ -20,6 +21,11 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
         {
             return await ProcessExplorerDbContext.Applications.Where(i => i.SessionId == sessionId)
                                         .ToListAsync();
+        }
+
+        public void BulkAdd(IList<ApplicationEntity> applicationEntities)
+        {
+            _context.BulkInsert(applicationEntities);
         }
     }
 }

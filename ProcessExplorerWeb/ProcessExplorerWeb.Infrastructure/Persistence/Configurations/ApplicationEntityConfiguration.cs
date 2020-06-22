@@ -10,7 +10,6 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Configurations
         {
             //dont generate value for this primary key
             builder.HasKey(i => i.Id);
-            builder.Property(i => i.Id).ValueGeneratedNever();
 
             builder.Property(i => i.Name).HasMaxLength(300)
                 .IsRequired();

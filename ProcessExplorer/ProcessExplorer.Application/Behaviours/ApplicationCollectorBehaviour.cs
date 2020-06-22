@@ -2,9 +2,9 @@
 using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Core.Entities;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,8 +12,8 @@ namespace ProcessExplorer.Application.Behaviours
 {
     public class ApplicationCollectorBehaviour : IApplicationCollectorBehaviour
     {
+        private readonly ISynchronizationClientFactory _syncFactory;
         private readonly IApplicationCollectorFactory _appFactory;
-        private readonly ITokenService _tokenService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IInternet _internet;
         private readonly ISessionService _session;
@@ -22,16 +22,16 @@ namespace ProcessExplorer.Application.Behaviours
 
         private CollectStatus CollectStatus { get; set; } = CollectStatus.SUCCESS;
 
-        public ApplicationCollectorBehaviour(IApplicationCollectorFactory appFactory,
-            ITokenService tokenService,
+        public ApplicationCollectorBehaviour(ISynchronizationClientFactory syncFactory,
+            IApplicationCollectorFactory appFactory,
             IUnitOfWork unitOfWork,
             IInternet internet,
             ISessionService session,
             ILoggerWrapper wrapper,
             IDateTime dateTime)
         {
+            _syncFactory = syncFactory;
             _appFactory = appFactory;
-            _tokenService = tokenService;
             _unitOfWork = unitOfWork;
             _internet = internet;
             _session = session;
@@ -41,6 +41,9 @@ namespace ProcessExplorer.Application.Behaviours
 
         public async Task Collect()
         {
+            if (_session.SessionInformation.Offline)
+                return;
+
             _logger.LogInfo($"Started collecting apps: {_time.Now}");
 
             //get app collector
@@ -56,8 +59,19 @@ namespace ProcessExplorer.Application.Behaviours
                 await StoreRecords(apps);
             }
 
-            //TODO: Push to backend
+            //get sync client
+            var syncClient = _syncFactory.GetClient();
 
+            //create user session dto
+            var dto = _session.SessionInformation.Adapt<UserSessionDto>();
+            dto.Applications = apps.Adapt<IEnumerable<ApplicationDto>>();
+
+            //send to server
+            if (!await syncClient.Sync(dto))
+            {
+                //store records to local database
+                await StoreRecords(apps);
+            }
 
             _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
         }

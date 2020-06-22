@@ -1,8 +1,12 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Mapster;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Service.Options;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -20,25 +24,17 @@ namespace ProcessExplorer.Service.Clients.Sync
             _tokenService = tokenService;
         }
 
-        public Task<bool> SyncApplications(UserSessionDto sessionDto)
+        public async Task<bool> Sync(UserSessionDto sessionDto)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SyncProcesses(UserSessionDto sessionDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> SyncSessionAll(UserSessionDto sessionDto)
-        {
-            var response = await Post("Synchronization/sync", CreateContent(sessionDto), _tokenService.GetValidToken());
+            var response = await Post("Synchronization/sync", sessionDto, _tokenService.GetValidToken());
 
             if (TimeOccurred) //Timeout occurred
                 return false;
 
             if (response.IsSuccessStatusCode)
                 return true;
+
+            var result = await GetInstanceFromBody<object>(response);
 
             return false;
         }

@@ -29,10 +29,12 @@ namespace ProcessExplorer.Service.Clients
 
         public StringContent CreateContent(object item, string contentType = "application/json")
         {
-            return new StringContent(
+            var temp =  new StringContent(
                 JsonConvert.SerializeObject(item),
                 Encoding.UTF8,
                 contentType);
+
+            return temp;
         }
 
         public async Task<T> GetInstanceFromBody<T>(HttpResponseMessage response)

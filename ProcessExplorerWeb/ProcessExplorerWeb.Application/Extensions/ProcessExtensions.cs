@@ -10,11 +10,22 @@ namespace ProcessExplorerWeb.Application.Extensions
 {
     public static class ProcessExtensions
     {
-        public static List<ProcessEntity> GetNewProcesses(this ICollection<ProcessEntity> storedProcesses, IEnumerable<ProcessExplorerModel> fetchedProcesses)
+        public static List<ProcessEntity> GetNewProcesses(this ICollection<ProcessEntity> storedProcesses, IEnumerable<ProcessExplorerModel> fetchedProcesses, Guid sessionId)
         {
             HashSet<string> storedProcessesNames = new HashSet<string>(storedProcesses.Select(i => i.ProcessName));
             var notStoredProcesses = fetchedProcesses.Where(i => !storedProcessesNames.Contains(i.Name));
-            return notStoredProcesses.Adapt<List<ProcessEntity>>();
+
+            var newEntites = new List<ProcessEntity>();
+
+            foreach(var item in notStoredProcesses)
+            {
+                var newEntity = item.Adapt<ProcessEntity>();
+                newEntity.SessionId = sessionId;
+                newEntity.Id = Guid.NewGuid();
+                newEntites.Add(newEntity);
+            }
+
+            return newEntites;
         } 
     }
 }

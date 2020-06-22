@@ -5,6 +5,7 @@ using ProcessExplorer.Application.Dtos.Requests.Update;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,34 +39,30 @@ namespace ProcessExplorer.Application.Behaviours
                 return;
 
             //Get all sessions
-            var sessions = await _unitOfWork.Sessions.GetAllWithIncludesAsync();
+            Guid currentSession = _sessionService.SessionInformation.SessionId;
+            var sessions = await _unitOfWork.Sessions.GetAllWithIncludesWihoutCurrentAsync(currentSession);
 
             //map to Dtos
             var dtos = sessions.Adapt<List<UserSessionDto>>();
 
-            string json = JsonConvert.SerializeObject(dtos);
-
             //guid is sessionId
             //bool update status from server
-            //var dictionary = new ConcurrentDictionary<Guid, bool>();
+            var bagSuccessSessions = new ConcurrentBag<UserSessionDto>();
 
-            foreach(var session in dtos)
-            {
-                var syncClient = _factory.GetClient();
-                bool success = await syncClient.SyncSessionAll(session);
-            }
-
-            /*
             //Synchronize with backend
-            Parallel.ForEach(dtos, async s =>
+            Parallel.ForEach(dtos, async session =>
             {
                 var syncClient = _factory.GetClient();
-                bool success = await syncClient.SyncSession(s);
-                dictionary.TryAdd(s.SessionId, success);
+                bool success = await syncClient.Sync(session);
+                if(success)
+                    bagSuccessSessions.Add(session);
             });
-            */
 
-            Console.WriteLine();
+            var updatedSessions = bagSuccessSessions.ToList();
+            var sessionsForDelete = sessions.Where(i => updatedSessions.Any(p => p.SessionId == i.Id));
+
+            _unitOfWork.Sessions.RemoveRange(sessionsForDelete);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

@@ -25,7 +25,6 @@ namespace ProcessExplorer.Persistence.Repositories
         {
             return ProcessExplorerDbContext.Sessions.Include(i => i.Applications)
                             .Include(i => i.ProcessEntities)
-                            .AsNoTracking()
                             .AsEnumerable();
         }
 
@@ -33,7 +32,14 @@ namespace ProcessExplorer.Persistence.Repositories
         {
             return  await ProcessExplorerDbContext.Sessions.Include(i => i.Applications)
                             .Include(i => i.ProcessEntities)
-                            .AsNoTracking()
+                            .ToListAsync();
+        }
+
+        public async Task<List<Session>> GetAllWithIncludesWihoutCurrentAsync(Guid sessionId)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Id != sessionId)
+                            .Include(i => i.Applications)
+                            .Include(i => i.ProcessEntities)
                             .ToListAsync();
         }
     }

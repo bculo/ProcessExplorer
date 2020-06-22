@@ -10,7 +10,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
             RuleFor(p => p.SessionId).NotEmpty();
             RuleFor(p => p.Started).NotEmpty();
             RuleFor(p => p.OS).NotEmpty();
-            RuleFor(p => p.UserId).NotEmpty();
+            //RuleFor(p => p.UserId).NotEmpty();
 
             //lists
             RuleFor(p => p.Processes).NotNull();
