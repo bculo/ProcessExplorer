@@ -18,13 +18,13 @@ namespace ProcessExplorer.Persistence.FluentApi
             builder.HasMany(i => i.ProcessEntities)
                 .WithOne(p => p.Session)
                 .HasForeignKey(i => i.SessionId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
             builder.HasMany(i => i.Applications)
                 .WithOne(p => p.Session)
                 .HasForeignKey(i => i.SessionId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
             builder.ToTable(nameof(Session));

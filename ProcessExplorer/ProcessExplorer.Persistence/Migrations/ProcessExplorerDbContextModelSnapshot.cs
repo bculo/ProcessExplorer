@@ -118,7 +118,7 @@ namespace ProcessExplorer.Persistence.Migrations
                     b.HasOne("ProcessExplorer.Core.Entities.Session", "Session")
                         .WithMany("Applications")
                         .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -127,7 +127,7 @@ namespace ProcessExplorer.Persistence.Migrations
                     b.HasOne("ProcessExplorer.Core.Entities.Session", "Session")
                         .WithMany("ProcessEntities")
                         .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

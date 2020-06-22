@@ -21,23 +21,9 @@ namespace ProcessExplorer.Persistence.Repositories
             return await ProcessExplorerDbContext.Sessions.SingleOrDefaultAsync(i => i.Started == logonTime);
         }
 
-        public IEnumerable<Session> GetAllWithIncludes()
-        {
-            return ProcessExplorerDbContext.Sessions.Include(i => i.Applications)
-                            .Include(i => i.ProcessEntities)
-                            .AsEnumerable();
-        }
-
         public async Task<List<Session>> GetAllWithIncludesAsync()
         {
-            return  await ProcessExplorerDbContext.Sessions.Include(i => i.Applications)
-                            .Include(i => i.ProcessEntities)
-                            .ToListAsync();
-        }
-
-        public async Task<List<Session>> GetAllWithIncludesWihoutCurrentAsync(Guid sessionId)
-        {
-            return await ProcessExplorerDbContext.Sessions.Where(i => i.Id != sessionId)
+            return  await ProcessExplorerDbContext.Sessions
                             .Include(i => i.Applications)
                             .Include(i => i.ProcessEntities)
                             .ToListAsync();

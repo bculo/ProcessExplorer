@@ -43,9 +43,6 @@ namespace ProcessExplorer.Application.Behaviours
 
         public async Task Collect()
         {
-            if (_session.SessionInformation.Offline)
-                return;
-
             _logger.LogInfo($"Started collecting processes: {_time.Now}");
 
             //get processes collector
@@ -55,10 +52,12 @@ namespace ProcessExplorer.Application.Behaviours
             List<ProcessInformation> processes = collector.GetProcesses();
 
             //check internet connection
-            if (!await _internet.CheckForInternetConnectionAsync())
+            if (!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
             {
                 //store records to local database
                 await StoreRecords(processes);
+                _logger.LogInfo($"Finished collecting processes: {_time.Now} with status: {CollectStatus}");
+                return;
             }
 
             //get sync client
@@ -75,7 +74,6 @@ namespace ProcessExplorer.Application.Behaviours
                 await StoreRecords(processes);
             }
 
-            //TODO: Push to backend
             _logger.LogInfo($"Finished collecting processes: {_time.Now} with status: {CollectStatus}");
         }
 

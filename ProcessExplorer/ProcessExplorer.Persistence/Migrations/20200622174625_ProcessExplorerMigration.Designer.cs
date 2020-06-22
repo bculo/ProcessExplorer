@@ -9,8 +9,8 @@ using ProcessExplorer.Persistence;
 namespace ProcessExplorer.Persistence.Migrations
 {
     [DbContext(typeof(ProcessExplorerDbContext))]
-    [Migration("20200622134244_ProcessExplorerDbSqlLite")]
-    partial class ProcessExplorerDbSqlLite
+    [Migration("20200622174625_ProcessExplorerMigration")]
+    partial class ProcessExplorerMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,7 +120,7 @@ namespace ProcessExplorer.Persistence.Migrations
                     b.HasOne("ProcessExplorer.Core.Entities.Session", "Session")
                         .WithMany("Applications")
                         .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -129,7 +129,7 @@ namespace ProcessExplorer.Persistence.Migrations
                     b.HasOne("ProcessExplorer.Core.Entities.Session", "Session")
                         .WithMany("ProcessEntities")
                         .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

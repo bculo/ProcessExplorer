@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Newtonsoft.Json;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Dtos.Requests.Authentication;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using System;
 using System.Collections.Concurrent;
@@ -39,28 +40,28 @@ namespace ProcessExplorer.Application.Behaviours
                 return;
 
             //Get all sessions
-            Guid currentSession = _sessionService.SessionInformation.SessionId;
-            var sessions = await _unitOfWork.Sessions.GetAllWithIncludesWihoutCurrentAsync(currentSession);
+            var sessions = await _unitOfWork.Sessions.GetAllWithIncludesAsync();
 
             //map to Dtos
-            var dtos = sessions.Adapt<List<UserSessionDto>>();
+            var dtosSessions = sessions.Adapt<List<UserSessionDto>>();
 
-            //guid is sessionId
-            //bool update status from server
-            var bagSuccessSessions = new ConcurrentBag<UserSessionDto>();
-
-            //Synchronize with backend
-            Parallel.ForEach(dtos, async session =>
+            var successStatuses = new List<UserSessionDto>();
+            foreach(var session in dtosSessions)
             {
                 var syncClient = _factory.GetClient();
-                bool success = await syncClient.Sync(session);
-                if(success)
-                    bagSuccessSessions.Add(session);
-            });
+                var result = await syncClient.Sync(session);
+                if (result)
+                    successStatuses.Add(session);
+            }
 
-            var updatedSessions = bagSuccessSessions.ToList();
-            var sessionsForDelete = sessions.Where(i => updatedSessions.Any(p => p.SessionId == i.Id));
+            //get sessions that we need to delete
+            Guid currentSessionId = _sessionService.SessionInformation.SessionId;
+            var sessionsForDelete = sessions.Where(i => i.Id != currentSessionId && successStatuses.Any(p => p.SessionId == i.Id)).ToList();
 
+            if (sessionsForDelete.Count() == 0)
+                return;
+
+            //Delete sessions
             _unitOfWork.Sessions.RemoveRange(sessionsForDelete);
             await _unitOfWork.CommitAsync();
         }

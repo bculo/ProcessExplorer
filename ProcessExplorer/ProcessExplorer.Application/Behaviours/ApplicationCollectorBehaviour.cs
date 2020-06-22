@@ -41,9 +41,6 @@ namespace ProcessExplorer.Application.Behaviours
 
         public async Task Collect()
         {
-            if (_session.SessionInformation.Offline)
-                return;
-
             _logger.LogInfo($"Started collecting apps: {_time.Now}");
 
             //get app collector
@@ -53,10 +50,12 @@ namespace ProcessExplorer.Application.Behaviours
             List<ApplicationInformation> apps = collector.GetApplications();
 
             //check internet connection
-            if(!await _internet.CheckForInternetConnectionAsync())
+            if(!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
             {
                 //store records to local database
                 await StoreRecords(apps);
+                _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
+                return;
             }
 
             //get sync client

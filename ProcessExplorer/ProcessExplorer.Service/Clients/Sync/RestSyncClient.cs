@@ -34,8 +34,6 @@ namespace ProcessExplorer.Service.Clients.Sync
             if (response.IsSuccessStatusCode)
                 return true;
 
-            var result = await GetInstanceFromBody<object>(response);
-
             return false;
         }
     }
