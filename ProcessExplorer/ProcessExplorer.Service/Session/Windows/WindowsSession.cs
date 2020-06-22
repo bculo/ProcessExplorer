@@ -36,7 +36,6 @@ namespace ProcessExplorer.Service.Session.Windows
             process.Start();
 
             var cmdContent = process.StandardOutput.ReadToEnd();
-            _logger.LogInfo($"Content from cmd {cmdContent}");
             DateTime logonTime = GetLogonTime(cmdContent);
 
             var sessionInstance = new SessionInformation

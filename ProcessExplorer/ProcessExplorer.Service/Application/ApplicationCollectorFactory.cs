@@ -31,22 +31,17 @@ namespace ProcessExplorer.Service.Application
             _sessionService = sessionService;
         }
 
-        /// <summary>
-        /// Define execution method for each platform
-        /// </summary>
-        /// <returns></returns>
-        private Dictionary<Platform, Func<IApplicationCollector>> GetExecutionMethods()
-        {
-            return new Dictionary<Platform, Func<IApplicationCollector>>
-            {
-                { Platform.Win,  GetWindowsApplicationCollector },
-                { Platform.Unix,  GetLinuxApplicationCollector }
-            };
-        }
-
         public IApplicationCollector GetApplicationCollector()
         {
-            return _platform.PlatformInformation.ExecuteFunWithReturnValue(GetExecutionMethods());
+            switch (_platform.PlatformInformation.Type)
+            {
+                case Platform.Win:
+                    return GetWindowsApplicationCollector();
+                case Platform.Unix:
+                    return GetLinuxApplicationCollector();
+                default:
+                    throw new NotSupportedException("Platform not supported");
+            }
         }
 
         private IApplicationCollector GetLinuxApplicationCollector()

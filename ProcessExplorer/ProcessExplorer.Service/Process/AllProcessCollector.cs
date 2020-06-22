@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
-using ProcessExplorer.Application.Common.Options;
 using System;
 using System.Collections.Generic;
 
@@ -10,8 +8,8 @@ namespace ProcessExplorer.Service.Process
     public class AllProcessCollector : RootCollector, IProcessCollector
     {
         public AllProcessCollector(ILoggerWrapper logger,
-            IOptions<ProcessCollectorOptions> options) 
-            : base(logger, options)
+            ISessionService session) 
+            : base(logger, session)
         {
         }
 
@@ -49,5 +47,7 @@ namespace ProcessExplorer.Service.Process
             _logger.LogInfo($"Processes fetched in {nameof(AllProcessCollector)} : {processList.Count}");
             return processList;
         }
+
+        public override IEnumerable<ProcessInformation> PlatformSpecificHandler(IEnumerable<ProcessInformation> processes) => processes;
     }
 }

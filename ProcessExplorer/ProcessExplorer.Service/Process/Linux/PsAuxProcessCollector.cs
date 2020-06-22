@@ -1,24 +1,19 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using System;
-using Microsoft.Extensions.Options;
-using ProcessExplorer.Application.Common.Options;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ProcessExplorer.Service.Process.Linux
 {
-    public class PsAuxProcessCollector : RootCollector, IProcessCollector
+    public class PsAuxProcessCollector : LinuxRootProcessCollector, IProcessCollector
     {
-        private readonly IPlatformInformationService _info;
-
         public PsAuxProcessCollector(ILoggerWrapper logger, 
             IPlatformInformationService info,
-            IOptions<ProcessCollectorOptions> options) 
-            : base(logger, options)
+            ISessionService session) 
+            : base(logger, session, info)
         {
-            _info = info;
         }
         
         public List<ProcessInformation> GetProcesses()
@@ -50,9 +45,10 @@ namespace ProcessExplorer.Service.Process.Linux
 
         private IEnumerable<ProcessInformation> ParseProcessInformation(string terminalContent)
         {
+            string username = _info.PlatformInformation.UserName;
             var rowsWithSpecificUser = terminalContent.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
                                                 .Skip(1) //skip header
-                                                .Where(i => i.Contains(_info.PlatformInformation.UserName));
+                                                .Where(i => i.Contains(username));
 
             foreach(var row in rowsWithSpecificUser)
             {

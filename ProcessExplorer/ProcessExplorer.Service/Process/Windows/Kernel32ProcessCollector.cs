@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
-using ProcessExplorer.Application.Common.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,11 +8,11 @@ using System.Text;
 
 namespace ProcessExplorer.Service.Process.Windows
 {
-    public class Kernel32ProcessCollector : RootCollector, IProcessCollector
+    public class Kernel32ProcessCollector : WindowsRootProcessCollector, IProcessCollector
     {
         public Kernel32ProcessCollector(ILoggerWrapper logger,
-            IOptions<ProcessCollectorOptions> options) 
-            : base(logger, options)
+            ISessionService session) 
+            : base(logger, session)
         {
         }
 
@@ -45,7 +43,7 @@ namespace ProcessExplorer.Service.Process.Windows
                 }
             }
 
-            var filteredList = FilterList(processList);
+            var filteredList = CleanList(processList);
             _logger.LogInfo($"Processes fetched in {nameof(Kernel32ProcessCollector)} : {processList.Count}");
             return filteredList;
         }
@@ -63,9 +61,7 @@ namespace ProcessExplorer.Service.Process.Windows
         {
             var fileNameBuilder = new StringBuilder(buffer);
             uint bufferLength = (uint)fileNameBuilder.Capacity + 1;
-            return QueryFullProcessImageName(process.Handle, 0, fileNameBuilder, ref bufferLength) ?
-                fileNameBuilder.ToString() :
-                null;
+            return QueryFullProcessImageName(process.Handle, 0, fileNameBuilder, ref bufferLength) ? fileNameBuilder.ToString() : null;
         }
     }
 }

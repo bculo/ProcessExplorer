@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
-using ProcessExplorer.Application.Common.Options;
 using ProcessExplorer.Service.Options;
 using ProcessExplorer.Service.Process.Linux;
 using ProcessExplorer.Service.Process.Windows;
@@ -13,18 +12,18 @@ namespace ProcessExplorer.Service.Process
     {
         private readonly IPlatformInformationService _platform;
         private readonly ILoggerWrapper _logger;
-        private readonly IOptions<ProcessCollectorOptions> _options;
+        private readonly ISessionService _session;
         private readonly ProcessCollectorUsageOptions _usageOptions;
 
         public ProcessCollectorFactory(IPlatformInformationService platform,
             ILoggerWrapper logger,
-            IOptions<ProcessCollectorOptions> options,
-            IOptions<ProcessCollectorUsageOptions> usageOptions)
+            IOptions<ProcessCollectorUsageOptions> usageOptions,
+            ISessionService session)
         {
             _platform = platform;
             _logger = logger;
-            _options = options;
             _usageOptions = usageOptions.Value;
+            _session = session;
         }
 
         /// <summary>
@@ -55,11 +54,11 @@ namespace ProcessExplorer.Service.Process
             switch (result)
             {
                 case nameof(WMIProcessCollector):
-                    return new WMIProcessCollector(_logger, _options);
+                    return new WMIProcessCollector(_logger, _session);
                 case nameof(Kernel32ProcessCollector):
-                    return new Kernel32ProcessCollector(_logger, _options);
+                    return new Kernel32ProcessCollector(_logger, _session);
                 case nameof(AllProcessCollector):
-                    return new Kernel32ProcessCollector(_logger, _options);
+                    return new AllProcessCollector(_logger, _session);
                 default:
                     throw new NotImplementedException();
             }
@@ -76,9 +75,9 @@ namespace ProcessExplorer.Service.Process
             switch(result)
             {
                 case nameof(AllProcessCollector):
-                    return new AllProcessCollector(_logger, _options);
+                    return new AllProcessCollector(_logger, _session);
                 case nameof(PsAuxProcessCollector):
-                    return new PsAuxProcessCollector(_logger, _platform, _options);
+                    return new PsAuxProcessCollector(_logger, _platform, _session);
                 default:
                     throw new NotImplementedException();
             }

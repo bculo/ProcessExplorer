@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
-using ProcessExplorer.Application.Common.Options;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -11,11 +9,11 @@ namespace ProcessExplorer.Service.Process.Windows
     /// <summary>
     /// WMI (Windows Management Instrumentation)
     /// </summary>
-    public class WMIProcessCollector : RootCollector, IProcessCollector
+    public class WMIProcessCollector : WindowsRootProcessCollector, IProcessCollector
     {
         public WMIProcessCollector(ILoggerWrapper logger,
-            IOptions<ProcessCollectorOptions> options) 
-            : base(logger, options)
+            ISessionService session) 
+            : base(logger, session)
         {
         }
 
@@ -43,7 +41,7 @@ namespace ProcessExplorer.Service.Process.Windows
                             ProcessName = p.ProcessName,
                         };
 
-            var filteredList = FilterList(filteredProcesses);
+            var filteredList = CleanList(filteredProcesses);
             _logger.LogInfo($"Processes fetched in {nameof(WMIProcessCollector)} : {filteredList.Count}");
             return filteredList;
         }
