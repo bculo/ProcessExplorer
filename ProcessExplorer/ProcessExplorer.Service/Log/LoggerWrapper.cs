@@ -22,7 +22,7 @@ namespace ProcessExplorer.Service.Log
             if (!_options.UseLog)
                 return;
 
-            _logger.LogError("{@error}", e);
+            _logger.LogError(e, e.Message);
         }
 
         public void LogInfo(string content, params object[] param)

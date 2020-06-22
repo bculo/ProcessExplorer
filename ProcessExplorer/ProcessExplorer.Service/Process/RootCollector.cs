@@ -12,12 +12,15 @@ namespace ProcessExplorer.Service.Process
     {
         protected readonly ILoggerWrapper _logger;
         protected readonly ISessionService _session;
+        protected readonly IDateTime _time;
 
         protected RootCollector(ILoggerWrapper logger,
-            ISessionService session)
+            ISessionService session,
+            IDateTime time)
         {
             _logger = logger;
             _session = session;
+            _time = time;
         }
 
         public abstract IEnumerable<ProcessInformation> PlatformSpecificHandler(IEnumerable<ProcessInformation> processes);
@@ -29,27 +32,14 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         protected virtual List<ProcessInformation> CleanList(IEnumerable<ProcessInformation> processes)
         {
-            //remove processes with same name
-            var filteredList = RemoveDuplicates(processes);
-
             //remove current process
-            filteredList = RemoveCurrentProcess(filteredList);
+            var filteredList = RemoveCurrentProcess(processes);
 
             //use platform specific handler
             filteredList = PlatformSpecificHandler(filteredList);
 
             //return
             return filteredList.ToList();
-        }
-
-        /// <summary>
-        /// Make process name unique
-        /// </summary>
-        /// <param name="processes">All fetched processes</param>
-        /// <returns></returns>
-        protected virtual IEnumerable<ProcessInformation> RemoveDuplicates(IEnumerable<ProcessInformation> processes)
-        {
-            return processes.GroupBy(i => i.ProcessName).Select(i => i.First());
         }
 
 
@@ -69,12 +59,14 @@ namespace ProcessExplorer.Service.Process
         }
 
         /// <summary>
-        /// Get all processes
+        /// Get all processes and make process name unique
         /// </summary>
         /// <returns></returns>
         protected IEnumerable<System.Diagnostics.Process> GetAllProcesses()
         {
-            return System.Diagnostics.Process.GetProcesses();
+            return System.Diagnostics.Process.GetProcesses()
+                    .GroupBy(i => i.ProcessName)
+                    .Select(i => i.First());
         }
     }
 }

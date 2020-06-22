@@ -9,7 +9,10 @@ namespace ProcessExplorer.Service.Process.Linux
     {
         protected readonly IPlatformInformationService _info;
 
-        public LinuxRootProcessCollector(ILoggerWrapper logger, ISessionService session, IPlatformInformationService info) : base(logger, session)
+        public LinuxRootProcessCollector(ILoggerWrapper logger,
+            ISessionService session, 
+            IPlatformInformationService info,
+            IDateTime time) : base(logger, session, time)
         {
             _info = info;
         }

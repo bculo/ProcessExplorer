@@ -6,7 +6,9 @@ namespace ProcessExplorer.Service.Process.Windows
 {
     public abstract class WindowsRootProcessCollector : RootCollector
     {
-        public WindowsRootProcessCollector(ILoggerWrapper logger, ISessionService session) : base(logger, session)
+        public WindowsRootProcessCollector(ILoggerWrapper logger,
+            ISessionService session,
+            IDateTime time) : base(logger, session, time)
         {
         }
 

@@ -11,8 +11,9 @@ namespace ProcessExplorer.Service.Process.Linux
     {
         public PsAuxProcessCollector(ILoggerWrapper logger, 
             IPlatformInformationService info,
-            ISessionService session) 
-            : base(logger, session, info)
+            ISessionService session,
+            IDateTime time) 
+            : base(logger, session, info, time)
         {
         }
         
@@ -20,6 +21,7 @@ namespace ProcessExplorer.Service.Process.Linux
         {
             _logger.LogInfo($"Started fetching processes in {nameof(PsAuxProcessCollector)}");
 
+            //command ps axco user,pid,command
             var startInfo = new ProcessStartInfo 
             {
                 FileName = "/bin/bash",
@@ -28,42 +30,66 @@ namespace ProcessExplorer.Service.Process.Linux
                 RedirectStandardOutput = true
             };
 
-            var process = new System.Diagnostics.Process();
-            process.StartInfo = startInfo;
+            //Start process
+            var process = new System.Diagnostics.Process
+            {
+                StartInfo = startInfo
+            };
             process.Start();
 
+            //read content
             var terminalContent = process.StandardOutput.ReadToEnd();
 
-            _logger.LogInfo($"Fetched content from terminal: {terminalContent}");
-
+            //parse content
             IEnumerable<ProcessInformation> processesInfo = ParseProcessInformation(terminalContent);
-            var processList = RemoveDuplicates(processesInfo).ToList();
 
+            //clean list
+            var processList = CleanList(processesInfo);
             _logger.LogInfo($"Application fetched in {nameof(PsAuxProcessCollector)} : {processList.Count}");
+
             return processList;
         }
 
+        /// <summary>
+        /// Parse content
+        /// </summary>
+        /// <param name="terminalContent"></param>
+        /// <returns></returns>
         private IEnumerable<ProcessInformation> ParseProcessInformation(string terminalContent)
         {
             string username = _info.PlatformInformation.UserName;
-            var rowsWithSpecificUser = terminalContent.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+            var rowsWithSpecificUser = terminalContent.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries) //split on /r/n
                                                 .Skip(1) //skip header
-                                                .Where(i => i.Contains(username));
+                                                .Where(i => i.Contains(username)); //get only processes for currently loged in user
 
-            foreach(var row in rowsWithSpecificUser)
+            DateTime fetchedTime = _time.Now;
+            Guid sessionId = _session.SessionInformation.SessionId;
+
+            //got throught each row
+            foreach (var row in rowsWithSpecificUser)
             {
+                //get row columns
                 var rowColumns = row.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
+                //length should be 3
                 if(rowColumns.Length != 3)
                     continue;
 
-                if(!int.TryParse(rowColumns[1], out int pid))
+                /// user -> rowColumns[0]
+                /// pid -> rowColumns[1]
+                /// command -> rowColumns[2]
+
+                //pid needs to be integer
+                if (!int.TryParse(rowColumns[1], out int pid))
                     continue;
 
+                //return new ProcessInformation instance
                 yield return new ProcessInformation
                 {
                     ProcessId = pid,
-                    ProcessName = rowColumns[2]
+                    ProcessName = rowColumns[2],
+                    Session = sessionId,
+                    Fetched = fetchedTime,
                 };
             }
         }

@@ -1,5 +1,6 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -12,8 +13,9 @@ namespace ProcessExplorer.Service.Process.Windows
     public class WMIProcessCollector : WindowsRootProcessCollector, IProcessCollector
     {
         public WMIProcessCollector(ILoggerWrapper logger,
-            ISessionService session) 
-            : base(logger, session)
+            ISessionService session, 
+            IDateTime time) 
+            : base(logger, session, time)
         {
         }
 
@@ -30,6 +32,9 @@ namespace ProcessExplorer.Service.Process.Windows
             using var searcher = new ManagementObjectSearcher(wmiQueryString);
             using var results = searcher.Get();
 
+            DateTime fetchedTime = _time.Now;
+            Guid sessionId = _session.SessionInformation.SessionId;
+
             var filteredProcesses = from p in GetAllProcesses()
                         join mo in results.Cast<ManagementObject>()
                         on p.Id equals (int)(uint)mo["ProcessId"]
@@ -39,6 +44,8 @@ namespace ProcessExplorer.Service.Process.Windows
                             ProcessId = p.Id,
                             ProcessPath = (string)mo["ExecutablePath"],
                             ProcessName = p.ProcessName,
+                            Fetched = fetchedTime,
+                            Session = sessionId
                         };
 
             var filteredList = CleanList(filteredProcesses);

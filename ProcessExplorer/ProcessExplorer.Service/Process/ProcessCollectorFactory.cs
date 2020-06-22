@@ -13,17 +13,20 @@ namespace ProcessExplorer.Service.Process
         private readonly IPlatformInformationService _platform;
         private readonly ILoggerWrapper _logger;
         private readonly ISessionService _session;
+        private readonly IDateTime _time;
         private readonly ProcessCollectorUsageOptions _usageOptions;
 
         public ProcessCollectorFactory(IPlatformInformationService platform,
             ILoggerWrapper logger,
             IOptions<ProcessCollectorUsageOptions> usageOptions,
-            ISessionService session)
+            ISessionService session,
+            IDateTime time)
         {
             _platform = platform;
             _logger = logger;
             _usageOptions = usageOptions.Value;
             _session = session;
+            _time = time;
         }
 
         /// <summary>
@@ -54,11 +57,11 @@ namespace ProcessExplorer.Service.Process
             switch (result)
             {
                 case nameof(WMIProcessCollector):
-                    return new WMIProcessCollector(_logger, _session);
+                    return new WMIProcessCollector(_logger, _session, _time);
                 case nameof(Kernel32ProcessCollector):
-                    return new Kernel32ProcessCollector(_logger, _session);
+                    return new Kernel32ProcessCollector(_logger, _session, _time);
                 case nameof(AllProcessCollector):
-                    return new AllProcessCollector(_logger, _session);
+                    return new AllProcessCollector(_logger, _session, _time);
                 default:
                     throw new NotImplementedException();
             }
@@ -75,9 +78,9 @@ namespace ProcessExplorer.Service.Process
             switch(result)
             {
                 case nameof(AllProcessCollector):
-                    return new AllProcessCollector(_logger, _session);
+                    return new AllProcessCollector(_logger, _session, _time);
                 case nameof(PsAuxProcessCollector):
-                    return new PsAuxProcessCollector(_logger, _platform, _session);
+                    return new PsAuxProcessCollector(_logger, _platform, _session, _time);
                 default:
                     throw new NotImplementedException();
             }

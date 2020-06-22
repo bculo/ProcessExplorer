@@ -11,8 +11,9 @@ namespace ProcessExplorer.Service.Process.Windows
     public class Kernel32ProcessCollector : WindowsRootProcessCollector, IProcessCollector
     {
         public Kernel32ProcessCollector(ILoggerWrapper logger,
-            ISessionService session) 
-            : base(logger, session)
+            ISessionService session, 
+            IDateTime time) 
+            : base(logger, session, time)
         {
         }
 
@@ -24,7 +25,10 @@ namespace ProcessExplorer.Service.Process.Windows
         public List<ProcessInformation> GetProcesses()
         {
             _logger.LogInfo($"Started fetching processes in {nameof(Kernel32ProcessCollector)}");
-            
+
+            DateTime fetchedTime = _time.Now;
+            Guid sessionId = _session.SessionInformation.SessionId;
+
             var processList = new List<ProcessInformation>();
             foreach (var proc in GetAllProcesses())
             {
@@ -35,12 +39,11 @@ namespace ProcessExplorer.Service.Process.Windows
                         ProcessId = proc.Id,
                         ProcessName = proc.ProcessName,
                         ProcessPath = GetMainModuleFileName(proc),
+                        Fetched = fetchedTime,
+                        Session = sessionId
                     });
                 }
-                catch (Win32Exception e) //Not allowed to read MainModule (important file!!!)
-                {
-                    _logger.LogError(e);
-                }
+                catch (Win32Exception) { } //Not allowed to read MainModule (important file!!!)
             }
 
             var filteredList = CleanList(processList);
