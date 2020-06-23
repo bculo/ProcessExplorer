@@ -28,6 +28,7 @@ namespace ProcessExplorerWeb.Core.Entities
         /// Reference on user session
         /// </summary>
         public Guid SessionId { get; set; }
+
         public virtual ProcessExplorerUserSession Session { get; set; }
     }
 }

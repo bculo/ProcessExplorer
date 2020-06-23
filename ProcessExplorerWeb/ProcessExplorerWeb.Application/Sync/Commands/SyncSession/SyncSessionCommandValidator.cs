@@ -13,28 +13,29 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
             //RuleFor(p => p.UserId).NotEmpty();
 
             //lists
-            RuleFor(p => p.Processes).NotNull();
-            RuleFor(p => p.Applications).NotNull();
             RuleForEach(p => p.Processes).SetValidator(new SynSessionProcessInfoCommandValidator());
             RuleForEach(p => p.Applications).SetValidator(new SynSessionApplicationInfoCommandValidator());
         }
     }
 
-    public class SynSessionApplicationInfoCommandValidator : AbstractValidator<SynSessionApplicationInfoCommand>
+    public class SynSessionApplicationInfoCommandValidator : AbstractValidator<SyncSessionApplicationInfoCommand>
     {
         public SynSessionApplicationInfoCommandValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.Started).NotEmpty();
             RuleFor(x => x.LastUse).NotEmpty();
+            RuleFor(x => x.SessionId).NotEmpty();
         }
     }
 
-    public class SynSessionProcessInfoCommandValidator : AbstractValidator<SynSessionProcessInfoCommand>
+    public class SynSessionProcessInfoCommandValidator : AbstractValidator<SyncSessionProcessInfoCommand>
     {
         public SynSessionProcessInfoCommandValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.Detected).NotEmpty();
+            RuleFor(x => x.SessionId).NotEmpty();
         }
     }
 }

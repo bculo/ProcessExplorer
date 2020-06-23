@@ -8,7 +8,6 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationEntity> builder)
         {
-            //dont generate value for this primary key
             builder.HasKey(i => i.Id);
 
             builder.Property(i => i.Name).HasMaxLength(300)

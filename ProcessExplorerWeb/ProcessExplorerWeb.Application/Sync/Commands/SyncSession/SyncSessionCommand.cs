@@ -6,18 +6,26 @@ using System.Collections.Generic;
 
 namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
 {
+    /// <summary>
+    /// Command for synchronization
+    /// </summary>
     public class SyncSessionCommand : IRequest
     {
         public Guid SessionId { get; set; }
         public string UserName { get; set; }
         public string OS { get; set; }
         public DateTime Started { get; set; }
-        //public Guid UserId { get; set; }
-        public List<SynSessionApplicationInfoCommand> Applications { get; set; }
-        public List<SynSessionProcessInfoCommand> Processes { get; set; }
+        public List<SyncSessionApplicationInfoCommand> Applications { get; set; }
+        public List<SyncSessionProcessInfoCommand> Processes { get; set; }
     }
 
-    public class SynSessionApplicationInfoCommand : ApplicationExplorerModel { }
+    public class SyncSessionApplicationInfoCommand : ApplicationExplorerModel 
+    {
+        public Guid SessionId { get; set; }
+    }
 
-    public class SynSessionProcessInfoCommand : ProcessExplorerModel { }
+    public class SyncSessionProcessInfoCommand : ProcessExplorerModel 
+    {
+        public Guid SessionId { get; set; }
+    }
 }

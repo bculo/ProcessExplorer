@@ -13,14 +13,6 @@ namespace ProcessExplorerWeb.Application.Dtos.Models
     public abstract class ProcessExplorerModel
     {
         public string Name { get; set; }
-    }
-
-    public class ProcessExplorerModelProfile : IRegister
-    {
-        public void Register(TypeAdapterConfig config)
-        {
-            config.ForType<ProcessExplorerModel, ProcessEntity>()
-                .Map(dst => dst.ProcessName, src => src.Name);
-        }
+        public DateTime Detected { get; set; }
     }
 }

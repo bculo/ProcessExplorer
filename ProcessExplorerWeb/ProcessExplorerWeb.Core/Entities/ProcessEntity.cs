@@ -14,6 +14,8 @@ namespace ProcessExplorerWeb.Core.Entities
         /// </summary>
         public int? PID { get; set; }
 
+        public DateTime Detected { get; set; }
+
         /// <summary>
         /// Reference on user session
         /// </summary>

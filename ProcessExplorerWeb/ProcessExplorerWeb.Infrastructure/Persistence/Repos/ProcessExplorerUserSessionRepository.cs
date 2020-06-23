@@ -14,7 +14,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
         {
         }
 
-        public async Task<ProcessExplorerUserSession> GetSessionWithWithAppsAndProcesses(Guid sessionId, Guid userId)
+        public async Task<ProcessExplorerUserSession> GetSessionWithAppsAndProcesses(Guid sessionId, Guid userId)
         {
             return await ProcessExplorerDbContext.Sessions
                             .Include(i => i.Applications)

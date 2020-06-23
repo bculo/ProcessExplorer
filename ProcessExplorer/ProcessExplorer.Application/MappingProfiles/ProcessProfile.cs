@@ -13,6 +13,7 @@ namespace ProcessExplorer.Application.MappingProfiles
             //Session -> UserSessionDto
             config.ForType<ProcessEntity, ProcessDto>()
                 .Map(dst => dst.Name, src => src.ProcessName)
+                .Map(dst => dst.SessionId, src => src.SessionId)
                 .Map(dst => dst.Detected, src => src.Saved);
 
             //ProcessInformation -> ProcessEntity
@@ -23,7 +24,9 @@ namespace ProcessExplorer.Application.MappingProfiles
 
             //ProcessInformation -> ProcessEntity
             config.ForType<ProcessInformation, ProcessDto>()
-                .Map(dst => dst.Name, src => src.ProcessName);
+                .Map(dst => dst.Name, src => src.ProcessName)
+                .Map(dst => dst.SessionId, src => src.Session)
+                .Map(dst => dst.Detected, src => src.Fetched);
         }
     }
 }

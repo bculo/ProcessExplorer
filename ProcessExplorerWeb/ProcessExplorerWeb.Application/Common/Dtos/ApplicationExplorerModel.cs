@@ -16,15 +16,4 @@ namespace ProcessExplorerWeb.Application.Dtos.Shared
         public DateTime Started { get; set; }
         public DateTime LastUse { get; set; }
     }
-
-    public class ApplicationExplorerModelProfile : IRegister
-    {
-        public void Register(TypeAdapterConfig config)
-        {
-            config.ForType<ApplicationExplorerModel, ApplicationEntity>()
-                .Map(dst => dst.Started, src => src.Started)
-                .Map(dst => dst.Name, src => src.Name)
-                .Map(dst => dst.Closed, src => src.LastUse);
-        }
-    }
 }

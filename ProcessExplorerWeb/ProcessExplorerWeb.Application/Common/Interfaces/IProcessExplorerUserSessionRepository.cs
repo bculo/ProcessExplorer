@@ -8,6 +8,6 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
 {
     public interface IProcessExplorerUserSessionRepository : IRepository<ProcessExplorerUserSession>
     {
-        Task<ProcessExplorerUserSession> GetSessionWithWithAppsAndProcesses(Guid sessionId, Guid userId);
+        Task<ProcessExplorerUserSession> GetSessionWithAppsAndProcesses(Guid sessionId, Guid userId);
     }
 }
