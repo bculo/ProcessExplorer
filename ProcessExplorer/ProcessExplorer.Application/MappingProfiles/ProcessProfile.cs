@@ -12,12 +12,14 @@ namespace ProcessExplorer.Application.MappingProfiles
         {
             //Session -> UserSessionDto
             config.ForType<ProcessEntity, ProcessDto>()
-                .Map(dst => dst.Name, src => src.ProcessName);
+                .Map(dst => dst.Name, src => src.ProcessName)
+                .Map(dst => dst.Detected, src => src.Saved);
 
             //ProcessInformation -> ProcessEntity
             config.ForType<ProcessInformation, ProcessEntity>()
                 .Map(dst => dst.Saved, src => src.Fetched)
-                .Map(dst => dst.SessionId, src => src.Session);
+                .Map(dst => dst.SessionId, src => src.Session)
+                .Ignore(dest => dest.Session);
 
             //ProcessInformation -> ProcessEntity
             config.ForType<ProcessInformation, ProcessDto>()

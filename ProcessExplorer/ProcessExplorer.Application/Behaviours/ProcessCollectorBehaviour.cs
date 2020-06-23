@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using Newtonsoft.Json;
 using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
@@ -12,15 +11,12 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Behaviours
 {
-    public class ProcessCollectorBehaviour : IProcessBehaviour
+    /// <summary>
+    /// Process collecting behaviour
+    /// </summary>
+    public class ProcessCollectorBehaviour : CommonCollectorBehaviour<ProcessEntity>, IProcessBehaviour
     {
-        private readonly ISynchronizationClientFactory _syncFactory;
         private readonly IProcessCollectorFactory _processFactory;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IInternet _internet;
-        private readonly ISessionService _session;
-        private readonly ILoggerWrapper _logger;
-        private readonly IDateTime _time;
 
         private CollectStatus CollectStatus { get; set; } = CollectStatus.SUCCESS;
 
@@ -31,14 +27,9 @@ namespace ProcessExplorer.Application.Behaviours
             ISessionService session,
             ILoggerWrapper wrapper,
             IDateTime dateTime)
+            : base(syncFactory, unitOfWork, internet, session, wrapper, dateTime)
         {
             _processFactory = processFactory;
-            _syncFactory = syncFactory;
-            _unitOfWork = unitOfWork;
-            _internet = internet;
-            _session = session;
-            _logger = wrapper;
-            _time = dateTime;
         }
 
         public async Task Collect()
@@ -48,10 +39,10 @@ namespace ProcessExplorer.Application.Behaviours
             //get processes collector
             IProcessCollector collector = _processFactory.GetProcessCollector();
 
-            //get running applications
+            //get running processes
             List<ProcessInformation> processes = collector.GetProcesses();
 
-            //check internet connection
+            //check internet connection and user work mode
             if (!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
             {
                 //store records to local database
@@ -78,46 +69,87 @@ namespace ProcessExplorer.Application.Behaviours
         }
 
         /// <summary>
-        /// Store records to local database
+        /// Store records to local database (working with max 5000 processes). That case is very rare
         /// </summary>
         /// <param name="apps"></param>
         /// <returns></returns>
-        private async Task StoreRecords(List<ProcessInformation> fetchedApps)
+        private async Task StoreRecords(List<ProcessInformation> fetchedProcesses)
         {
-            //get all applications records for this session
-            //we are working here with max 1000 records
             try
             {
+                //zero processes fetched, so exit
+                if (fetchedProcesses.Count == 0)
+                    return;
+
+                //Get all stored processes for current session
                 var storedProcesses = await _unitOfWork.Process.GetEntitesForSession(_session.SessionInformation.SessionId);
 
-                //no records for this session so enter everything
+                //no records for this session so add every process to database
                 if (storedProcesses.Count == 0)
                 {
-                    var newProcesses = fetchedApps.Adapt<List<ProcessEntity>>();
-                    _unitOfWork.Process.BulkAdd(newProcesses);
+                    //map them to process entities
+                    var newProcesses = fetchedProcesses.Adapt<List<ProcessEntity>>();
+
+                    //save changes of modified entites
+                    await InsertLogic(newProcesses);
+
+                    //done
                     return;
                 }
 
-                //O(m + n)
-                //get processes that are not stored
-                HashSet<string> hashset = new HashSet<string>(storedProcesses.Select(i => i.ProcessName));
-                var notStoredProcesses = fetchedApps.Where(i => !hashset.Contains(i.ProcessName));
+                //get processes that are not yet stored in database
+                var notStoredProcesses = GetNewProcessesToStore(fetchedProcesses, storedProcesses);
 
-                //map them to Entity
+                //map them to process entities
                 var processesToStore = notStoredProcesses.Adapt<List<ProcessEntity>>();
+
+                //nothing to store -> exit
                 if (processesToStore.Count == 0)
                     return;
 
                 //save changes of modified entites
-                await _unitOfWork.CommitAsync();
-
-                //Store them
-                _unitOfWork.Process.BulkAdd(processesToStore);
+                await InsertLogic(processesToStore);
             }
             catch (Exception e)
             {
+                //on failure change status and log error
                 CollectStatus = CollectStatus.FAILURE;
                 _logger.LogError(e);
+            }
+        }
+
+        /// <summary>
+        /// Get only processes that are not yet stored in database O(m + n)
+        /// </summary>
+        /// <param name="fetchedProcesses"></param>
+        /// <param name="storedProcesses"></param>
+        /// <returns></returns>
+        private IEnumerable<ProcessInformation> GetNewProcessesToStore(List<ProcessInformation> fetchedProcesses, List<ProcessEntity> storedProcesses)
+        {
+            //get stored processes names and put them in hashset
+            var storedProccessesName = new HashSet<string>(storedProcesses.Select(i => i.ProcessName));
+
+            //get processes that are not in hashset
+            var notStoredProcesses = fetchedProcesses.Where(i => !storedProccessesName.Contains(i.ProcessName));
+            return notStoredProcesses;
+        }
+
+        /// <summary>
+        /// Insert records to dabase
+        /// </summary>
+        /// <param name="newEntities"></param>
+        /// <returns></returns>
+        protected async Task InsertLogic(List<ProcessEntity> newEntities)
+        {
+            //Use bulk insert (faster)
+            if (newEntities.Count >= 1000)
+            {
+                _unitOfWork.Process.BulkAdd(newEntities);
+            }
+            else //faster for less then 1000 records
+            {
+                _unitOfWork.Process.AddRange(newEntities);
+                await _unitOfWork.CommitAsync();
             }
         }
     }

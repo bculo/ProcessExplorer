@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Mapster.Adapters;
 using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
@@ -10,33 +11,26 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Behaviours
 {
-    public class ApplicationCollectorBehaviour : IApplicationCollectorBehaviour
+    /// <summary>
+    /// Application collecting behaviour
+    /// </summary>
+    public class ApplicationCollectorBehaviour : CommonCollectorBehaviour<ProcessEntity>, IApplicationCollectorBehaviour
     {
-        private readonly ISynchronizationClientFactory _syncFactory;
         private readonly IApplicationCollectorFactory _appFactory;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IInternet _internet;
-        private readonly ISessionService _session;
-        private readonly ILoggerWrapper _logger;
-        private readonly IDateTime _time;
 
         private CollectStatus CollectStatus { get; set; } = CollectStatus.SUCCESS;
 
-        public ApplicationCollectorBehaviour(ISynchronizationClientFactory syncFactory,
+        public ApplicationCollectorBehaviour(
+            ISynchronizationClientFactory syncFactory,
             IApplicationCollectorFactory appFactory,
             IUnitOfWork unitOfWork,
             IInternet internet,
             ISessionService session,
             ILoggerWrapper wrapper,
             IDateTime dateTime)
+            : base(syncFactory, unitOfWork, internet, session, wrapper, dateTime)
         {
-            _syncFactory = syncFactory;
             _appFactory = appFactory;
-            _unitOfWork = unitOfWork;
-            _internet = internet;
-            _session = session;
-            _logger = wrapper;
-            _time = dateTime;
         }
 
         public async Task Collect()
@@ -65,10 +59,10 @@ namespace ProcessExplorer.Application.Behaviours
             var dto = _session.SessionInformation.Adapt<UserSessionDto>();
             dto.Applications = apps.Adapt<IEnumerable<ApplicationDto>>();
 
-            //send to server
+            //sync fetched apps with server if possible
             if (!await syncClient.Sync(dto))
             {
-                //store records to local database
+                //store records to local database if sync with server failes
                 await StoreRecords(apps);
             }
 
@@ -76,34 +70,55 @@ namespace ProcessExplorer.Application.Behaviours
         }
 
         /// <summary>
-        /// Store records to local database
+        /// Store applications records to local database (we are working here with max 200 records)
         /// </summary>
         /// <param name="apps"></param>
         /// <returns></returns>
         private async Task StoreRecords(List<ApplicationInformation> fetchedApps)
         {
-            //get all applications records for this session
-            //we are working here with max 200 records
             try
             {
+                //zero apps, exit
+                if (fetchedApps.Count == 0)
+                    return;
+
+                //Get stored applications in this session
                 var applications = await _unitOfWork.Application.GetEntitesForSession(_session.SessionInformation.SessionId);
 
-                //no records for this session so enter everything
+                //no application records in database for this session insert all application
                 if (applications.Count == 0)
                 {
+                    //map to entity objects
                     var newApps = fetchedApps.Adapt<List<ApplicationEntity>>();
-                    _unitOfWork.Application.BulkAdd(newApps);
+                    
+                    //Insert to database
+                    await InsertLogic(newApps);
+
+                    //exit
                     return;
                 }
 
-                //update old and add new apps
-                var newApplications = ModifyOldAndGetNewApps(fetchedApps, applications);
+                //update old and get new opened applications
+                var newApplications = ModifyOldAndGetNewApps(fetchedApps, applications, out bool databaseEntitesModified);
 
-                //Modife old aps
-                await _unitOfWork.CommitAsync();
+                //no modification and no new apps
+                if (newApplications.Count == 0 && !databaseEntitesModified)
+                    return;
 
-                //add new apps
-                _unitOfWork.Application.BulkAdd(newApplications);
+                //some entites from database modified and zero new application fetched
+                if (databaseEntitesModified && newApplications.Count == 0)
+                {
+                    _logger.LogInfo("Application entites modified");
+
+                    //save changes for modifed entites
+                    await _unitOfWork.CommitAsync();
+
+                    //exit
+                    return;
+                }
+
+                //save everything
+                await InsertLogic(newApplications);
             }
             catch(Exception e)
             {
@@ -118,13 +133,21 @@ namespace ProcessExplorer.Application.Behaviours
         /// <param name="fetchedApps">apps fetched from collector</param>
         /// <param name="storedApps">apps for this session fetched from store</param>
         /// <returns></returns>
-        private List<ApplicationEntity> ModifyOldAndGetNewApps(List<ApplicationInformation> fetchedApps, List<ApplicationEntity> storedApps)
+        private List<ApplicationEntity> ModifyOldAndGetNewApps(List<ApplicationInformation> fetchedApps, List<ApplicationEntity> storedApps, out bool modificationOnDatabaseEntites)
         {
+            //no modification yet
+            modificationOnDatabaseEntites = false;
+
+            //prepare empty collection for new apps
             List<ApplicationEntity> newApps = new List<ApplicationEntity>();
 
+            //iteratre throught fetched apps
             foreach (var fetchedApp in fetchedApps)
             {
+                //flag, for new app recognation
                 bool newApp = true;
+
+                //iterate throught stored apps
                 foreach(var storedApp in storedApps)
                 {
                     //we are talking about same app if it has same applicaiton name and same starttime
@@ -132,17 +155,36 @@ namespace ProcessExplorer.Application.Behaviours
                     {
                         //change last active time of app
                         storedApp.Saved = fetchedApp.FetchTime;
+
+                        //set flag
                         newApp = false;
+
+                        //set modification flag
+                        modificationOnDatabaseEntites = true;
+
+                        //exit inner for loop
                         break;
                     }
                 }
 
-                // new app
+                //if new app, add to collection
                 if (newApp)
                     newApps.Add(fetchedApp.Adapt<ApplicationEntity>());
             }
 
+            //return new opened apps
             return newApps;
+        }
+
+        /// <summary>
+        /// Insert records to dabase
+        /// </summary>
+        /// <param name="newEntities"></param>
+        /// <returns></returns>
+        protected async Task InsertLogic(List<ApplicationEntity> newEntities)
+        {
+            _unitOfWork.Application.AddRange(newEntities);
+            await _unitOfWork.CommitAsync();
         }
     }
 }
