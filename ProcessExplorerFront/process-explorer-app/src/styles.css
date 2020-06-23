@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+    background: #ECF0F3;
+}
+
+.vertical {
+    margin-top: 10rem;
+    background: white;
+    border-radius: 10px;
+  }
