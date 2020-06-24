@@ -23,7 +23,7 @@ namespace ProcessExplorer.Api.Controllers
             var result = await _service.UserCredentialsValid(model.Identifier, model.Password);
 
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest("Invalid credentials");
 
             var tokenInfo = await _service.GenerateJwtToken(model.Identifier);
 
@@ -31,6 +31,27 @@ namespace ProcessExplorer.Api.Controllers
             {
                 JwtToken = tokenInfo.JwtToken,
                 UserId = tokenInfo.User.Id
+            };
+
+            return Ok(dtoModel);
+        }
+
+        [HttpPost("loginweb")]
+        public async Task<IActionResult> LoginWeb([FromBody] LoginModel model)
+        {
+            var result = await _service.UserCredentialsValid(model.Identifier, model.Password);
+
+            if (!result.Succeeded)
+                return BadRequest("Invalid credentials");
+
+            var tokenInfo = await _service.GenerateJwtToken(model.Identifier);
+
+            var dtoModel = new LoginDetailedResponseModel
+            {
+                JwtToken = tokenInfo.JwtToken,
+                UserId = tokenInfo.User.Id,
+                UserName = tokenInfo.User.UserName,
+                ExpireIn = tokenInfo.ExpireIn
             };
 
             return Ok(dtoModel);

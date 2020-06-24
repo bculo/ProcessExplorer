@@ -36,6 +36,17 @@ namespace ProcessExplorer.Api
             services.AddApplicationLayer(Configuration);
             services.AddHttpContextAccessor();
             services.AddControllers(opt => opt.Filters.Add(new ExceptionFilter()));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ProcessExplorerPolicy", builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200");
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                    builder.AllowCredentials();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +77,8 @@ namespace ProcessExplorer.Api
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.UseCors("ProcessExplorerPolicy");
 
             app.UseAuthorization();
 

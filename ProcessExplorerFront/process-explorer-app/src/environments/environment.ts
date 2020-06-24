@@ -4,11 +4,10 @@
 
 export const environment = {
   production: false,
-
+  api: 'http://localhost/ProcessExplorer.Api/api',
   authentication: {
     passwordLength: 6
   }
-
 };
 
 /*

@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { FormValidationService } from 'src/app/shared/services/form-validation.service';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +12,11 @@ import { FormValidationService } from 'src/app/shared/services/form-validation.s
 export class LoginComponent implements OnInit, OnDestroy {
 
   public loginForm: FormGroup;
+  public submited: boolean = false;
+  public errorMessage: string | null = null;
 
-  constructor(public validation: FormValidationService) { }
+  constructor(public validation: FormValidationService,
+    private authService: AuthenticationService) { }
 
   ngOnDestroy(): void {
     this.validation.removeForm();
@@ -35,11 +39,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    console.log(this.loginForm);
+    if(!this.loginForm.valid) return;
+    this.submited = true;
+    this.authService.loginUser(this.loginForm.value)
+      .subscribe(() => {
+        console.log("Loged in");
+        this.submited = false;
+      },
+      (error) => {
+        this.errorMessage = error;
+        this.submited = false;
+      })
   }
 
   cleanForm(): void {
     this.loginForm.reset();
   }
-
 }
