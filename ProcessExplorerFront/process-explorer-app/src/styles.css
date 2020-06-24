@@ -9,8 +9,8 @@ html, body {
 }
 
 .vertical-top-margin {
-    margin-top: 10rem;
-  }
+    margin-top: 7rem;
+}
 
 .brand-color-text {
     color: var(--brand-color);
@@ -30,4 +30,8 @@ footer {
 
 .footer {
     padding: 2rem 1.5rem;
+}
+
+.authentication-box {
+    padding: 3rem 4.5rem;
 }
