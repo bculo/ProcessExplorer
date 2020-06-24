@@ -2,32 +2,46 @@
     <div class="column is-half is-offset-one-quarter">
         <div class="box has-text-centered authentication-box">
             <h3 class="title is-4">Login</h3>
-
             <hr>
-
-            <form [formGroup]="loginForm">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
                 <div class="field">
                     <p class="control has-icons-left">
-                        <input class="input" type="email" placeholder="Email">
+                        <input 
+                            class="input" 
+                            type="text" 
+                            placeholder="Email or Username"
+                            [ngClass]="validation.displayFieldCss('identifier')"
+                            formControlName="identifier">
                         <span class="icon is-small is-left">
                             <i class="fas fa-envelope"></i>
                         </span>
                     </p>
-                </div>
-
-                <div class="field">
-                    <p class="control has-icons-left">
-                        <input class="input" type="password" placeholder="Password">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-lock"></i>
-                        </span>
+                    <p *ngIf="validation.isFieldValid('identifier')" class="help is-danger">
+                        {{ validation.getFirstErrorMessage("identifier") }}
                     </p>
                 </div>
 
                 <div class="field">
-                    <p class="control">
-                        <button class="button is-primary">
+                    <p class="control has-icons-left">
+                        <input 
+                            class="input" 
+                            type="password" 
+                            placeholder="Password"
+                            formControlName="password"
+                            [ngClass]="validation.displayFieldCss('password')">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </p>
+                    <p *ngIf="validation.isFieldValid('password')" class="help is-danger">
+                        {{ validation.getFirstErrorMessage('password') }}
+                    </p>
+                </div>
+
+                <div class="field">
+                    <p class="control" >
+                        <button class="button is-primary" [disabled]="!loginForm.valid">
                             Submit
                         </button>
                     </p>
