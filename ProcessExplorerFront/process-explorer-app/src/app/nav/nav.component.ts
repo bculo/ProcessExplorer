@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApplicationUser } from '../shared/models/application-user.model';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
+import { SignalRService } from '../shared/services/signal-r.service';
 
 @Component({
   selector: 'app-nav',
@@ -13,7 +14,8 @@ export class NavComponent implements OnInit, OnDestroy {
   
   private subscription: Subscription;
 
-  constructor(private authService: AuthenticationService) { }
+  constructor(private authService: AuthenticationService,
+    private signalR: SignalRService) { }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -23,8 +25,10 @@ export class NavComponent implements OnInit, OnDestroy {
     this.subscription = this.authService.user.subscribe((user: ApplicationUser) => {
       if(user) {
         this.authenticatedUser = user;
+        this.signalR.startConnection(user);
       }else{
         this.authenticatedUser = null;
+        this.signalR.stopConnection();
       }
     });
   }
