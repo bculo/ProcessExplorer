@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { FormValidationService } from 'src/app/shared/services/form-validation.service';
 import { AuthenticationService } from '../authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public errorMessage: string | null = null;
 
   constructor(public validation: FormValidationService,
+    private router: Router,
     private authService: AuthenticationService) { }
 
   ngOnDestroy(): void {
@@ -41,10 +43,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if(!this.loginForm.valid) return;
     this.submited = true;
+    this.errorMessage = null;
     this.authService.loginUser(this.loginForm.value)
       .subscribe(() => {
-        console.log("Loged in");
         this.submited = false;
+        console.log("LOGED IN");
       },
       (error) => {
         this.errorMessage = error;

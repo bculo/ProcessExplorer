@@ -44,11 +44,12 @@ export class FormValidationService {
     const errorKeys = this.getControlErrorCodes(fieldName);
     const firstErrorCode = errorKeys[0];
     const capitalizedFieldName = this.capitalizeFirstCharacter(fieldName);
+    const fieldValue = this.getControl(fieldName).value;
     switch (firstErrorCode) {
-      case 'required': return `${capitalizedFieldName} is required!`;
-      case 'pattern': return `${capitalizedFieldName} has wrong pattern!`;
+      case 'required': return `${capitalizedFieldName} must not be empty.`;
       case 'email': return `${capitalizedFieldName} has wrong email format!`; 
-      case 'minlength': return `${capitalizedFieldName} has wrong length! Required length: ${ this.getError(firstErrorCode, fieldName).requiredLength }`; 
+      case 'minlength': return `The length of ${capitalizedFieldName} must be at least ${this.getError(firstErrorCode, fieldName).requiredLength} characters! You entered  ${fieldValue.length}`;
+      case 'server': return this.getError('server', fieldName);
       default: return 'This field is required';
     }
   }
@@ -69,6 +70,11 @@ export class FormValidationService {
     };
   }
 
+  private getControl(propertyName: string) {
+    const lowerCase = propertyName.toLowerCase();
+    return this.form.get(lowerCase);
+  }
+
   public handleServerError(response: HttpErrorResponse){
     if(response.status === 0)
       return throwError("Server not available :(");
@@ -82,13 +88,14 @@ export class FormValidationService {
     if(response.status === 400) {
       const error = response.error;
 
-      //error is null
-      if(!error)
-        return throwError("Unknown error");
-
       //handle dictionary
       if (error.constructor == Object) {
-
+        console.log(error)
+        Object.keys(error).forEach(property => {
+          let control = this.getControl(property);
+          control.setErrors( {'server': error[property][0]} );
+        });
+        return throwError(null);
       }
       else if(Array.isArray(error)) {
         return throwError(error[0]);

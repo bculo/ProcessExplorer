@@ -22,8 +22,8 @@ export class RegisterRequestModel {
 */
 
 export interface ILoginResponse {
-    id: string;
-    username: string;
-    expiresIn: string;
-    jwt: string;
+    userId: string;
+    userName: string;
+    expireIn: string;
+    jwtToken: string;
 }
