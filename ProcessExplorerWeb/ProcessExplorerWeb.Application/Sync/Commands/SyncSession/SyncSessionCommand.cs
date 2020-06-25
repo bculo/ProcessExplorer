@@ -19,12 +19,12 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
         public List<SyncSessionProcessInfoCommand> Processes { get; set; }
     }
 
-    public class SyncSessionApplicationInfoCommand : ApplicationExplorerModel 
+    public class SyncSessionApplicationInfoCommand : ApplicationExplorerDto 
     {
         public Guid SessionId { get; set; }
     }
 
-    public class SyncSessionProcessInfoCommand : ProcessExplorerModel 
+    public class SyncSessionProcessInfoCommand : ProcessExplorerDto 
     {
         public Guid SessionId { get; set; }
     }

@@ -4,16 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProcessExplorerWeb.Application.Dtos.Shared
+namespace ProcessExplorerWeb.Application.Dtos.Models
 {
     /// <summary>
     /// Base model of every process DTO instance
-    /// Every process needs to have this defiend properties
+    /// Every process needs to have a name
     /// </summary>
-    public abstract class ApplicationExplorerModel
+    public abstract class ProcessExplorerDto
     {
         public string Name { get; set; }
-        public DateTime Started { get; set; }
-        public DateTime LastUse { get; set; }
+        public DateTime Detected { get; set; }
     }
 }
