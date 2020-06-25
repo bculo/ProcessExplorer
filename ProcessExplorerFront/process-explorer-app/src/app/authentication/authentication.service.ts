@@ -26,7 +26,10 @@ export class AuthenticationService {
   }
 
   public registerUser(user: RegisterRequestModel) {
-    
+    return this.http.post(`${environment.api}/authentication/register`, user)
+      .pipe(
+        catchError(error => this.validation.handleServerError(error))
+      );
   }
 
   private handleLoginLogic(res: ILoginResponse) {

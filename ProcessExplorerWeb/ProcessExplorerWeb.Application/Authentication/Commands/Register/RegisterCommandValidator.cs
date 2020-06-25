@@ -36,8 +36,10 @@ namespace ProcessExplorerWeb.Application.Authentication.Commands.Register
                 RuleFor(p => p.UserName).MustAsync(UniqueUserName).WithMessage("The specified username already taken.");
             });
 
-            RuleFor(p => p.Password).NotEmpty().Must((model, pw) => MustBeSame(model.RepeatPassword, pw)).WithMessage("Password does not match");
-            RuleFor(p => p.RepeatPassword).NotEmpty().Must((model, pw) => MustBeSame(model.RepeatPassword, pw)).WithMessage("RepeatPassword does not match");
+            RuleFor(p => p.Password).NotEmpty();
+            When(x => x.Password != null, () => {
+                RuleFor(p => p.Password).MinimumLength(_options.IdentityPasswordOptions.RequiredLength);
+            });
         }
 
         public async Task<bool> UniqueEmail(string email, CancellationToken cancellationToken)

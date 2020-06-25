@@ -21,7 +21,6 @@ export class NavComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.authService.user.subscribe((user: ApplicationUser) => {
-      console.log(user);
       if(user) {
         this.authenticatedUser = user;
       }else{

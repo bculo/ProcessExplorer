@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.loginUser(this.loginForm.value)
       .subscribe(() => {
         this.submited = false;
-        console.log("LOGED IN");
       },
       (error) => {
         this.errorMessage = error;
