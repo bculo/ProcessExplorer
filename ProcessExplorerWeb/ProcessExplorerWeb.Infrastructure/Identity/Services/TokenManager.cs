@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ProcessExplorerWeb.Application.Common.Options;
 using ProcessExplorerWeb.Core.Interfaces;
 using ProcessExplorerWeb.Infrastructure.Interfaces;
-using ProcessExplorerWeb.Infrastructure.Options;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Infrastructure.Identity.Services
 {

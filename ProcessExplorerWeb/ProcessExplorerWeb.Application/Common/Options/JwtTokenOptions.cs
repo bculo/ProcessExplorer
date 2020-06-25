@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProcessExplorerWeb.Infrastructure.Options
+namespace ProcessExplorerWeb.Application.Common.Options
 {
     public class JwtTokenOptions
     {

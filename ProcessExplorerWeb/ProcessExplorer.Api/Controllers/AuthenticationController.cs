@@ -1,90 +1,30 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using ProcessExplorer.Api.Models.Authentication;
-using ProcessExplorerWeb.Application.Common.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProcessExplorerWeb.Application.Authentication.Commands.Register;
+using ProcessExplorerWeb.Application.Authentication.Queries.CheckToken;
+using ProcessExplorerWeb.Application.Authentication.Queries.Login;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : MediatRBaseController
     {
-        private readonly IAuthenticationService _service;
-
-        public AuthenticationController(IAuthenticationService service)
-        {
-            _service = service;
-        }
-
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginQuery query)
         {
-            var result = await _service.UserCredentialsValid(model.Identifier, model.Password);
-
-            if (!result.Succeeded)
-                return BadRequest("Invalid credentials");
-
-            var tokenInfo = await _service.GenerateJwtToken(model.Identifier);
-
-            var dtoModel = new LoginResponseModel
-            {
-                JwtToken = tokenInfo.JwtToken,
-                UserId = tokenInfo.User.Id
-            };
-
-            return Ok(dtoModel);
-        }
-
-        [HttpPost("loginweb")]
-        public async Task<IActionResult> LoginWeb([FromBody] LoginModel model)
-        {
-            var result = await _service.UserCredentialsValid(model.Identifier, model.Password);
-
-            if (!result.Succeeded)
-                return BadRequest("Invalid credentials");
-
-            var tokenInfo = await _service.GenerateJwtToken(model.Identifier);
-
-            var dtoModel = new LoginDetailedResponseModel
-            {
-                JwtToken = tokenInfo.JwtToken,
-                UserId = tokenInfo.User.Id,
-                UserName = tokenInfo.User.UserName,
-                ExpireIn = tokenInfo.ExpireIn
-            };
-
-            return Ok(dtoModel);
+            return Ok(await Mediator.Send(query));
         }
 
         [HttpPost("checktoken")]
-        public async Task<IActionResult> CheckToken([FromBody] CheckTokenModel model)
+        public async Task<IActionResult> CheckToken([FromBody] CheckTokenQuery query)
         {
-            var valid = await _service.IsTokenValid(model.Token);
-
-            if (!valid)
-                return BadRequest();
-
-            return Ok();
+            return Ok(await Mediator.Send(query));
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
-            var (result, user) = await _service.RegisterUser(model.UserName, model.Email, model.Password, null);
-
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            return Ok();
-        }
-
-        [Authorize]
-        [HttpPost("sessionregistration")]
-        public async Task<IActionResult> RegisterSession([FromBody] SessionModel model)
-        {
-            await _service.RegisterSession(model.UserName, model.SesssionId, model.Started);
-            return Ok();
+            await Mediator.Send(command);
+            return NoContent();
         }
     }
 }

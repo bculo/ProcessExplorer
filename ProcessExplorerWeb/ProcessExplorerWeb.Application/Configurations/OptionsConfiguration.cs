@@ -10,6 +10,7 @@ namespace ProcessExplorerWeb.Application.Configurations
         public IServiceCollection Configure(IServiceCollection services, IConfiguration config)
         {
             services.Configure<PerformanceOptions>(opt => config.GetSection(nameof(PerformanceOptions)).Bind(opt));
+            services.Configure<AuthenticationOptions>(opt => config.GetSection(nameof(AuthenticationOptions)).Bind(opt));
 
             return services;
         }
