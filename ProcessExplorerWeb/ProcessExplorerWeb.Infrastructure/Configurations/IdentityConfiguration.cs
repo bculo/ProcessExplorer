@@ -9,6 +9,7 @@ using ProcessExplorerWeb.Infrastructure.Identity;
 using ProcessExplorerWeb.Infrastructure.Persistence;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Infrastructure.Configurations
 {
@@ -67,6 +68,24 @@ namespace ProcessExplorerWeb.Infrastructure.Configurations
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,
+                };
+
+                //for token access insise hub
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accesToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accesToken)
+                            && path.StartsWithSegments("/processhub"))
+                        {
+                            context.Token = accesToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

@@ -37,7 +37,7 @@ namespace ProcessExplorer.Api
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseIISIntegration();
+                    //webBuilder.UseIISIntegration();
                     webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureLogging(logging =>

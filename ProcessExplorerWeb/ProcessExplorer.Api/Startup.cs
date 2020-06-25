@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProcessExplorer.Api.Filters;
+using ProcessExplorer.Api.SignalR;
 using ProcessExplorerWeb.Application;
 using ProcessExplorerWeb.Application.Extensions;
 using ProcessExplorerWeb.Infrastructure;
@@ -41,7 +42,7 @@ namespace ProcessExplorer.Api
             {
                 options.AddPolicy("ProcessExplorerPolicy", builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200");
+                    builder.WithOrigins(new string[] { "https://processexplorerfront.azurewebsites.net", "http://localhost:4200" });
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
                     builder.AllowCredentials();
@@ -85,6 +86,7 @@ namespace ProcessExplorer.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ProcessExplorerHub>("/processhub");
             });
         }
     }
