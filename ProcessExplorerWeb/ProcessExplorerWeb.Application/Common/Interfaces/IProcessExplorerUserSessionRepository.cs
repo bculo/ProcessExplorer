@@ -11,5 +11,6 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
     {
         Task<ProcessExplorerUserSession> GetSessionWithAppsAndProcesses(Guid sessionId, Guid userId);
         Task<(List<SessionDetailedModel>, int)> FilterSessions(Guid userId, DateTime? selectedDate, int page, int take);
+        Task<ProcessExplorerUserSession> GetSelectedSession(Guid userId, Guid sessionId);
     }
 }

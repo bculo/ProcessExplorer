@@ -53,5 +53,10 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
             return (records, recordsCount);
         }
+
+        public async Task<ProcessExplorerUserSession> GetSelectedSession(Guid userId, Guid sessionId)
+        {
+            return await ProcessExplorerDbContext.Sessions.SingleOrDefaultAsync(i => i.ExplorerUserId == userId && i.Id == sessionId);
+        }
     }
 }
