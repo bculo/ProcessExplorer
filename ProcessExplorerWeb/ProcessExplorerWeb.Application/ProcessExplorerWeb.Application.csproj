@@ -24,7 +24,6 @@
     <Folder Include="Application\Queries\" />
     <Folder Include="Common\Enums\" />
     <Folder Include="Processes\Commands\" />
-    <Folder Include="Processes\Queries\GetProcessesUserPeriod\" />
     <Folder Include="Session\Commands\" />
     <Folder Include="Sync\Queries\" />
   </ItemGroup>

@@ -1,21 +1,18 @@
 ﻿using Mapster;
 using MediatR;
 using Microsoft.Extensions.Options;
-using ProcessExplorerWeb.Application.Common.Dtos;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Common.Options;
 using ProcessExplorerWeb.Application.Processes.Common.Dtos;
 using ProcessExplorerWeb.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Processes.Queries.GetProcessesPeriod
 {
-    public class GetProcessesPeriodQueryHandler : IRequestHandler<GetProcessesPeriodQuery, ProcessPaginationResponseDto<SingleProcessResponseDto>>
+    public class GetProcessesPeriodQueryHandler : IRequestHandler<GetProcessesPeriodQuery, ProcessPaginationResponseDto<ProcessSearchResponseDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDateTime _date;
@@ -33,7 +30,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.GetProcessesPeriod
             _pagination = pagination.Value;
         }
 
-        public async Task<ProcessPaginationResponseDto<SingleProcessResponseDto>> Handle(GetProcessesPeriodQuery request, CancellationToken cancellationToken)
+        public async Task<ProcessPaginationResponseDto<ProcessSearchResponseDto>> Handle(GetProcessesPeriodQuery request, CancellationToken cancellationToken)
         {
             //NOTE _periodOptions.DaysBack is negative number. You can see concrete value in appsetings.json
             DateTime endOfPeriod = _date.Now.Date;
@@ -46,11 +43,11 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.GetProcessesPeriod
             var (records, count) = await _unitOfWork.Process.GetProcessesForPeriod(startOfPeriod, endOfPeriod, request.CurrentPage, _pagination.Take, request.SearchCriteria);
 
             //map
-            var dto = new ProcessPaginationResponseDto<SingleProcessResponseDto>
+            var dto = new ProcessPaginationResponseDto<ProcessSearchResponseDto>
             {
                 TotalRecords = count,
                 TotalNumberOfSessions = totalNumberOfSessions,
-                Records = records?.Adapt<IEnumerable<SingleProcessResponseDto>>()
+                Records = records?.Adapt<IEnumerable<ProcessSearchResponseDto>>()
             };
 
             //success

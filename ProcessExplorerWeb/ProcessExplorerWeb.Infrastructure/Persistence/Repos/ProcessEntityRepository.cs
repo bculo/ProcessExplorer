@@ -32,16 +32,23 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
             searchCriteria = string.IsNullOrEmpty(searchCriteria) ? null : searchCriteria.ToLower();
 
             //get records for specific period and group them by name
-            //search processes using given search criteria
-            var query = ProcessExplorerDbContext.Processes.Where(i => i.Detected.Date >= start.Date && i.Detected.Date <= end.Date
-                                            && (searchCriteria != null && i.ProcessName.ToLower().Contains(searchCriteria)))
-                                        .GroupBy(i => i.ProcessName);
+            var query = ProcessExplorerDbContext.Processes.Where(i => i.Detected.Date >= start.Date && i.Detected.Date <= end.Date);
+
+            if (!string.IsNullOrEmpty(searchCriteria))
+            {
+                //search processes using given search criteria
+                searchCriteria = searchCriteria.ToLower();
+                query = query.Where(i => i.ProcessName.ToLower().Contains(searchCriteria));
+            }
+
+            //group by process name
+            var groupBy = query.GroupBy(i => i.ProcessName);
 
             //count total number of records
-            int count = await query.CountAsync();
+            int count = await groupBy.CountAsync();
 
             //get concrete records (PAGINATED)
-            var records = await query.Skip((currentPage - 1) * take).Take(take)
+            var records = await groupBy.Skip((currentPage - 1) * take).Take(take)
                                         .Select(i => new ProcessSearchModel
                                         {
                                             ProcessName = i.Key,
@@ -59,16 +66,23 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
             searchCriteria = string.IsNullOrEmpty(searchCriteria) ? null : searchCriteria.ToLower();
 
             //get records for given user id and group by process name
-            //search processes using given search criteria
-            var query = ProcessExplorerDbContext.Processes.Where(i => i.Session.ProcessExplorerUser.Id == userId 
-                                            && (searchCriteria != null && i.ProcessName.ToLower().Contains(searchCriteria)))
-                                        .GroupBy(i => i.ProcessName);
+            var query = ProcessExplorerDbContext.Processes.Where(i => i.Session.ExplorerUserId == userId);
+
+            if (!string.IsNullOrEmpty(searchCriteria))
+            {
+                //search processes using given search criteria
+                searchCriteria = searchCriteria.ToLower();
+                query = query.Where(i => i.ProcessName.ToLower().Contains(searchCriteria));
+            }
+
+            //group by process name
+            var groupBy = query.GroupBy(i => i.ProcessName);
 
             //count total number of records
-            int count = await query.CountAsync();
+            int count = await groupBy.Select(i => i.Key).CountAsync();
 
             //get concrete records (PAGINATED)
-            var records = await query.Skip((currentPage - 1) * take).Take(take)
+            var records = await groupBy.Skip((currentPage - 1) * take).Take(take)
                                         .Select(i => new ProcessSearchModel
                                         {
                                             ProcessName = i.Key,

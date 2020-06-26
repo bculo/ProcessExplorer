@@ -4,12 +4,14 @@ using System.Text;
 
 namespace ProcessExplorerWeb.Application.Processes.Common.Dtos
 {
-    public class SingleProcessResponseDto
+    public class ProcessSearchResponseDto
     {
         /// <summary>
         /// Name of process
         /// </summary>
         public string ProcessName { get; set; }
+
+        public string GoogleSearchQuery { get; set; }
 
         /// <summary>
         /// occures in number of sessions
