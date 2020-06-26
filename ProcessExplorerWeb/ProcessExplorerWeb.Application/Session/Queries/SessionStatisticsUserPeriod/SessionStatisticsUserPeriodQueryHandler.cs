@@ -4,11 +4,11 @@ using Microsoft.Extensions.Options;
 using ProcessExplorerWeb.Application.Common.Dtos;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Common.Options;
+using ProcessExplorerWeb.Application.Session.Extensions;
 using ProcessExplorerWeb.Application.Session.SharedDtos;
 using ProcessExplorerWeb.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,16 +39,24 @@ namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsUserPe
             DateTime startOfPeriod = endOfPeriod.AddDays(_periodOptions.DaysBack);
 
             //pie chart statistis for operating systems
-            var piceChartStatistics = await _unitOfWork.Session.OperatingSystemStatisticsForUser(startOfPeriod, endOfPeriod, _currentUser.UserId);
+            var piceChartStatistics = await _unitOfWork.Session.GetOperatingSystemStatisticsForUser(startOfPeriod, endOfPeriod, _currentUser.UserId);
 
             //get statistics for most active day
             var mostActiveDay = await _unitOfWork.Session.GetMostActiveDayForUser(startOfPeriod, endOfPeriod, _currentUser.UserId);
+
+            //get line chart for activity
+            var lineChartStatistic = await _unitOfWork.Session.GetActivityChartStatisticsForUser(startOfPeriod, endOfPeriod, _currentUser.UserId);
+            //fill mising dates
+            lineChartStatistic.FillDatesThatAreMissing(startOfPeriod, endOfPeriod);
 
             //map to dto
             var finalDto = new SessionStatisticsUserPeriodQueryResponseDto
             {
                 MostActiveDay = mostActiveDay?.Adapt<SessionMostActiveDayDto>(),
-                PieChartRecords = piceChartStatistics?.Adapt<IEnumerable<PieChartDto>>()
+                PieChartRecords = piceChartStatistics?.Adapt<IEnumerable<PieChartDto>>(),
+                ActivityChartRecords = lineChartStatistic?.Adapt<IEnumerable<SessionLineChartDto>>(),
+                EndOfPeriod = endOfPeriod,
+                StartOfPeriod = startOfPeriod
             };
 
             return finalDto;

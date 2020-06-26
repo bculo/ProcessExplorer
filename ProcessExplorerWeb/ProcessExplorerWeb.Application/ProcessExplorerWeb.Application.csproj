@@ -21,6 +21,7 @@
     <Folder Include="Application\Commands\" />
     <Folder Include="Application\Queries\" />
     <Folder Include="Common\Enums\" />
+    <Folder Include="Session\Commands\" />
   </ItemGroup>
 
 </Project>

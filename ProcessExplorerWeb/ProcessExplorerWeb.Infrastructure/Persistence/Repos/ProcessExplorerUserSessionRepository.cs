@@ -60,7 +60,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
             return await ProcessExplorerDbContext.Sessions.SingleOrDefaultAsync(i => i.ExplorerUserId == userId && i.Id == sessionId);
         }
 
-        public async Task<List<PieChartStatisticModel>> OperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod)
+        public async Task<List<PieChartStatisticModel>> GetOperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod)
         {
             return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
                             .GroupBy(i => i.OS) //Group by operating system name
@@ -85,7 +85,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                             .FirstOrDefaultAsync();
         }
 
-        public async Task<List<PieChartStatisticModel>> OperatingSystemStatisticsForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
+        public async Task<List<PieChartStatisticModel>> GetOperatingSystemStatisticsForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
         {
             return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod && i.ExplorerUserId == userId)
                             .GroupBy(i => i.OS) //Group by operating system name
@@ -108,6 +108,32 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                             })
                             .OrderByDescending(i => i.NumberOfSessions)
                             .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<SessionChartLineModel>> GetActivityChartStatistics(DateTime startOfPeriod, DateTime endOfPeriod)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
+                            .GroupBy(i => i.Started.Date)
+                            .Select(i => new SessionChartLineModel
+                            {
+                                Date = i.Key,
+                                Number = i.Count()
+                            })
+                            .OrderBy(i => i.Date)
+                            .ToListAsync();
+        }
+
+        public async Task<List<SessionChartLineModel>> GetActivityChartStatisticsForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod && i.ExplorerUserId == userId)
+                            .GroupBy(i => i.Started.Date)
+                            .Select(i => new SessionChartLineModel
+                            {
+                                Date = i.Key,
+                                Number = i.Count()
+                            })
+                            .OrderBy(i => i.Date)
+                            .ToListAsync();
         }
     }
 }

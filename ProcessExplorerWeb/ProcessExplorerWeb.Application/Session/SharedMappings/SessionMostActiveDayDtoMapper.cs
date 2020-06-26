@@ -2,7 +2,7 @@
 using ProcessExplorerWeb.Application.Common.Models.Session;
 using ProcessExplorerWeb.Application.Session.SharedDtos;
 
-namespace ProcessExplorerWeb.Application.Session.SessionSharedMappings
+namespace ProcessExplorerWeb.Application.Session.SharedMappings
 {
     public class SessionMostActiveDayDtoMapper : IRegister
     {

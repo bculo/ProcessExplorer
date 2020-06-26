@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProcessExplorerWeb.Application.Session.SessionSharedDtos
+namespace ProcessExplorerWeb.Application.Session.SharedDtos
 {
     public class SessionLineChartDto
     {
