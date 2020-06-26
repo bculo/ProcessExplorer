@@ -13,7 +13,6 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncApplication
         public string UserName { get; set; }
         public string OS { get; set; }
         public DateTime Started { get; set; }
-        public List<ApplicationInstanceDto> Updates { get; set; }
-        public List<ApplicationInstanceDto> Inserts { get; set; }
+        public List<ApplicationInstanceDto> Applications { get; set; }
     }
 }

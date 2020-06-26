@@ -88,55 +88,6 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
         }
 
         /// <summary>
-        /// Modify old records and create new records
-        /// </summary>
-        /// <param name="fetchedApps">apps fetched from collector</param>
-        /// <param name="storedApps">apps for this session fetched from store</param>
-        /// <returns></returns>
-        private List<ApplicationEntity> ModifyOldAndGetNewApps(List<ApplicationInstanceDto> fetchedApps, 
-            ICollection<ApplicationEntity> storedApps, out bool modificationOnDatabaseEntites)
-        {
-            //no modification yet
-            modificationOnDatabaseEntites = false;
-
-            //prepare empty collection for new apps
-            List<ApplicationEntity> newApps = new List<ApplicationEntity>();
-
-            //iteratre throught fetched apps
-            foreach (var fetchedApp in fetchedApps)
-            {
-                //flag, for new app recognation
-                bool newApp = true;
-
-                //is there any app in datrabase with same name and same start time
-                //we are talking about same app if it has same applicaiton name and same starttime
-                var foundEntity = storedApps.FirstOrDefault(i => i.Name == fetchedApp.Name && i.Started == fetchedApp.Started);
-
-                if (foundEntity != null)
-                {
-                    newApp = false;
-
-                    //Modify entity only if Last use is greater than closeD time of found entity
-                    if (foundEntity.Closed < fetchedApp.LastUse)
-                    {
-                        //update entity
-                        foundEntity.Closed = fetchedApp.LastUse;
-
-                        //set modification flag to true
-                        modificationOnDatabaseEntites = true;
-                    }
-                }
-
-                //if new app, add to collection
-                if (newApp)
-                    newApps.Add(fetchedApp.Adapt<ApplicationEntity>());
-            }
-
-            //return new opened apps
-            return newApps;
-        }
-
-        /// <summary>
         /// Get only processes that are not yet stored in database O(m + n)
         /// </summary>
         /// <param name="fetchedProcesses"></param>
