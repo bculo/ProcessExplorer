@@ -10,6 +10,8 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
     public interface IProcessExplorerUserSessionRepository : IRepository<ProcessExplorerUserSession>
     {
         Task<ProcessExplorerUserSession> GetSessionWithAppsAndProcesses(Guid sessionId, Guid userId);
+        Task<ProcessExplorerUserSession> GetSessionWithProcesses(Guid sessionId, Guid userId);
+        Task<ProcessExplorerUserSession> GetSessionWithApps(Guid sessionId, Guid userId);
         Task<(List<SessionDetailedModel>, int)> FilterSessions(Guid userId, DateTime? selectedDate, int page, int take);
         Task<ProcessExplorerUserSession> GetSelectedSession(Guid userId, Guid sessionId);
         Task<List<PieChartStatisticModel>> GetOperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod);

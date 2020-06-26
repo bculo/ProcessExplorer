@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProcessExplorerWeb.Application.Sync.Commands.SyncApplication
+namespace ProcessExplorerWeb.Application.Sync.Commands.SyncProcess
 {
-    public class SyncApplicationCommandValidator : AbstractValidator<SyncApplicationCommand>
+    public class SyncProcessCommandValidator : AbstractValidator<SyncProcessCommand>
     {
-        public SyncApplicationCommandValidator()
+        public SyncProcessCommandValidator()
         {
             RuleFor(p => p.UserName).NotEmpty();
             RuleFor(p => p.SessionId).NotEmpty();
@@ -16,7 +16,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncApplication
             RuleFor(p => p.OS).NotEmpty();
 
             //lists
-            RuleForEach(p => p.Applications).SetValidator(new ApplicationInstanceDtoValidator());
+            RuleForEach(p => p.Processes).SetValidator(new ProcessInstanceDtoValidator());
         }
     }
 }

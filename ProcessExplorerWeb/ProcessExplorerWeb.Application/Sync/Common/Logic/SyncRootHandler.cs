@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Sync.SharedLogic
 {
@@ -89,6 +90,39 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
 
             //return new opened apps
             return newApps;
+        }
+
+        /// <summary>
+        /// Get only processes that are not yet stored in database O(m + n)
+        /// </summary>
+        /// <param name="fetchedProcesses"></param>
+        /// <param name="storedProcesses"></param>
+        /// <returns></returns>
+        protected List<ProcessEntity> GetNewProcessesToStore(List<ProcessInstanceDto> fetchedProcesses, ICollection<ProcessEntity> storedProcesses)
+        {
+            //get stored processes names and put them in hashset
+            var storedProccessesName = new HashSet<string>(storedProcesses.Select(i => i.ProcessName));
+
+            //get processes that are not in hashset
+            var notStoredProcesses = fetchedProcesses.Where(i => !storedProccessesName.Contains(i.Name));
+
+            //map them to process entities
+            return notStoredProcesses.Adapt<List<ProcessEntity>>();
+        }
+
+        /// <summary>
+        /// Add new session to database
+        /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        protected async Task AddNewSession(ProcessExplorerUserSession session)
+        {
+            //set user id on session instance
+            FillSessionEntity(session);
+
+            //add to database
+            _work.Session.Add(session);
+            await _work.CommitAsync();
         }
     }
 }

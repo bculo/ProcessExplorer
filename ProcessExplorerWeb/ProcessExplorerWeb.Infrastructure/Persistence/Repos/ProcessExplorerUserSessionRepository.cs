@@ -135,5 +135,19 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                             .OrderBy(i => i.Date)
                             .ToListAsync();
         }
+
+        public async Task<ProcessExplorerUserSession> GetSessionWithProcesses(Guid sessionId, Guid userId)
+        {
+            return await ProcessExplorerDbContext.Sessions
+                            .Include(i => i.Processes)
+                            .SingleOrDefaultAsync(i => i.Id == sessionId && i.ExplorerUserId == userId);
+        }
+
+        public async Task<ProcessExplorerUserSession> GetSessionWithApps(Guid sessionId, Guid userId)
+        {
+            return await ProcessExplorerDbContext.Sessions
+                            .Include(i => i.Applications)
+                            .SingleOrDefaultAsync(i => i.Id == sessionId && i.ExplorerUserId == userId);
+        }
     }
 }

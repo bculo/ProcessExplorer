@@ -41,20 +41,14 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
             if (session == null)
             {
                 //Map to entity model
-                var entity = request.Adapt<ProcessExplorerUserSession>();
-
-                //set user id on session instance
-                FillSessionEntity(entity);
+                session = request.Adapt<ProcessExplorerUserSession>();
 
                 _logger.LogInformation("Session with given id {0} doesnt exists (INSERT...)", request.SessionId);
 
-                //add to database
-                _work.Session.Add(entity);
-                await _work.CommitAsync();
+                await AddNewSession(session);
 
                 _logger.LogInformation("Session with given id {0} doesnt exists (INSERTED)", request.SessionId);
 
-                //exit
                 return Unit.Value;
             }
 
@@ -85,24 +79,6 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
 
             //success
             return Unit.Value;
-        }
-
-        /// <summary>
-        /// Get only processes that are not yet stored in database O(m + n)
-        /// </summary>
-        /// <param name="fetchedProcesses"></param>
-        /// <param name="storedProcesses"></param>
-        /// <returns></returns>
-        protected List<ProcessEntity> GetNewProcessesToStore(List<ProcessInstanceDto> fetchedProcesses, ICollection<ProcessEntity> storedProcesses)
-        {
-            //get stored processes names and put them in hashset
-            var storedProccessesName = new HashSet<string>(storedProcesses.Select(i => i.ProcessName));
-
-            //get processes that are not in hashset
-            var notStoredProcesses = fetchedProcesses.Where(i => !storedProccessesName.Contains(i.Name));
-
-            //map them to process entities
-            return notStoredProcesses.Adapt<List<ProcessEntity>>();
         }
     }
 }
