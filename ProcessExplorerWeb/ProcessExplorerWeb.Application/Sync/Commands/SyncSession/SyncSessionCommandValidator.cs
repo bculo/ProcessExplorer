@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using ProcessExplorerWeb.Application.Sync.Common.Validators;
 
 namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
 {
@@ -10,32 +11,10 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
             RuleFor(p => p.SessionId).NotEmpty();
             RuleFor(p => p.Started).NotEmpty();
             RuleFor(p => p.OS).NotEmpty();
-            //RuleFor(p => p.UserId).NotEmpty();
 
             //lists
-            RuleForEach(p => p.Processes).SetValidator(new SynSessionProcessInfoCommandValidator());
-            RuleForEach(p => p.Applications).SetValidator(new SynSessionApplicationInfoCommandValidator());
-        }
-    }
-
-    public class SynSessionApplicationInfoCommandValidator : AbstractValidator<SyncSessionApplicationInfoCommand>
-    {
-        public SynSessionApplicationInfoCommandValidator()
-        {
-            RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.Started).NotEmpty();
-            RuleFor(x => x.LastUse).NotEmpty();
-            RuleFor(x => x.SessionId).NotEmpty();
-        }
-    }
-
-    public class SynSessionProcessInfoCommandValidator : AbstractValidator<SyncSessionProcessInfoCommand>
-    {
-        public SynSessionProcessInfoCommandValidator()
-        {
-            RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.Detected).NotEmpty();
-            RuleFor(x => x.SessionId).NotEmpty();
+            RuleForEach(p => p.Processes).SetValidator(new ProcessInstanceDtoValidator());
+            RuleForEach(p => p.Applications).SetValidator(new ApplicationInstanceDtoValidator());
         }
     }
 }

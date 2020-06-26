@@ -6,7 +6,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
     /// <summary>
     /// Mapster settings for Sync command
     /// </summary>
-    public class SyncSessionCommandProfile : IRegister
+    public class SyncSessionCommandMapper : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {
@@ -17,19 +17,6 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
                 .Map(dst => dst.OS, src => src.OS)
                 .Map(dst => dst.Applications, src => src.Applications)
                 .Map(dst => dst.Processes, src => src.Processes);
-
-            config.ForType<SyncSessionProcessInfoCommand, ProcessEntity>()
-                .Map(dst => dst.ProcessName, src => src.Name)
-                .Map(dst => dst.Detected, src => src.Detected)
-                .Map(dst => dst.SessionId, src => src.SessionId)
-                .Ignore(dst => dst.Session);
-
-            config.ForType<SyncSessionApplicationInfoCommand, ApplicationEntity>()
-                .Map(dst => dst.Started, src => src.Started)
-                .Map(dst => dst.Name, src => src.Name)
-                .Map(dst => dst.Closed, src => src.LastUse)
-                .Map(dst => dst.SessionId, src => src.SessionId)
-                .Ignore(dst => dst.Session);
         }
     }
 }

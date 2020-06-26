@@ -1,7 +1,12 @@
 ﻿using Mapster;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using ProcessExplorerWeb.Application.Common.Exceptions;
 using ProcessExplorerWeb.Application.Common.Interfaces;
+using ProcessExplorerWeb.Application.Sync.SharedDtos;
+using ProcessExplorerWeb.Application.Sync.SharedLogic;
 using ProcessExplorerWeb.Core.Entities;
+using ProcessExplorerWeb.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,47 +14,61 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
 {
-    class SyncSessionCommandHandler : IRequestHandler<SyncSessionCommand>
+    class SyncSessionCommandHandler : SyncRootHandler, IRequestHandler<SyncSessionCommand>
     {
-        private readonly IUnitOfWork _work;
-        private readonly ICurrentUserService _currentUser;
+        private readonly ILogger<SyncSessionCommandHandler> _logger;
 
         public SyncSessionCommandHandler(IUnitOfWork work,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IDateTime dateTime,
+            ILogger<SyncSessionCommandHandler> logger) : base(work, currentUser, dateTime)
         {
-            _work = work;
-            _currentUser = currentUser;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(SyncSessionCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Starting to handle session {0} for user {1}", request.SessionId, _currentUser.UserId);
+
             //get session with given id and belongs to specific user
             var session = await _work.Session.GetSessionWithAppsAndProcesses(request.SessionId, _currentUser.UserId);
 
+            //wrong request
+            if (session != null && session.ExplorerUserId != _currentUser.UserId)
+                throw new ProcessExplorerException("Invalid request");
+
             //Session not found, so create it
-            if(session == null)
+            if (session == null)
             {
                 //Map to entity model
                 var entity = request.Adapt<ProcessExplorerUserSession>();
 
                 //set user id on session instance
-                SetUserIdOnSession(entity);
+                FillSessionEntity(entity);
+
+                _logger.LogInformation("Session with given id {0} doesnt exists (INSERT...)", request.SessionId);
 
                 //add to database
                 _work.Session.Add(entity);
                 await _work.CommitAsync();
 
+                _logger.LogInformation("Session with given id {0} doesnt exists (INSERTED)", request.SessionId);
+
                 //exit
                 return Unit.Value;
             }
 
+            _logger.LogInformation("Session with given id {0} exists (FILTERING...)", request.SessionId);
+
             //get new apps for this session and modify old entites if change detected
             //first parameter -> fetched apps
             //second parameter -> application from stored session
-            var newApps = ModifyOldAndGetNewApps(request?.Applications ?? EmptyList<SyncSessionApplicationInfoCommand>(), session.Applications, out bool modificationHappend);
+            var newApps = ModifyOldAndGetNewApps(request?.Applications ?? EmptyList<ApplicationInstanceDto>(), session.Applications, out bool modificationHappend);
 
             //get processes that are not yet stored in database
-            var newProcesses = GetNewProcessesToStore(request?.Processes ?? EmptyList<SyncSessionProcessInfoCommand>(), session.Processes);
+            var newProcesses = GetNewProcessesToStore(request?.Processes ?? EmptyList<ProcessInstanceDto>(), session.Processes);
+
+            _logger.LogInformation("Session with given id {0} exists (UPDATE|INSERT...)", request.SessionId);
 
             //add apps
             if (newApps.Count > 0)
@@ -62,17 +81,10 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
             //save changes
             await _work.CommitAsync();
 
+            _logger.LogInformation("Session with given id {0} exists (UPDATED|INSERTED)", request.SessionId);
+
             //success
             return Unit.Value;
-        }
-
-        /// <summary>
-        /// Set UserId on entity model for session
-        /// </summary>
-        /// <param name="entity"></param>
-        private void SetUserIdOnSession(ProcessExplorerUserSession entity)
-        {
-            entity.ExplorerUserId = _currentUser.UserId;
         }
 
         /// <summary>
@@ -81,7 +93,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
         /// <param name="fetchedApps">apps fetched from collector</param>
         /// <param name="storedApps">apps for this session fetched from store</param>
         /// <returns></returns>
-        private List<ApplicationEntity> ModifyOldAndGetNewApps(List<SyncSessionApplicationInfoCommand> fetchedApps, 
+        private List<ApplicationEntity> ModifyOldAndGetNewApps(List<ApplicationInstanceDto> fetchedApps, 
             ICollection<ApplicationEntity> storedApps, out bool modificationOnDatabaseEntites)
         {
             //no modification yet
@@ -125,19 +137,12 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
         }
 
         /// <summary>
-        /// Create empty list for given type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public List<T> EmptyList<T>() => new List<T>();
-
-        /// <summary>
         /// Get only processes that are not yet stored in database O(m + n)
         /// </summary>
         /// <param name="fetchedProcesses"></param>
         /// <param name="storedProcesses"></param>
         /// <returns></returns>
-        private List<ProcessEntity> GetNewProcessesToStore(List<SyncSessionProcessInfoCommand> fetchedProcesses, ICollection<ProcessEntity> storedProcesses)
+        protected List<ProcessEntity> GetNewProcessesToStore(List<ProcessInstanceDto> fetchedProcesses, ICollection<ProcessEntity> storedProcesses)
         {
             //get stored processes names and put them in hashset
             var storedProccessesName = new HashSet<string>(storedProcesses.Select(i => i.ProcessName));

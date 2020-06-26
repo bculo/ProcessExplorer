@@ -6,6 +6,8 @@ export const environment = {
   production: false,
   api: 'https://localhost:44362/api',
   //api: "https://processexplorerfoi.azurewebsites.net/api",
+  //api: "http://localhost/ProcessExplorer.Api/api",
+  //hub: "http://localhost/ProcessExplorer.Api/api",
   hub: "https://localhost:44362/processhub",
   //hub: "https://processexplorerfoi.azurewebsites.net/processhub",
   authentication: {

@@ -21,13 +21,5 @@ namespace ProcessExplorer.Application.Common.Interfaces
         /// <param name="password">password</param>
         /// <returns></returns>
         public Task<LoginResponseDto> Login(string identifier, string password);
-
-        /// <summary>
-        /// Register user session
-        /// </summary>
-        /// <param name="sessionId"></param>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        public Task<bool> RegisterSession(SessionInformation session);
     }
 }

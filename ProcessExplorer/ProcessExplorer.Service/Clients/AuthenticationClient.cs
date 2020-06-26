@@ -15,15 +15,12 @@ namespace ProcessExplorer.Service.Clients
 {
     public class AuthenticationClient : RootHttpClient, IAuthenticationClient
     {
-        private readonly ITokenService _tokenService;
         private readonly ILoggerWrapper _logger;
 
         public AuthenticationClient(HttpClient http, 
             IOptions<ProcessExplorerWebClientOptions> options,
-            ITokenService tokenService,
             ILoggerWrapper logger) : base(http, options)
         {
-            _tokenService = tokenService;
             _logger = logger;
         }
 
@@ -34,55 +31,34 @@ namespace ProcessExplorer.Service.Clients
         /// <returns></returns>
         public async Task<LoginResponseDto> Login(string identifier, string password)
         {
-            var requestModel = new LoginDto
+            try
             {
-                Identifier = identifier,
-                Password = password,
-            };
+                var requestModel = new LoginDto
+                {
+                    Identifier = identifier,
+                    Password = password,
+                };
 
-            var response = await _http.PostAsync("authentication/login", CreateContent(requestModel));
+                var response = await _http.PostAsync("authentication/login", CreateContent(requestModel));
 
-            if (response.IsSuccessStatusCode)
-                return await GetInstanceFromBody<LoginResponseDto>(response);
+                _logger.LogInfo("SUCCESS LOGIN");
 
-            if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                if (response.IsSuccessStatusCode)
+                    return await GetInstanceFromBody<LoginResponseDto>(response);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                {
+                    _logger.LogInfo("Server not available!!!");
+                    throw new HttpRequestException("Server not available!!!");
+                }
+
+                return null;
+            }
+            catch(Exception e)
             {
-                _logger.LogInfo("Server not available!!!");
+                _logger.LogError(e);
                 throw new HttpRequestException("Server not available!!!");
             }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Register user session
-        /// </summary>
-        /// <param name="sessionId"></param>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        public async Task<bool> RegisterSession(SessionInformation session)
-        {
-            var requestModel = new SessionDto
-            {
-                SesssionId = session.SessionId,
-                UserName = session.User,
-                Started = session.SessionStarted
-            };
-
-            AddBearerToken(_tokenService.GetValidToken());
-            var response = await _http.PostAsync("authentication/sessionregistration", CreateContent(requestModel));
-
-            if (response.IsSuccessStatusCode)
-                return true;
-
-
-            if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-            {
-                _logger.LogInfo("Server not available!!!");
-                throw new HttpRequestException("Server not available!!!");
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -93,21 +69,30 @@ namespace ProcessExplorer.Service.Clients
         /// <returns></returns>
         public async Task<bool> ValidateToken(string jwtToken)
         {
-            var requestModel = new CheckTokenDto { Token = jwtToken };
-
-            var response = await _http.PostAsync($"authentication/checktoken", CreateContent(requestModel));
-
-            if (response.IsSuccessStatusCode)
-                return true;
-
-
-            if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+            try
             {
-                _logger.LogInfo("Server not available!!!");
+                var requestModel = new CheckTokenDto { Token = jwtToken };
+
+                var response = await _http.PostAsync($"authentication/checktoken", CreateContent(requestModel));
+
+                if (response.IsSuccessStatusCode)
+                    return true;
+
+                _logger.LogInfo("SUCCESS TOKEN CHECK");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                {
+                    _logger.LogInfo("Server not available!!!");
+                    throw new HttpRequestException("Server not available!!!");
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e);
                 throw new HttpRequestException("Server not available!!!");
             }
-
-            return false;
         }
     }
 }

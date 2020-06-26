@@ -60,6 +60,18 @@ namespace ProcessExplorer.Application.Behaviours
                 _logger.LogInfo($"Sync finished: {_time.Now}, NO RECORDS FOR SYNC");
                 return;
             }
+            
+            //are we working only with current session ?
+            if(sessions.Count == 1 && IsCurrentSession(sessions))
+            {
+                var curSession = sessions.First();
+
+                if (!SessionNeedsUpdate(curSession))
+                {
+                    _logger.LogInfo($"Sync finished: {_time.Now}, NO RECORDS FOR SYNC");
+                    return;
+                }
+            }
 
             //map entites from database to dtos
             var dtosSessions = sessions.Adapt<List<UserSessionDto>>();
@@ -92,7 +104,13 @@ namespace ProcessExplorer.Application.Behaviours
             var sessionsForDelete = GetSessionsForDelete(sessions, successStatuses);
 
             //remove current session entity -> current sessions = different treatment
-            var currentSession = GetCurrentSession(sessionsForDelete);
+            //get current session
+            var currentSession = GetCurrentSessionFromList(sessionsForDelete);
+
+            //remove if from deletesessions
+            RemoveCurrentSessionFromList(sessionsForDelete);
+
+            //handle current session
             HandleCurrentSession(currentSession);
 
             //zero objects, exit
@@ -106,6 +124,30 @@ namespace ProcessExplorer.Application.Behaviours
             await _unitOfWork.CommitAsync();
 
             _logger.LogInfo($"Sync finished: {_time.Now}, SYNC");
+        }
+
+        /// <summary>
+        /// Check if session needs update
+        /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        private bool SessionNeedsUpdate(Session session)
+        {
+            if (session.Applications.Count == 0 && session.ProcessEntities.Count == 0)
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Are we working with current session
+        /// </summary>
+        /// <param name="sessions"></param>
+        /// <returns></returns>
+        private bool IsCurrentSession(List<Session> sessions)
+        {
+            Guid currentSessionId = _sessionService.SessionInformation.SessionId;
+            //find current session
+            return sessions.FirstOrDefault().Id == currentSessionId;
         }
 
         /// <summary>
@@ -124,29 +166,28 @@ namespace ProcessExplorer.Application.Behaviours
         }
 
         /// <summary>
-        /// Get current session
+        /// Get current session (can be null)
         /// </summary>
         /// <param name="sessions">all stored sessions</param>
         /// <returns></returns>
-        private Session GetCurrentSession(List<Session> sessionForDelete)
+        private Session GetCurrentSessionFromList(List<Session> sessions)
         {
             //get current session ID
             Guid currentSessionId = _sessionService.SessionInformation.SessionId;
 
             //find current session
-            var currentSession = sessionForDelete.SingleOrDefault(i => i.Id == currentSessionId);
+            return sessions.SingleOrDefault(i => i.Id == currentSessionId);
+        }
 
-            //current session synchronized with backend
-            if(currentSession != null)
-            {
-                //remove current session from delete list
-                sessionForDelete.Remove(currentSession);
-
-                return currentSession;
-            }
-
-            //not found
-            return null;
+        /// <summary>
+        /// Remove current session from list
+        /// </summary>
+        /// <param name="sessions"></param>
+        private void RemoveCurrentSessionFromList(List<Session> sessions)
+        {
+            var currentSession = GetCurrentSessionFromList(sessions);
+            if (currentSession != null)
+                sessions.Remove(currentSession);
         }
 
         /// <summary>
