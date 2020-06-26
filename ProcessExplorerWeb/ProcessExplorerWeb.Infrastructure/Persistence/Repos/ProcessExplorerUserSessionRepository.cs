@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProcessExplorerWeb.Application.Common.Charts.Shared;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Common.Models.Session;
 using ProcessExplorerWeb.Core.Entities;
@@ -57,6 +58,31 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
         public async Task<ProcessExplorerUserSession> GetSelectedSession(Guid userId, Guid sessionId)
         {
             return await ProcessExplorerDbContext.Sessions.SingleOrDefaultAsync(i => i.ExplorerUserId == userId && i.Id == sessionId);
+        }
+
+        public async Task<List<PieChartStatisticModel>> OperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
+                            .GroupBy(i => i.OS)
+                            .Select(i => new PieChartStatisticModel
+                            {
+                                Quantity = i.Count(),
+                                ChunkName = i.Key
+                            })
+                            .ToListAsync();
+        }
+
+        public async Task<PopularSessionDayModel> GetMostActiveDay(DateTime startOfPeriod, DateTime endOfPeriod)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
+                            .GroupBy(i => i.Started.Date)
+                            .Select(i => new PopularSessionDayModel
+                            {
+                                Date = i.Key,
+                                NumberOfSessions = i.Count()
+                            })
+                            .OrderByDescending(i => i.NumberOfSessions)
+                            .FirstOrDefaultAsync();
         }
     }
 }

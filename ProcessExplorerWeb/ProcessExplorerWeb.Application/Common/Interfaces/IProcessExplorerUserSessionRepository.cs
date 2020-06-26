@@ -1,8 +1,8 @@
-﻿using ProcessExplorerWeb.Application.Common.Models.Session;
+﻿using ProcessExplorerWeb.Application.Common.Charts.Shared;
+using ProcessExplorerWeb.Application.Common.Models.Session;
 using ProcessExplorerWeb.Core.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Common.Interfaces
@@ -12,5 +12,7 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         Task<ProcessExplorerUserSession> GetSessionWithAppsAndProcesses(Guid sessionId, Guid userId);
         Task<(List<SessionDetailedModel>, int)> FilterSessions(Guid userId, DateTime? selectedDate, int page, int take);
         Task<ProcessExplorerUserSession> GetSelectedSession(Guid userId, Guid sessionId);
+        Task<List<PieChartStatisticModel>> OperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod);
+        Task<PopularSessionDayModel> GetMostActiveDay(DateTime startOfPeriod, DateTime endOfPeriod);
     }
 }
