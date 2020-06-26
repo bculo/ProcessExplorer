@@ -3,11 +3,11 @@ using ProcessExplorerWeb.Application.Common.Models.Session;
 
 namespace ProcessExplorerWeb.Application.Session.Queries.GetSessions
 {
-    public class GetSessionsQueryMapper : IRegister
+    public class GetUserSessionsQueryMapper : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.ForType<SessionDetailedModel, GetSessionsQueryResponseDto>()
+            config.ForType<SessionDetailedModel, GetUserSessionsQueryResponseDto>()
                 .Map(dst => dst.ApplicationNumber, src => src.ApplicationNum)
                 .Map(dst => dst.DifferentProcessesNumber, src => src.DifferentProcesses)
                 .Map(dst => dst.Id, src => src.SessionId)

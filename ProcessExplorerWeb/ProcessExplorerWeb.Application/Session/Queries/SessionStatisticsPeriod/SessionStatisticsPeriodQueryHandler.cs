@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsPeriod
 {
-    public class SessionStatisticsAllQueryHandler : IRequestHandler<SessionStatisticsPeriodQuery, SessionStatisticsPeriodResponseDto>
+    public class SessionStatisticsPeriodQueryHandler : IRequestHandler<SessionStatisticsPeriodQuery, SessionStatisticsPeriodResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDateTime _date;
         private readonly DateTimePeriodOptions _periodOptions;
 
-        public SessionStatisticsAllQueryHandler(IUnitOfWork unitOfWork,
+        public SessionStatisticsPeriodQueryHandler(IUnitOfWork unitOfWork,
             IDateTime date,
             IOptions<DateTimePeriodOptions> options)
         {
@@ -44,7 +44,7 @@ namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsPeriod
             var finalDto = new SessionStatisticsPeriodResponseDto
             {
                 MostActiveDay = mostActiveDay?.Adapt<SessionMostActiveDayDto>(),
-                PieChartRecords = piceChartStatistics?.Adapt<IEnumerable<PieChartDto>>()
+                PieChartRecords = piceChartStatistics?.Adapt<IEnumerable<PieChartDto>>(),
             };
 
             return finalDto;

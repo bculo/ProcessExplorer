@@ -1,13 +1,10 @@
 ﻿using Mapster;
 using ProcessExplorerWeb.Application.Common.Charts.Shared;
 using ProcessExplorerWeb.Application.Common.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsPeriod
+namespace ProcessExplorerWeb.Application.Common.Mappings
 {
-    public class SessionStatisticsAllQueryMapper : IRegister
+    public class PieChartMapper : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {

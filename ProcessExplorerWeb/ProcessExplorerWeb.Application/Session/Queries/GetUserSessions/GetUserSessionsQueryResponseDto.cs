@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProcessExplorerWeb.Application.Session.Queries.GetSessions
 {
-    public class GetSessionsQueryResponseDto
+    public class GetUserSessionsQueryResponseDto
     {
         public Guid Id { get; set; }
         public string UserName { get; set; }

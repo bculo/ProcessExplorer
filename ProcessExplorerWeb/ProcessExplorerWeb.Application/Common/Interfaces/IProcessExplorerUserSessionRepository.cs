@@ -14,5 +14,7 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         Task<ProcessExplorerUserSession> GetSelectedSession(Guid userId, Guid sessionId);
         Task<List<PieChartStatisticModel>> OperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod);
         Task<PopularSessionDayModel> GetMostActiveDay(DateTime startOfPeriod, DateTime endOfPeriod);
+        Task<List<PieChartStatisticModel>> OperatingSystemStatisticsForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId);
+        Task<PopularSessionDayModel> GetMostActiveDayForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId);
     }
 }

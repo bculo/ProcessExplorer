@@ -63,7 +63,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
         public async Task<List<PieChartStatisticModel>> OperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod)
         {
             return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
-                            .GroupBy(i => i.OS)
+                            .GroupBy(i => i.OS) //Group by operating system name
                             .Select(i => new PieChartStatisticModel
                             {
                                 Quantity = i.Count(),
@@ -75,6 +75,31 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
         public async Task<PopularSessionDayModel> GetMostActiveDay(DateTime startOfPeriod, DateTime endOfPeriod)
         {
             return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
+                            .GroupBy(i => i.Started.Date)
+                            .Select(i => new PopularSessionDayModel
+                            {
+                                Date = i.Key,
+                                NumberOfSessions = i.Count()
+                            })
+                            .OrderByDescending(i => i.NumberOfSessions)
+                            .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<PieChartStatisticModel>> OperatingSystemStatisticsForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod && i.ExplorerUserId == userId)
+                            .GroupBy(i => i.OS) //Group by operating system name
+                            .Select(i => new PieChartStatisticModel
+                            {
+                                Quantity = i.Count(),
+                                ChunkName = i.Key
+                            })
+                            .ToListAsync();
+        }
+
+        public async Task<PopularSessionDayModel> GetMostActiveDayForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod && i.ExplorerUserId == userId)
                             .GroupBy(i => i.Started.Date)
                             .Select(i => new PopularSessionDayModel
                             {

@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Session.Queries.GetSessions
 {
-    public class GetSessionsQueryHandler : IRequestHandler<GetSessionsQuery, PaginationResponseDto<GetSessionsQueryResponseDto>>
+    public class GetUserSessionsQueryHandler : IRequestHandler<GetUserSessionsQuery, PaginationResponseDto<GetUserSessionsQueryResponseDto>>
     {
         private readonly ICurrentUserService _currentUser;
         private readonly IUnitOfWork _unitOfWork;
         private readonly PaginationOptions _pagination;
 
-        public GetSessionsQueryHandler(ICurrentUserService currentUser, 
+        public GetUserSessionsQueryHandler(ICurrentUserService currentUser, 
             IUnitOfWork unitOfWork,
             IOptions<PaginationOptions> options)
         {
@@ -26,15 +26,15 @@ namespace ProcessExplorerWeb.Application.Session.Queries.GetSessions
             _pagination = options.Value;
         }
 
-        public async Task<PaginationResponseDto<GetSessionsQueryResponseDto>> Handle(GetSessionsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginationResponseDto<GetUserSessionsQueryResponseDto>> Handle(GetUserSessionsQuery request, CancellationToken cancellationToken)
         {
             Guid userId = _currentUser.UserId;
 
             var (records, total) = await _unitOfWork.Session.FilterSessions(userId, request.SessionDate, request.CurrentPage, _pagination.Take);
 
-            var finalDto = new PaginationResponseDto<GetSessionsQueryResponseDto>
+            var finalDto = new PaginationResponseDto<GetUserSessionsQueryResponseDto>
             {
-                Records = records?.Adapt<IEnumerable<GetSessionsQueryResponseDto>>(),
+                Records = records?.Adapt<IEnumerable<GetUserSessionsQueryResponseDto>>(),
                 TotalRecords = total
             };
 
