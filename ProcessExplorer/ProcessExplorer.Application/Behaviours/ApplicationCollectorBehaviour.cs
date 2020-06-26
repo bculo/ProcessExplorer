@@ -60,7 +60,7 @@ namespace ProcessExplorer.Application.Behaviours
             dto.Applications = apps.Adapt<IEnumerable<ApplicationDto>>();
 
             //sync fetched apps with server if possible
-            if (!await syncClient.Sync(dto))
+            if (!await syncClient.SyncApplications(dto))
             {
                 //store records to local database if sync with server failes
                 await StoreRecords(apps);

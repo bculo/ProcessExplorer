@@ -59,7 +59,7 @@ namespace ProcessExplorer.Application.Behaviours
             dto.Processes = processes.Adapt<IEnumerable<ProcessDto>>();
 
             //send to server
-            if (!await syncClient.Sync(dto))
+            if (!await syncClient.SyncProcesses(dto))
             {
                 //store records to local database
                 await StoreRecords(processes);

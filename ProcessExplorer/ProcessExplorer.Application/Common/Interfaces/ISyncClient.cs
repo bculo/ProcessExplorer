@@ -15,5 +15,20 @@ namespace ProcessExplorer.Application.Common.Interfaces
         /// <returns></returns>
         Task<bool> Sync(UserSessionDto sessionDto);
 
+        /// <summary>
+        /// Sync applications
+        /// </summary>
+        /// <param name="sessionDto"></param>
+        /// <returns></returns>
+        Task<bool> SyncApplications(UserSessionDto sessionDto);
+
+
+        /// <summary>
+        /// Sync processes
+        /// </summary>
+        /// <param name="sessionDto"></param>
+        /// <returns></returns>
+        Task<bool> SyncProcesses(UserSessionDto sessionDto);
+
     }
 }

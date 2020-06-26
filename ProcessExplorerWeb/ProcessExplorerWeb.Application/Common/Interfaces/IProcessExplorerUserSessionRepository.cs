@@ -9,6 +9,8 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
 {
     public interface IProcessExplorerUserSessionRepository : IRepository<ProcessExplorerUserSession>
     {
+        Task<int> GetNumberOfSessinsForPeriod(DateTime startOfPeriod, DateTime endOfPeriod);
+        Task<int> GetNumberOfSessinsForUser(Guid userId);
         Task<ProcessExplorerUserSession> GetSessionWithAppsAndProcesses(Guid sessionId, Guid userId);
         Task<ProcessExplorerUserSession> GetSessionWithProcesses(Guid sessionId, Guid userId);
         Task<ProcessExplorerUserSession> GetSessionWithApps(Guid sessionId, Guid userId);

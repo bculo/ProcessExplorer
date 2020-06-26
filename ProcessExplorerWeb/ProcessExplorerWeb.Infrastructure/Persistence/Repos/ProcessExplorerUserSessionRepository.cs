@@ -39,7 +39,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
             int recordsCount = await query.CountAsync();
 
             //get paginated result
-            var records = await query.OrderByDescending(i => i.Started)
+            var records = await query.OrderByDescending(i => i.Started.Date)
                             .Skip((page - 1) * take).Take(take)
                             .Select(i => new SessionDetailedModel
                             {
@@ -62,7 +62,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<List<PieChartStatisticModel>> GetOperatingSystemStatistics(DateTime startOfPeriod, DateTime endOfPeriod)
         {
-            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started.Date >= startOfPeriod && i.Started.Date <= endOfPeriod)
                             .GroupBy(i => i.OS) //Group by operating system name
                             .Select(i => new PieChartStatisticModel
                             {
@@ -74,7 +74,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<PopularSessionDayModel> GetMostActiveDay(DateTime startOfPeriod, DateTime endOfPeriod)
         {
-            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started.Date >= startOfPeriod && i.Started.Date <= endOfPeriod)
                             .GroupBy(i => i.Started.Date)
                             .Select(i => new PopularSessionDayModel
                             {
@@ -87,7 +87,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<List<PieChartStatisticModel>> GetOperatingSystemStatisticsForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
         {
-            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod && i.ExplorerUserId == userId)
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started.Date >= startOfPeriod && i.Started.Date <= endOfPeriod && i.ExplorerUserId == userId)
                             .GroupBy(i => i.OS) //Group by operating system name
                             .Select(i => new PieChartStatisticModel
                             {
@@ -99,7 +99,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<PopularSessionDayModel> GetMostActiveDayForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
         {
-            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod && i.ExplorerUserId == userId)
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started.Date >= startOfPeriod && i.Started.Date <= endOfPeriod && i.ExplorerUserId == userId)
                             .GroupBy(i => i.Started.Date)
                             .Select(i => new PopularSessionDayModel
                             {
@@ -112,7 +112,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<List<SessionChartLineModel>> GetActivityChartStatistics(DateTime startOfPeriod, DateTime endOfPeriod)
         {
-            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod)
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started.Date >= startOfPeriod && i.Started.Date <= endOfPeriod)
                             .GroupBy(i => i.Started.Date)
                             .Select(i => new SessionChartLineModel
                             {
@@ -125,7 +125,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<List<SessionChartLineModel>> GetActivityChartStatisticsForUser(DateTime startOfPeriod, DateTime endOfPeriod, Guid userId)
         {
-            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started >= startOfPeriod && i.Started <= endOfPeriod && i.ExplorerUserId == userId)
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started.Date >= startOfPeriod && i.Started.Date <= endOfPeriod && i.ExplorerUserId == userId)
                             .GroupBy(i => i.Started.Date)
                             .Select(i => new SessionChartLineModel
                             {
@@ -148,6 +148,18 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
             return await ProcessExplorerDbContext.Sessions
                             .Include(i => i.Applications)
                             .SingleOrDefaultAsync(i => i.Id == sessionId && i.ExplorerUserId == userId);
+        }
+
+        public async Task<int> GetNumberOfSessinsForPeriod(DateTime startOfPeriod, DateTime endOfPeriod)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.Started.Date >= startOfPeriod && i.Started.Date <= endOfPeriod)
+                            .CountAsync();
+        }
+
+        public async Task<int> GetNumberOfSessinsForUser(Guid userId)
+        {
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.ExplorerUserId == userId)
+                            .CountAsync();
         }
     }
 }

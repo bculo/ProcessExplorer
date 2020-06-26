@@ -36,5 +36,35 @@ namespace ProcessExplorer.Service.Clients.Sync
 
             return false;
         }
+
+        public async Task<bool> SyncApplications(UserSessionDto sessionDto)
+        {
+            sessionDto.Processes = null;
+
+            var response = await Post("Synchronization/sync/applications", sessionDto, _tokenService.GetValidToken());
+
+            if (TimeOccurred) //Timeout occurred
+                return false;
+
+            if (response.IsSuccessStatusCode)
+                return true;
+
+            return false;
+        }
+
+        public async Task<bool> SyncProcesses(UserSessionDto sessionDto)
+        {
+            sessionDto.Applications = null;
+
+            var response = await Post("Synchronization/sync/processes", sessionDto, _tokenService.GetValidToken());
+
+            if (TimeOccurred) //Timeout occurred
+                return false;
+
+            if (response.IsSuccessStatusCode)
+                return true;
+
+            return false;
+        }
     }
 }

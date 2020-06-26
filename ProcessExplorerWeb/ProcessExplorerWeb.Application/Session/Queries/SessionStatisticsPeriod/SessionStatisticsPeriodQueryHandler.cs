@@ -32,7 +32,7 @@ namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsPeriod
         public async Task<SessionStatisticsPeriodResponseDto> Handle(SessionStatisticsPeriodQuery request, CancellationToken cancellationToken)
         {
             //NOTE _periodOptions.DaysBack is negative number. You can see concrete value in appsetings.json
-            DateTime endOfPeriod = _date.Now;
+            DateTime endOfPeriod = _date.Now.Date;
             DateTime startOfPeriod = endOfPeriod.AddDays(_periodOptions.DaysBack); 
 
             //pie chart statistis for operating systems
