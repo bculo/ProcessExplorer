@@ -22,12 +22,18 @@ namespace ProcessExplorer.Api
             using var scope = host.Services.CreateScope();
             try
             {
+                logger.Info("STARTED");
                 await DLLInfrastructureConfiguration.ConfigureStorage(scope.ServiceProvider);
             }
             catch (Exception error)
             {
                 logger.Error(error);
                 throw error;
+            }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                NLog.LogManager.Shutdown();
             }
 
             await host.RunAsync();

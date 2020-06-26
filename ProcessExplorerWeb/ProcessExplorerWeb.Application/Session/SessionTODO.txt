@@ -1,11 +1,1 @@
 ﻿STATISTIS 
-	1. TODO -> IN WORK
-	-Get statistics for all session (FOR PIE)
-	-most session on day
-	-total number of sessions
-	-total number of users
-
-	2. TODO
-	-Get statics for user (FOR PIE)
-	-most session on day for user
-	-total number of sessions for user
