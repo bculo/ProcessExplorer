@@ -37,13 +37,17 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod
             DateTime endOfPeriod = _date.Now.Date;
             DateTime startOfPeriod = endOfPeriod.AddDays(_periodOptions.DaysBack);
 
+            //get number of sessions for given period
+            int maxNumOfSessions = await _unitOfWork.Session.GetNumberOfSessinsForPeriod(startOfPeriod, endOfPeriod);
+
             //get column chart models
             var columnChart = await _unitOfWork.Process.GetMostUsedProcessesForPeriod(startOfPeriod, endOfPeriod, _pagination.Take);
 
             //map
             var dto = new TopProcessesPeriodQueryResponseDto
             {
-                ChartRecords = columnChart?.Adapt<IEnumerable<ColumnChartDto>>()
+                ChartRecords = columnChart?.Adapt<IEnumerable<ColumnChartDto>>(),
+                MaxNumberOfSessions = maxNumOfSessions
             };
 
             //success

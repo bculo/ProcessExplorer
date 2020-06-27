@@ -1,8 +1,4 @@
-﻿-
-	1. search top 10 most common processes num / sessions -> period
-
-	2. search top 5 process for user -> all time	
-	
+﻿
 	3. number of processes per session for some period -> user all time
 
 	4. Number of different processes per day all users -> period

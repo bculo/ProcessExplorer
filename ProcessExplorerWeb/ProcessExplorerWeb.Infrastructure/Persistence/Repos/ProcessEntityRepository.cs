@@ -101,5 +101,20 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .ToListAsync();
 
         }
+
+        public async Task<List<ColumnChartStatisticModel>> GetMostUsedProcessesForUser(Guid userId, int take)
+        {
+            //get records for specific user
+            return await ProcessExplorerDbContext.Processes.Where(i => i.Session.ExplorerUserId == userId)
+                                        .GroupBy(i => i.ProcessName)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new ColumnChartStatisticModel
+                                        {
+                                            Label = i.Key,
+                                            Value = i.Count()
+                                        })
+                                        .Take(take)
+                                        .ToListAsync();
+        }
     }
 }

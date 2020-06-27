@@ -33,12 +33,23 @@ namespace ProcessExplorer.Api.Controllers
         }
 
         /// <summary>
-        /// Search process
+        /// Msot used processes for some period
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("topprocessesperiod")]
         public async Task<IActionResult> GetTopProcessesForPeriod()
+        {
+            return Ok(await Mediator.Send(new TopProcessesPeriodQuery()));
+        }
+
+        /// <summary>
+        /// Most used process by user
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("topprocessesuser")]
+        public async Task<IActionResult> GetTopProcessesForUser()
         {
             return Ok(await Mediator.Send(new TopProcessesPeriodQuery()));
         }

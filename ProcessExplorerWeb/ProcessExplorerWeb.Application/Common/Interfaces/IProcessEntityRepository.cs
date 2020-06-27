@@ -13,5 +13,6 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         Task<(List<ProcessSearchModel>, int)> GetProcessesForPeriod(DateTime start, DateTime end, int currentPage, int take, string searchCriteria);
         Task<(List<ProcessSearchModel>, int)> GetProcessesForUser(Guid userId, int currentPage, int take, string searchCriteria);
         Task<List<ColumnChartStatisticModel>> GetMostUsedProcessesForPeriod(DateTime start, DateTime end, int take);
+        Task<List<ColumnChartStatisticModel>> GetMostUsedProcessesForUser(Guid userId, int take);
     }
 }
