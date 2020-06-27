@@ -11,7 +11,10 @@ namespace ProcessExplorerWeb.Application.Processes.Common.Dtos
         /// </summary>
         public string ProcessName { get; set; }
 
-        public string GoogleSearchQuery { get; set; }
+        /// <summary>
+        /// For google search
+        /// </summary>
+        public string GoogleSearchQuery => ProcessName.Replace(' ', '+');
 
         /// <summary>
         /// occures in number of sessions

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProcessExplorerWeb.Application.Processes.Queries.GetProcessesPeriod;
 using ProcessExplorerWeb.Application.Processes.Queries.GetProcessesUser;
+using ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Api.Controllers
@@ -29,6 +30,17 @@ namespace ProcessExplorer.Api.Controllers
         public async Task<IActionResult> SearchUserProcesses([FromBody] GetProcessesUserQuery query)
         {
             return Ok(await Mediator.Send(query));
+        }
+
+        /// <summary>
+        /// Search process
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("topprocessesperiod")]
+        public async Task<IActionResult> GetTopProcessesForPeriod()
+        {
+            return Ok(await Mediator.Send(new TopProcessesPeriodQuery()));
         }
     }
 }

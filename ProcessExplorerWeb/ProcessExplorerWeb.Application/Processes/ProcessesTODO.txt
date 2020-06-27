@@ -1,12 +1,10 @@
 ﻿-
-	2. search top 10 most common process process num / sessions
+	1. search top 10 most common processes num / sessions -> period
 
-	3. search process user -> order by usage on session process number / sessions -> DOING
-
-	4. search top 5 process for user	
+	2. search top 5 process for user -> all time	
 	
-	5. number of processes per session for some period
+	3. number of processes per session for some period -> user all time
 
-	6. Number of different processes per day all users
+	4. Number of different processes per day all users -> period
 
-	7 Number of different processes per day for single user
+	5. Number of different processes per day for single user -> all time

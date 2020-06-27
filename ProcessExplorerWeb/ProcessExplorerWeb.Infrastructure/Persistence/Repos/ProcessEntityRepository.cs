@@ -1,6 +1,7 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using ProcessExplorerWeb.Application.Common.Interfaces;
+using ProcessExplorerWeb.Application.Common.Models.Charts;
 using ProcessExplorerWeb.Application.Common.Models.Process;
 using ProcessExplorerWeb.Core.Entities;
 using System;
@@ -27,12 +28,8 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<(List<ProcessSearchModel>, int)> GetProcessesForPeriod(DateTime start, DateTime end, int currentPage, int take, string searchCriteria)
         {
-            //turn searchCriteria in null if empty
-            //if not null keep search criteria value and make it lowercase
-            searchCriteria = string.IsNullOrEmpty(searchCriteria) ? null : searchCriteria.ToLower();
-
             //get records for specific period and group them by name
-            var query = ProcessExplorerDbContext.Processes.Where(i => i.Detected.Date >= start.Date && i.Detected.Date <= end.Date);
+            var query = ProcessExplorerDbContext.Processes.Where(i => i.Detected.Date >= start && i.Detected.Date <= end);
 
             if (!string.IsNullOrEmpty(searchCriteria))
             {
@@ -61,10 +58,6 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
         public async Task<(List<ProcessSearchModel>, int)> GetProcessesForUser(Guid userId, int currentPage, int take, string searchCriteria)
         {
-            //turn searchCriteria in null if empty
-            //if not null keep search criteria value and make it lowercase
-            searchCriteria = string.IsNullOrEmpty(searchCriteria) ? null : searchCriteria.ToLower();
-
             //get records for given user id and group by process name
             var query = ProcessExplorerDbContext.Processes.Where(i => i.Session.ExplorerUserId == userId);
 
@@ -91,6 +84,22 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .ToListAsync();
 
             return (records, count);
+        }
+
+        public async Task<List<ColumnChartStatisticModel>> GetMostUsedProcessesForPeriod(DateTime start, DateTime end, int take)
+        {
+            //get records for specific period
+            return await ProcessExplorerDbContext.Processes.Where(i => i.Detected.Date >= start && i.Detected.Date <= end)
+                                        .GroupBy(i => i.ProcessName)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new ColumnChartStatisticModel
+                                        {
+                                            Label = i.Key,
+                                            Value = i.Count()
+                                        })
+                                        .Take(take)
+                                        .ToListAsync();
+
         }
     }
 }
