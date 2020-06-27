@@ -1,6 +1,2 @@
 ﻿
-	3. number of processes per session for some period -> user all time
-
 	4. Number of different processes per day all users -> period
-
-	5. Number of different processes per day for single user -> all time

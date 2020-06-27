@@ -116,5 +116,33 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .Take(take)
                                         .ToListAsync();
         }
+
+        public async Task<List<ColumnChartStatisticModel>> GetProcessesStatsForSessions(Guid userId, int take)
+        {
+            //get records for specific user
+            return await ProcessExplorerDbContext.Sessions.Where(i => i.ExplorerUserId == userId)
+                                        .OrderByDescending(i => i.Started)
+                                        .Select(i => new ColumnChartStatisticModel
+                                        {
+                                            Label = i.Started.ToString(),
+                                            Value = i.Processes.Count
+                                        })
+                                        .Take(take)
+                                        .ToListAsync();
+        }
+
+        public async Task<TopProcessDayModel> DayWithMostDifferentProcessesForAllTime()
+        {
+            //get records for specific user
+            return await ProcessExplorerDbContext.Processes
+                                        .GroupBy(i => i.Detected.Date)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new TopProcessDayModel
+                                        {
+                                            Day = i.Key,
+                                            TotalNumberOfDifferentProcesses = i.Count()
+                                        })
+                                        .FirstOrDefaultAsync();
+        }
     }
 }

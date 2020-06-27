@@ -11,15 +11,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProcessExplorerWeb.Application.Processes.Queries.GetProcessesUser
+namespace ProcessExplorerWeb.Application.Processes.Queries.SearchProcessesUser
 {
-    public class GetProcessesUserQueryHandler : IRequestHandler<GetProcessesUserQuery, ProcessPaginationResponseDto<ProcessSearchResponseDto>>
+    public class SearchProcessesUserQueryHandler : IRequestHandler<SearchProcessesUserQuery, ProcessPaginationResponseDto<ProcessSearchResponseDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly PaginationOptions _pagination;
         private readonly ICurrentUserService _currentUser;
 
-        public GetProcessesUserQueryHandler(IUnitOfWork unitOfWork,
+        public SearchProcessesUserQueryHandler(IUnitOfWork unitOfWork,
             IOptions<PaginationOptions> pagination,
             ICurrentUserService currentUser)
         {
@@ -28,7 +28,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.GetProcessesUser
             _currentUser = currentUser;
         }
 
-        public async Task<ProcessPaginationResponseDto<ProcessSearchResponseDto>> Handle(GetProcessesUserQuery request, CancellationToken cancellationToken)
+        public async Task<ProcessPaginationResponseDto<ProcessSearchResponseDto>> Handle(SearchProcessesUserQuery request, CancellationToken cancellationToken)
         {
             //Get total number of sessions
             var totalNumberOfSessions = await _unitOfWork.Session.GetNumberOfSessinsForUser(_currentUser.UserId);

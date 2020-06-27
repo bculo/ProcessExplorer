@@ -10,16 +10,16 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProcessExplorerWeb.Application.Processes.Queries.GetProcessesPeriod
+namespace ProcessExplorerWeb.Application.Processes.Queries.SearchProcessesPeriod
 {
-    public class GetProcessesPeriodQueryHandler : IRequestHandler<GetProcessesPeriodQuery, ProcessPaginationResponseDto<ProcessSearchResponseDto>>
+    public class SearchProcessesPeriodQueryHandler : IRequestHandler<SearchProcessesPeriodQuery, ProcessPaginationResponseDto<ProcessSearchResponseDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDateTime _date;
         private readonly DateTimePeriodOptions _periodOptions;
         private readonly PaginationOptions _pagination;
 
-        public GetProcessesPeriodQueryHandler(IUnitOfWork unitOfWork,
+        public SearchProcessesPeriodQueryHandler(IUnitOfWork unitOfWork,
             IDateTime date,
             IOptions<DateTimePeriodOptions> options,
             IOptions<PaginationOptions> pagination)
@@ -30,7 +30,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.GetProcessesPeriod
             _pagination = pagination.Value;
         }
 
-        public async Task<ProcessPaginationResponseDto<ProcessSearchResponseDto>> Handle(GetProcessesPeriodQuery request, CancellationToken cancellationToken)
+        public async Task<ProcessPaginationResponseDto<ProcessSearchResponseDto>> Handle(SearchProcessesPeriodQuery request, CancellationToken cancellationToken)
         {
             //NOTE _periodOptions.DaysBack is negative number. You can see concrete value in appsetings.json
             DateTime endOfPeriod = _date.Now.Date;
