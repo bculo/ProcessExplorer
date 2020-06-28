@@ -3,6 +3,7 @@ import { ApplicationUser } from '../shared/models/application-user.model';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { SignalRService } from '../shared/services/signal-r.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -15,6 +16,7 @@ export class NavComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   constructor(private authService: AuthenticationService,
+    private router: Router,
     private signalR: SignalRService) { }
 
   ngOnDestroy(): void {
@@ -35,6 +37,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   onLogout(){
     this.authService.logout();
+    this.router.navigate(['/authentication']);
   }
 
   isAuthenticated(){

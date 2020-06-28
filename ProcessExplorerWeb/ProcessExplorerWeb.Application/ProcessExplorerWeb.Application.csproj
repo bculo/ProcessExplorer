@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Application\Commands\" />
+    <Folder Include="Application\Common\" />
     <Folder Include="Application\Queries\" />
     <Folder Include="Common\Enums\" />
     <Folder Include="Processes\Commands\" />

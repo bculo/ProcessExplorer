@@ -24,10 +24,13 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/chart.js/dist/Chart.min.css",
               "./node_modules/bulma/css/bulma.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/chart.js/dist/Chart.min.js"
+            ]
           },
           "configurations": {
             "production": {
