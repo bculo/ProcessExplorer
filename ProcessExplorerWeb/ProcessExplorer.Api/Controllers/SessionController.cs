@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProcessExplorerWeb.Application.Session.Queries.GetSeletedSession;
 using ProcessExplorerWeb.Application.Session.Queries.GetSessions;
 using ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsPeriod;
+using ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsUserPeriod;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Api.Controllers
@@ -31,7 +32,7 @@ namespace ProcessExplorer.Api.Controllers
         [HttpGet("usersessionstatistic")]
         public async Task<IActionResult> UserSessionsStatistic()
         {
-            return Ok(await Mediator.Send(new SessionStatisticsPeriodQuery()));
+            return Ok(await Mediator.Send(new SessionStatisticsUserPeriodQuery()));
         }
     }
 }

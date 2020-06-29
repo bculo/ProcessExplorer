@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../session.service';
-import { IActivityRecords, ISessionStatsResponse, IPieChartRecords } from '../models/session.models';
+import { SessionService } from '../../session.service';
+import { IActivityRecords, ISessionStatsResponse, IPieChartRecords } from '../../models/session.models';
 import { IChartModel } from 'src/app/shared/models/interfaces.models';
 
 @Component({
-  selector: 'app-session-all',
-  templateUrl: './session-all.component.html',
-  styleUrls: ['./session-all.component.css']
+  selector: 'app-session-all-stats',
+  templateUrl: './session-all-stats.component.html',
+  styleUrls: ['./session-all-stats.component.css']
 })
-export class SessionAllComponent implements OnInit {
+export class SessionAllStatsComponent implements OnInit {
 
   //pie chart stats
   public pieChart: IChartModel = {
@@ -39,7 +39,7 @@ export class SessionAllComponent implements OnInit {
   constructor(public service: SessionService) { }
 
   ngOnInit(): void {
-    this.service.getSessionStatistic().subscribe(response => {
+    this.service.getSessionStatisticAll().subscribe(response => {
       this.setPieChartValues(response.pieChartRecords);
       this.setNumberStatistics(response);
       this.setRecordsForActivityChart(response.activityChartRecords);

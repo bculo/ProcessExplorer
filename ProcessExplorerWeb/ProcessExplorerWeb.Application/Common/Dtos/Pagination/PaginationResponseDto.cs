@@ -6,5 +6,6 @@ namespace ProcessExplorerWeb.Application.Common.Dtos
     {
         public IEnumerable<T> Records { get; set; }
         public int TotalRecords { get; set; }
+        public int TotalPages { get; set; }
     }
 }

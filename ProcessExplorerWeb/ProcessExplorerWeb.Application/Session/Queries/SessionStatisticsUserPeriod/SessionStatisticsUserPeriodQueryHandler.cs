@@ -47,16 +47,14 @@ namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsUserPe
             //get line chart for activity
             var lineChartStatistic = await _unitOfWork.Session.GetActivityChartStatisticsForUser(startOfPeriod, endOfPeriod, _currentUser.UserId);
             //fill mising dates
-            lineChartStatistic.FillDatesThatAreMissing(startOfPeriod, endOfPeriod);
+            lineChartStatistic = lineChartStatistic.FillDatesThatAreMissing(startOfPeriod, endOfPeriod);
 
             //map to dto
             var finalDto = new SessionStatisticsUserPeriodQueryResponseDto
             {
                 MostActiveDay = mostActiveDay?.Adapt<SessionMostActiveDayDto>(),
-                PieChartRecords = piceChartStatistics?.Adapt<IEnumerable<PieChartDto>>(),
-                ActivityChartRecords = lineChartStatistic?.Adapt<IEnumerable<SessionLineChartDto>>(),
-                EndOfPeriod = endOfPeriod,
-                StartOfPeriod = startOfPeriod
+                PieChartRecords = piceChartStatistics?.Adapt<PieChartDto>(),
+                ActivityChartRecords = lineChartStatistic?.Adapt<SessionLineChartDto>(),
             };
 
             return finalDto;

@@ -35,7 +35,8 @@ namespace ProcessExplorerWeb.Application.Session.Queries.GetSessions
             var finalDto = new PaginationResponseDto<GetUserSessionsQueryResponseDto>
             {
                 Records = records?.Adapt<IEnumerable<GetUserSessionsQueryResponseDto>>(),
-                TotalRecords = total
+                TotalRecords = total,
+                TotalPages = (int)Math.Ceiling((double)total / _pagination.Take)
             };
 
             return finalDto;

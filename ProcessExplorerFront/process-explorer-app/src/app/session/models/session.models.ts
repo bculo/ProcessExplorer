@@ -20,3 +20,12 @@ export interface ISessionStatsResponse {
     totalNumberOfSessions: number;
     numberOfUsers: number
 }
+
+export interface ISessionItem {
+    id: string;
+    userName: string;
+    os: string;
+    started: Date;
+    differentProcessesNumber: number;
+    applicationNumber: number;
+}

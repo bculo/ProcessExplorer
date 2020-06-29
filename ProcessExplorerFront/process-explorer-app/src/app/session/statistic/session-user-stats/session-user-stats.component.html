@@ -1,0 +1,41 @@
+<div class="content-box">
+
+    <div *ngIf="pieChart.data.length > 0" class="box">
+        <canvas baseChart
+            [legend]="pieChart.title"
+            [data]="pieChart.data"
+            [labels]="pieChart.labels"
+            [chartType]="pieChart.type"
+            [colors]="pieChart.colors"></canvas>
+    </div>
+
+
+    <div class="columns is-multiline has-text-centered">
+
+        <div class="column is-half">
+            <div class="box">
+                <p class="heading">Day with most sessions</p>
+                <p class="title"> {{ numberStats.mostActiveDay }} </p>
+            </div>
+        </div>
+
+        <div class="column is-half">
+            <div class="box">
+                <p class="heading">Maximum number of session (Single day)</p>
+                <p class="title"> {{ numberStats.maxNumberOfSession }} </p>
+            </div>
+        </div>
+
+    </div>       
+
+
+    <div *ngIf="activityChart.data.length > 0" class="box">
+        <canvas baseChart
+            [legend]="activityChart.title"
+            [data]="activityChart.data"
+            [labels]="activityChart.labels"
+            [chartType]="activityChart.type"
+            [colors]="activityChart.colors"></canvas>
+    </div>
+
+</div>

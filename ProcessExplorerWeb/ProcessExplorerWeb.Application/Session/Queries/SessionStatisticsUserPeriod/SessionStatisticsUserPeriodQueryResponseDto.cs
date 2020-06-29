@@ -7,9 +7,9 @@ namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsUserPe
 {
     public class SessionStatisticsUserPeriodQueryResponseDto
     {
-        public IEnumerable<PieChartDto> PieChartRecords { get; set; }
+        public PieChartDto PieChartRecords { get; set; }
         public SessionMostActiveDayDto MostActiveDay { get; set; }
-        public IEnumerable<SessionLineChartDto> ActivityChartRecords { get; set; }
+        public SessionLineChartDto ActivityChartRecords { get; set; }
         public DateTime StartOfPeriod { get; set; }
         public DateTime EndOfPeriod { get; set; }
     }
