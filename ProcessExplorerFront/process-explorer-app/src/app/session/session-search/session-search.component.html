@@ -1,4 +1,14 @@
-<div class="content-box">
+<div *ngIf="isLoading" class="content-box box">
+  <app-spinner></app-spinner>
+</div>
+
+<article *ngIf="!isLoading && errorMessage" class="message is-danger content-box">
+  <div class="message-body">
+      {{ errorMessage }}
+  </div>
+</article>
+
+<div *ngIf="!isLoading && !errorMessage" class="content-box">
 
     <table class="table is-fullwidth is-hoverable">
         <thead>

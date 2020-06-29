@@ -10,6 +10,9 @@ import { environment } from 'src/environments/environment';
 })
 export class SessionSearchComponent implements OnInit {
 
+  public errorMessage: string | null = null;
+  public isLoading: boolean = true;
+
   public totalRecords: number = 0;
   public records: ISessionItem[] = [];
   public currentPage: number = 1;
@@ -24,10 +27,16 @@ export class SessionSearchComponent implements OnInit {
   getRecords(){
     this.service.getSessionsForUsers(this.currentPage)
       .subscribe(response => {
-        console.log(response);
         this.records = response.records;
         this.totalRecords = response.totalRecords;
         this.totalPages = response.totalPages;
+
+        this.isLoading = false;
+        this.errorMessage = null;
+      },
+      (error) => {
+        this.errorMessage = "An error occurred";
+        this.isLoading = false;
       });
   }
 

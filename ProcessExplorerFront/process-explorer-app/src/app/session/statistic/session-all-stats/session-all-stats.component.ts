@@ -10,6 +10,9 @@ import { IChartModel } from 'src/app/shared/models/interfaces.models';
 })
 export class SessionAllStatsComponent implements OnInit {
 
+  public errorMessage: string | null = null;
+  public isLoading: boolean = true;
+
   //pie chart stats
   public pieChart: IChartModel = {
     data: [],
@@ -39,11 +42,19 @@ export class SessionAllStatsComponent implements OnInit {
   constructor(public service: SessionService) { }
 
   ngOnInit(): void {
-    this.service.getSessionStatisticAll().subscribe(response => {
-      this.setPieChartValues(response.pieChartRecords);
-      this.setNumberStatistics(response);
-      this.setRecordsForActivityChart(response.activityChartRecords);
-    });
+    this.service.getSessionStatisticAll()
+      .subscribe(response => {
+        this.setPieChartValues(response.pieChartRecords);
+        this.setNumberStatistics(response);
+        this.setRecordsForActivityChart(response.activityChartRecords);
+
+        this.isLoading = false;
+        this.errorMessage = null;
+      },
+      (error) => {
+        this.errorMessage = "An error occurred";
+        this.isLoading = false;
+      });
   }
 
   setPieChartValues(records: IPieChartRecords){

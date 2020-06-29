@@ -11,6 +11,10 @@ const routes: Routes = [
     path: 'session', 
     loadChildren: () => import('./session/session.module').then(l => l.SessionModule) 
   },
+  { 
+    path: 'process', 
+    loadChildren: () => import('./process/process.module').then(l => l.ProcessModule) 
+  },
 ];
 
 @NgModule({

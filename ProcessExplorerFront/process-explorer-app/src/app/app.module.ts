@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NavComponent } from './nav/nav.component';
 import { FooterComponent } from './footer/footer.component';
-import { SessionComponent } from './session/session.component';
 import { CoreModule } from './core.module';
 
 @NgModule({

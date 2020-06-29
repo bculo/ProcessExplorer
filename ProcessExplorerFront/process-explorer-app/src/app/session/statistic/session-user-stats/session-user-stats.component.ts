@@ -10,6 +10,9 @@ import { ISessionStatsResponse, IPieChartRecords, IActivityRecords } from '../..
 })
 export class SessionUserStatsComponent implements OnInit {
 
+  public errorMessage: string | null = null;
+  public isLoading: boolean = true;
+
   //pie chart stats
   public pieChart: IChartModel = {
     data: [],
@@ -39,11 +42,19 @@ export class SessionUserStatsComponent implements OnInit {
   constructor(public service: SessionService) { }
 
   ngOnInit(): void {
-    this.service.getSessionStatisticUser().subscribe(response => {
-      this.setPieChartValues(response.pieChartRecords);
-      this.setNumberStatistics(response);
-      this.setRecordsForActivityChart(response.activityChartRecords);
-    });
+    this.service.getSessionStatisticUser()
+      .subscribe(response => {
+        this.setPieChartValues(response.pieChartRecords);
+        this.setNumberStatistics(response);
+        this.setRecordsForActivityChart(response.activityChartRecords);
+
+        this.isLoading = false;
+        this.errorMessage = null;
+      },
+      (error) => {
+        this.isLoading = false;
+        this.errorMessage = "Ann error occurred";
+      });
   }
 
   setPieChartValues(records: IPieChartRecords){

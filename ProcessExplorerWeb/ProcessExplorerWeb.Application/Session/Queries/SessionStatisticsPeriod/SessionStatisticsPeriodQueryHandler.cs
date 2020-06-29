@@ -8,7 +8,6 @@ using ProcessExplorerWeb.Application.Session.Extensions;
 using ProcessExplorerWeb.Application.Session.SharedDtos;
 using ProcessExplorerWeb.Core.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
