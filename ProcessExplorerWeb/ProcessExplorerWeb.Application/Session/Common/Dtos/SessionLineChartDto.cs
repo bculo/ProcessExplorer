@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProcessExplorerWeb.Application.Session.SharedDtos
 {
     public class SessionLineChartDto
     {
-        public DateTime Date { get; set; }
-        public int Number { get; set; }
+        public IEnumerable<string> Date { get; set; }
+        public IEnumerable<int> Number { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace ProcessExplorerWeb.Application.Common.Dtos
 {
     public class PieChartDto
     {
-        public string Name { get; set; }
-        public int Quantity { get; set; }
+        public IEnumerable<string> Name { get; set; }
+        public IEnumerable<int> Quantity { get; set; }
     }
 }

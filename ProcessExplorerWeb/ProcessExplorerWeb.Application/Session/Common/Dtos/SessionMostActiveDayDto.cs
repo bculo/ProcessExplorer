@@ -6,7 +6,7 @@ namespace ProcessExplorerWeb.Application.Session.SharedDtos
 {
     public class SessionMostActiveDayDto
     {
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public int NumberOfSessions { get; set; }
     }
 }

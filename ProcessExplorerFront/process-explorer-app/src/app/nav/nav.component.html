@@ -18,41 +18,23 @@
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item">
-                    Home
+                <a routerLink="/session" class="navbar-item">
+                    Sessions
                 </a>
-
-                <a class="navbar-item">
-                    Documentation
+                <a routerLink="/session" class="navbar-item">
+                    Applications
                 </a>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
-                        More
-                    </a>
-
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item">
-                            About
-                        </a>
-                        <a class="navbar-item">
-                            Jobs
-                        </a>
-                        <a class="navbar-item">
-                            Contact
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item">
-                            Report an issue
-                        </a>
-                    </div>
-                </div>
+                <a routerLink="/session" class="navbar-item">
+                    Processes
+                </a>
             </div>
        
             <div class="navbar-end">
+
                 <div *ngIf="isAuthenticated()" class="navbar-item">
                     {{ authenticatedUser.userName }}
                 </div>
+
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-primary" (click)="onLogout()" *ngIf="isAuthenticated()">
@@ -66,6 +48,7 @@
                         </a>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>

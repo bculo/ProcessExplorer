@@ -4,7 +4,9 @@ import { SharedModule } from '../shared/shared.module';
 import { SessionRoutingModule } from './session-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SessionComponent } from './session.component';
-import { OperatingSystemStatisticComponent } from './charts/operating-system-statistic/operating-system-statistic.component';
+import { SessionAllComponent } from './session-all/session-all.component';
+import { SessionUserComponent } from './session-user/session-user.component';
+import { SessionTabsComponent } from './session-tabs/session-tabs.component';
 
 @NgModule({
     imports: [
@@ -15,7 +17,9 @@ import { OperatingSystemStatisticComponent } from './charts/operating-system-sta
     ],
     declarations: [
         SessionComponent,
-        OperatingSystemStatisticComponent,
+        SessionAllComponent,
+        SessionUserComponent,
+        SessionTabsComponent,
     ]
 })
 export class SessionModule {}

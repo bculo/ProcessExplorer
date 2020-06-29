@@ -9,6 +9,7 @@ using ProcessExplorerWeb.Application.Session.SharedDtos;
 using ProcessExplorerWeb.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +34,13 @@ namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsPeriod
         {
             //NOTE _periodOptions.DaysBack is negative number. You can see concrete value in appsetings.json
             DateTime endOfPeriod = _date.Now.Date;
-            DateTime startOfPeriod = endOfPeriod.AddDays(_periodOptions.DaysBack); 
+            DateTime startOfPeriod = endOfPeriod.AddDays(_periodOptions.DaysBack);
+
+            //num of users
+            int users = _unitOfWork.User.GetAll().Count();
+
+            //num of sessions
+            int sessionNum = await _unitOfWork.Session.GetNumberOfSessinsForPeriod(startOfPeriod, endOfPeriod);
 
             //pie chart statistis for operating systems
             var piceChartStatistics = await _unitOfWork.Session.GetOperatingSystemStatistics(startOfPeriod, endOfPeriod);
@@ -50,10 +57,10 @@ namespace ProcessExplorerWeb.Application.Session.Queries.SessionStatisticsPeriod
             var finalDto = new SessionStatisticsPeriodResponseDto
             {
                 MostActiveDay = mostActiveDay?.Adapt<SessionMostActiveDayDto>(),
-                PieChartRecords = piceChartStatistics?.Adapt<IEnumerable<PieChartDto>>(),
-                ActivityChartRecords = lineChartStatistic?.Adapt<IEnumerable<SessionLineChartDto>>(),
-                EndOfPeriod = endOfPeriod,
-                StartOfPeriod = startOfPeriod
+                PieChartRecords = piceChartStatistics?.Adapt<PieChartDto>(),
+                ActivityChartRecords = lineChartStatistic?.Adapt<SessionLineChartDto>(),
+                TotalNumberOfSessions = sessionNum,
+                NumberOfUsers = users
             };
 
             return finalDto;

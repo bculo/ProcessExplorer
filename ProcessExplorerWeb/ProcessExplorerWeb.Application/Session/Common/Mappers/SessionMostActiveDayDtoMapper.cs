@@ -10,7 +10,7 @@ namespace ProcessExplorerWeb.Application.Session.SharedMappings
         {
             {
                 config.ForType<PopularSessionDayModel, SessionMostActiveDayDto>()
-                    .Map(dst => dst.Date, src => src.Date)
+                    .Map(dst => dst.Date, src => $"{src.Date.Day}/{src.Date.Month}/{src.Date.Year}")
                     .Map(dst => dst.NumberOfSessions, src => src.NumberOfSessions);
             }
         }
