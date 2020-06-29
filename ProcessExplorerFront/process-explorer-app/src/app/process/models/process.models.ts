@@ -1,4 +1,4 @@
-import { IPaginationResponse } from 'src/app/shared/models/interfaces.models';
+import { IPaginationResponse, IColumnChartDto } from 'src/app/shared/models/interfaces.models';
 
 export interface IProcessItem {
     processName: string;
@@ -11,4 +11,14 @@ export class IProcessPaginationResponseDto implements IPaginationResponse<IProce
     totalRecords: number;
     totalPages: number;
     totalNumberOfSessions: number;
+}
+
+export interface IBestProcessesDay {
+    day: Date;
+    totalNumberOfDifferentProcesses: number;
+}
+
+export interface ITopProcessesPeriodResponseDto {
+    chartRecords: IColumnChartDto;
+    maxNumberOfSessions: number;
 }

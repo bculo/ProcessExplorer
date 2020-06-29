@@ -7,6 +7,6 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.ProcessesSesionUserSt
 {
     public class ProcessesSessionUserStatsQueryResponseDto
     {
-        public IEnumerable<ColumnChartDto> ChartRecords { get; set; }
+        public ColumnChartDto ChartRecords { get; set; }
     }
 }

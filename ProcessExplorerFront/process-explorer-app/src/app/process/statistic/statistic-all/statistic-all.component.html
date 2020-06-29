@@ -1,0 +1,55 @@
+<div class="content-box">
+
+    <!-- STATS FOR ALL USERS -->
+    <div>
+        <div *ngIf="!bestDay.isLoading && !bestDay.errorMessage" class="columns is-multiline has-text-centered">
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Day with most diferent processes</p>
+                    <p class="title"> {{ bestDay.data.day | date:'dd/MM/yyyy' }} </p>
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Maximum number of different processes (Single day)</p>
+                    <p class="title"> {{ bestDay.data.totalNumberOfDifferentProcesses }} </p>
+                </div>
+            </div>
+        </div>
+        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger content-box">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="bestDay.isLoading" class="content-box box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- CHART FOR ALL USERS -->
+    <div>
+        <div class="box has-text-centered">
+            <p class="heading">Maximum number of sessions</p>
+            <p class="title"> {{ maxNumOfSessions }} </p>
+        </div>
+        <div *ngIf="columnChart.data.data.length > 0" class="box">
+            <canvas baseChart
+                [legend]="columnChart.data.title"
+                [data]="columnChart.data.data"
+                [labels]="columnChart.data.labels"
+                [chartType]="columnChart.data.type"
+                [colors]="columnChart.data.colors"></canvas>
+        </div>
+        <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger content-box">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="columnChart.isLoading" class="content-box box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+</div>

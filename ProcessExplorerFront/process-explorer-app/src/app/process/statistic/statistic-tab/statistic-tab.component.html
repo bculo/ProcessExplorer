@@ -1,0 +1,17 @@
+<div class="tabs is-centered is-boxed">
+    <ul>
+    <li [routerLinkActive]="['is-active']"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <a routerLink="/process">
+          <span class="icon is-small"><i class="fa fa-users" aria-hidden="true"></i></span>
+          <span>All processes</span>
+        </a>
+      </li>
+      <li routerLinkActive="is-active">
+        <a routerLink="/process/user">
+          <span class="icon is-small"><i class="fa fa-user" aria-hidden="true"></i></span>
+          <span>My processes</span>
+        </a>
+      </li>
+    </ul>
+</div>

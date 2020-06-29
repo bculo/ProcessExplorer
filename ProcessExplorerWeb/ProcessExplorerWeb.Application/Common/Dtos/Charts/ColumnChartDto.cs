@@ -6,7 +6,7 @@ namespace ProcessExplorerWeb.Application.Common.Dtos
 {
     public class ColumnChartDto
     {
-        public string Label { get; set; }
-        public int Value { get; set; }
+        public IEnumerable<string> Label { get; set; }
+        public IEnumerable<int> Value { get; set; }
     }
 }

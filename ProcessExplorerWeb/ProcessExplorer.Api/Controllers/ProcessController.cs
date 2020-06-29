@@ -5,6 +5,7 @@ using ProcessExplorerWeb.Application.Processes.Queries.ProcessesSesionUserStats;
 using ProcessExplorerWeb.Application.Processes.Queries.SearchProcessesPeriod;
 using ProcessExplorerWeb.Application.Processes.Queries.SearchProcessesUser;
 using ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod;
+using ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Api.Controllers
@@ -53,7 +54,7 @@ namespace ProcessExplorer.Api.Controllers
         [HttpGet("topprocessesuser")]
         public async Task<IActionResult> GetTopProcessesForUser()
         {
-            return Ok(await Mediator.Send(new TopProcessesPeriodQuery()));
+            return Ok(await Mediator.Send(new TopProcessesUserQuery()));
         }
 
         /// <summary>

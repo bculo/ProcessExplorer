@@ -49,7 +49,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .Select(i => new ProcessSearchModel
                                         {
                                             ProcessName = i.Key,
-                                            OccuresInNumOfSessions = i.Count()
+                                            OccuresInNumOfSessions = i.Count(),
                                         })
                                         .ToListAsync();
 
@@ -79,7 +79,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .Select(i => new ProcessSearchModel
                                         {
                                             ProcessName = i.Key,
-                                            OccuresInNumOfSessions = i.Count()
+                                            OccuresInNumOfSessions = i.Count(),
                                         })
                                         .ToListAsync();
 
@@ -124,7 +124,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .OrderByDescending(i => i.Started)
                                         .Select(i => new ColumnChartStatisticModel
                                         {
-                                            Label = i.Started.ToString(),
+                                            Label = $"{i.Started.Day}/{i.Started.Month}/{i.Started.Year} {i.Started.Hour}:{i.Started.Minute}",
                                             Value = i.Processes.Count
                                         })
                                         .Take(take)

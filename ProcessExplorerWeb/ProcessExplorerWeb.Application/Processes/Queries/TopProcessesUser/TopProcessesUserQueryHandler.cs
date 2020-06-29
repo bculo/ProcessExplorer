@@ -34,7 +34,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser
             //map
             var dto = new TopProcessesUserQueryResponseDto
             {
-                ChartRecords = columnChart?.Adapt<IEnumerable<ColumnChartDto>>(),
+                ChartRecords = columnChart?.Adapt<ColumnChartDto>(),
                 MaxNumberOfSessions = maxNumOfSessions
             };
 

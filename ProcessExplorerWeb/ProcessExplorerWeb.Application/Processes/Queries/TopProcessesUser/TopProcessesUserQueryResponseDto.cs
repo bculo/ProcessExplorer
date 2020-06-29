@@ -7,7 +7,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser
 {
     public class TopProcessesUserQueryResponseDto
     {
-        public IEnumerable<ColumnChartDto> ChartRecords { get; set; }
+        public ColumnChartDto ChartRecords { get; set; }
         public int MaxNumberOfSessions { get; set; }
     }
 }

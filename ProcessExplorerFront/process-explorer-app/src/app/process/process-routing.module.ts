@@ -5,6 +5,8 @@ import { SearchComponent } from './search/search.component';
 import { SearchUserComponent } from './search/search-user/search-user.component';
 import { SearchAllComponent } from './search/search-all/search-all.component';
 import { StatisticComponent } from './statistic/statistic.component';
+import { StatisticAllComponent } from './statistic/statistic-all/statistic-all.component';
+import { StatisticUserComponent } from './statistic/statistic-user/statistic-user.component';
 
 const routes: Routes = [
     { 
@@ -22,6 +24,10 @@ const routes: Routes = [
             { 
                 path: '',
                 component: StatisticComponent,
+                children: [
+                    { path: '', component: StatisticAllComponent },
+                    { path: 'user', component: StatisticUserComponent },
+                ]
             }
         ],
     }

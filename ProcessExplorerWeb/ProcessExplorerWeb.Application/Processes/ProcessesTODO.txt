@@ -1,2 +1,4 @@
 ﻿
-	4. Number of different processes per day all users -> period
+	4. Number of processes for windows -> peroid all users
+	5. Number of processes for Operating system -> single user
+	6. Top day for user

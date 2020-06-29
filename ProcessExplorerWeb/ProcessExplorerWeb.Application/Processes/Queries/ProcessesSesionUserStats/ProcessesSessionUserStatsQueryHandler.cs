@@ -37,7 +37,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.ProcessesSesionUserSt
             //map to dto
             var dto = new ProcessesSessionUserStatsQueryResponseDto
             {
-                ChartRecords = columnChartModels?.Adapt<IEnumerable<ColumnChartDto>>(),
+                ChartRecords = columnChartModels?.Adapt<ColumnChartDto>(),
             };
 
             //success

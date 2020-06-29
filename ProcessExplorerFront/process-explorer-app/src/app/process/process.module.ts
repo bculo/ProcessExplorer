@@ -10,6 +10,9 @@ import { SearchUserComponent } from './search/search-user/search-user.component'
 import { SearchAllComponent } from './search/search-all/search-all.component';
 import { SearchTabsComponent } from './search/search-tabs/search-tabs.component';
 import { SearchBarComponent } from './search/search-bar/search-bar.component';
+import { StatisticAllComponent } from './statistic/statistic-all/statistic-all.component';
+import { StatisticUserComponent } from './statistic/statistic-user/statistic-user.component';
+import { StatisticTabComponent } from './statistic/statistic-tab/statistic-tab.component';
 
 @NgModule({
     imports: [
@@ -26,6 +29,9 @@ import { SearchBarComponent } from './search/search-bar/search-bar.component';
         SearchAllComponent,
         SearchTabsComponent,
         SearchBarComponent,
+        StatisticTabComponent,
+        StatisticAllComponent,
+        StatisticUserComponent,
     ]
 })
 export class ProcessModule {}
