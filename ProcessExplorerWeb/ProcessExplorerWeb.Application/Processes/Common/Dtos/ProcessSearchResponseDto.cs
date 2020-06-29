@@ -14,7 +14,7 @@ namespace ProcessExplorerWeb.Application.Processes.Common.Dtos
         /// <summary>
         /// For google search
         /// </summary>
-        public string GoogleSearchQuery => ProcessName.Replace(' ', '+');
+        public string GoogleSearchQuery => $"https://www.google.com/search?q={ ProcessName.Replace(' ', '+') }";
 
         /// <summary>
         /// occures in number of sessions

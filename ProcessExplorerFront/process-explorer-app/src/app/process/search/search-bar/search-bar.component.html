@@ -1,0 +1,14 @@
+<div class="field has-addons">
+    <div class="control is-expanded">
+        <input 
+            class="input" 
+            type="text" 
+            placeholder="Search processes by name"
+            #searchBy>
+    </div>
+    <div class="control">
+        <a class="button is-primary" (click)="onSearch(searchBy.value)">
+            Search
+        </a>
+    </div>
+</div>

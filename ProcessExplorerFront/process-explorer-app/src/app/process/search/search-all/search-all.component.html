@@ -1,0 +1,57 @@
+<div *ngIf="isLoading" class="content-box box">
+    <app-spinner></app-spinner>
+</div>
+
+<article *ngIf="!isLoading && errorMessage" class="message is-danger content-box">
+    <div class="message-body">
+        {{ errorMessage}}
+    </div>
+</article>
+
+<div *ngIf="!isLoading && !errorMessage" class="content-box">
+
+    <app-search-bar (search)="onSearch($event)"></app-search-bar>
+
+    <br/>
+
+    <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Process name</th>
+            <th>Occures in number of sessions</th>
+            <th>Google link</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let process of records">
+                <th> {{ process.processName }} </th>
+                <th> {{ process.occuresInNumOfSessions }} / {{ totalNumberOfSessions }} </th>
+                <th> <a target="_blank" href="{{process.googleSearchQuery}}">link</a></th>
+            </tr>
+        </tbody>
+    </table>
+
+      <nav class="level is-mobile">
+        <div class="level-item has-text-centered">
+          <p class="control">
+            <button class="button" (click)="back()">
+              Previous
+            </button>
+          </p>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">PAGES</p>
+            <p class="title">{{ currentPage }} / {{ totalPages }}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <p class="control">
+            <button class="button" (click)="next()">
+              Next
+            </button>
+          </p>
+        </div>
+      </nav>
+
+</div>

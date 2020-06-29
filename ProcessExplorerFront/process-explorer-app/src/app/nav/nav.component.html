@@ -32,12 +32,24 @@
                         </a>
                     </div>
                 </div>
+
                 <a routerLink="/session" class="navbar-item">
                     Applications
                 </a>
-                <a routerLink="/session" class="navbar-item">
-                    Processes
-                </a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        Processes
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" routerLink="/process">
+                            Statistics
+                        </a>
+                        <a class="navbar-item" [routerLink]="['process', 'search']">
+                            Search
+                        </a>
+                    </div>
+                </div>
                 
             </div>
        

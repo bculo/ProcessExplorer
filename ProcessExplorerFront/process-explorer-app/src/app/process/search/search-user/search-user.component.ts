@@ -1,35 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../session.service';
-import { ISessionItem } from '../models/session.models';
-import { environment } from 'src/environments/environment';
+import { ProcessService } from '../../process.service';
+import { IProcessItem } from '../../models/process.models';
 
 @Component({
-  selector: 'app-session-search',
-  templateUrl: './session-search.component.html',
-  styleUrls: ['./session-search.component.css']
+  selector: 'app-search-user',
+  templateUrl: './search-user.component.html',
+  styleUrls: ['./search-user.component.css']
 })
-export class SessionSearchComponent implements OnInit {
+export class SearchUserComponent implements OnInit {
 
   public errorMessage: string | null = null;
   public isLoading: boolean = true;
 
   public totalRecords: number = 0;
-  public records: ISessionItem[] = [];
+  public records: IProcessItem[] = [];
   public currentPage: number = 1;
   public totalPages: number = 1;
-  
-  constructor(private service: SessionService) { }
+  public totalNumberOfSessions: number = 0;
+
+  public searchCriteria: string = "";
+
+  constructor(private service: ProcessService) { }
 
   ngOnInit(): void {
     this.getRecords();
   }
 
-  getRecords(){
-    this.service.getSessionsForUsers(this.currentPage)
+  getRecords() {
+    this.service.searchUserProcesses(this.searchCriteria, this.currentPage)
       .subscribe(response => {
         this.records = response.records;
         this.totalRecords = response.totalRecords;
         this.totalPages = response.totalPages;
+        this.totalNumberOfSessions = response.totalNumberOfSessions;
 
         this.isLoading = false;
         this.errorMessage = null;
@@ -52,5 +55,13 @@ export class SessionSearchComponent implements OnInit {
 
     this.currentPage++;
     this.getRecords();
+  }
+
+  onSearch(searchCriteria: string){
+    if(this.searchCriteria !== searchCriteria) { 
+      this.searchCriteria = searchCriteria;
+      this.currentPage = 1;
+      this.getRecords();
+    }
   }
 }

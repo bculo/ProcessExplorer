@@ -47,7 +47,8 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.SearchProcessesPeriod
             {
                 TotalRecords = count,
                 TotalNumberOfSessions = totalNumberOfSessions,
-                Records = records?.Adapt<IEnumerable<ProcessSearchResponseDto>>()
+                Records = records?.Adapt<IEnumerable<ProcessSearchResponseDto>>(),
+                TotalPages = (int)Math.Ceiling((double)count / _pagination.Take)
             };
 
             //success

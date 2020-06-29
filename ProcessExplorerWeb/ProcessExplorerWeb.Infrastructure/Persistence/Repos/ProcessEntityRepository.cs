@@ -42,7 +42,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
             var groupBy = query.GroupBy(i => i.ProcessName);
 
             //count total number of records
-            int count = await groupBy.CountAsync();
+            int count = await groupBy.Select(i => i.Key).CountAsync();
 
             //get concrete records (PAGINATED)
             var records = await groupBy.Skip((currentPage - 1) * take).Take(take)
