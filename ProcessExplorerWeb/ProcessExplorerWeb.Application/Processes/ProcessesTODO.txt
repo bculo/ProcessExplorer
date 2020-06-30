@@ -1,3 +1,0 @@
-﻿
-	4. Number of processes for windows -> peroid all users
-	5. Number of processes for Operating system -> single user

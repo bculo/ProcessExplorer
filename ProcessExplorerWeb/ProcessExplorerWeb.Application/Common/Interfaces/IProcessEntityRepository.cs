@@ -1,4 +1,5 @@
-﻿using ProcessExplorerWeb.Application.Common.Models.Charts;
+﻿using ProcessExplorerWeb.Application.Common.Charts.Shared;
+using ProcessExplorerWeb.Application.Common.Models.Charts;
 using ProcessExplorerWeb.Application.Common.Models.Process;
 using ProcessExplorerWeb.Core.Entities;
 using System;
@@ -27,6 +28,16 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<TopProcessDayModel> DayWithMostDifferentProcessesForAllTime(Guid userId);
+
+        /// <summary>
+        /// Search processes for specific session
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="currentPage"></param>
+        /// <param name="take"></param>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        Task<(List<ProcessSearchModel>, int)> GetProcessesForUserSession(Guid userId, int currentPage, int take, string searchCriteria, Guid sessionId);
 
         /// <summary>
         /// Search all processes for given period
@@ -74,5 +85,21 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         /// <param name="take"></param>
         /// <returns></returns>
         Task<List<ColumnChartStatisticModel>> GetProcessesStatsForSessions(Guid userId, int take);
+
+        /// <summary>
+        /// Get operating system statistic for processes for given period
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        Task<List<PieChartStatisticModel>> GetProcessStatsForOSPeriod(DateTime start, DateTime end);
+
+        /// <summary>
+        /// Get operating system statistic for processes for given period and user
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        Task<List<PieChartStatisticModel>> GetProcessStatsForOSUser(DateTime start, DateTime end, Guid userId);
     }
 }

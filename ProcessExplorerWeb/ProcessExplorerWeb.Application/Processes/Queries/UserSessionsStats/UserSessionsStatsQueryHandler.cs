@@ -15,13 +15,13 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.ProcessesSesionUserSt
     /// <summary>
     /// Gets number of different processes per session ( MAX 20 sessions )
     /// </summary>
-    public class ProcessesSessionUserStatsQueryHandler : IRequestHandler<ProcessesSessionUserStatsQuery, ProcessesSessionUserStatsQueryResponseDto>
+    public class UserSessionsStatsQueryHandler : IRequestHandler<UserSessionsStatsQuery, UserSessionsStatsQueryResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly PaginationOptions _pagination;
         private readonly ICurrentUserService _currentUser;
 
-        public ProcessesSessionUserStatsQueryHandler(IUnitOfWork unitOfWork,
+        public UserSessionsStatsQueryHandler(IUnitOfWork unitOfWork,
             IOptions<PaginationOptions> pagination,
             ICurrentUserService currentUser)
         {
@@ -30,12 +30,12 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.ProcessesSesionUserSt
             _currentUser = currentUser;
         }
 
-        public async Task<ProcessesSessionUserStatsQueryResponseDto> Handle(ProcessesSessionUserStatsQuery request, CancellationToken cancellationToken)
+        public async Task<UserSessionsStatsQueryResponseDto> Handle(UserSessionsStatsQuery request, CancellationToken cancellationToken)
         {
             var columnChartModels = await _unitOfWork.Process.GetProcessesStatsForSessions(_currentUser.UserId, _pagination.Take);
 
             //map to dto
-            var dto = new ProcessesSessionUserStatsQueryResponseDto
+            var dto = new UserSessionsStatsQueryResponseDto
             {
                 ChartRecords = columnChartModels?.Adapt<ColumnChartDto>(),
             };

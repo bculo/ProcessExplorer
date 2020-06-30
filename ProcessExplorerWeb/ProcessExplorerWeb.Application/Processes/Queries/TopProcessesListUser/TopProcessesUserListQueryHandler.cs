@@ -14,19 +14,19 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser
     /// <summary>
     /// Most used processes for specific user
     /// </summary>
-    public class TopProcessesUserQueryHandler : IRequestHandler<TopProcessesUserQuery, TopProcessesUserQueryResponseDto>
+    public class TopProcessesUserListQueryHandler : IRequestHandler<TopProcessesUserListQuery, TopProcessesUserListQueryResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _user;
 
-        public TopProcessesUserQueryHandler(IUnitOfWork unitOfWork,
+        public TopProcessesUserListQueryHandler(IUnitOfWork unitOfWork,
             ICurrentUserService user)
         {
             _unitOfWork = unitOfWork;
             _user = user;
         }
 
-        public async Task<TopProcessesUserQueryResponseDto> Handle(TopProcessesUserQuery request, CancellationToken cancellationToken)
+        public async Task<TopProcessesUserListQueryResponseDto> Handle(TopProcessesUserListQuery request, CancellationToken cancellationToken)
         {
             //get number of sessions for given user id
             int maxNumOfSessions = await _unitOfWork.Session.GetNumberOfSessinsForUser(_user.UserId);
@@ -35,7 +35,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser
             var columnChart = await _unitOfWork.Process.GetMostUsedProcessesForUser(_user.UserId, 10);
 
             //map
-            var dto = new TopProcessesUserQueryResponseDto
+            var dto = new TopProcessesUserListQueryResponseDto
             {
                 ChartRecords = columnChart?.Adapt<ColumnChartDto>(),
                 MaxNumberOfSessions = maxNumOfSessions

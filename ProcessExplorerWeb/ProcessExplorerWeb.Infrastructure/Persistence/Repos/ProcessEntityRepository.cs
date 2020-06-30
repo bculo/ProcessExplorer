@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using ProcessExplorerWeb.Application.Common.Charts.Shared;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Common.Models.Charts;
 using ProcessExplorerWeb.Application.Common.Models.Process;
@@ -158,6 +159,53 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                             TotalNumberOfDifferentProcesses = i.Count()
                                         })
                                         .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<PieChartStatisticModel>> GetProcessStatsForOSPeriod(DateTime start, DateTime end)
+        {
+            return await ProcessExplorerDbContext.Processes.Where(i => i.Detected.Date >= start && i.Detected.Date <= end)
+                                        .GroupBy(i => i.Session.OS)
+                                        .Select(i => new PieChartStatisticModel
+                                        {
+                                            ChunkName = i.Key,
+                                            Quantity = i.Count()
+                                        })
+                                        .ToListAsync();
+        }
+
+        public async Task<List<PieChartStatisticModel>> GetProcessStatsForOSUser(DateTime start, DateTime end, Guid userId)
+        {
+            return await ProcessExplorerDbContext.Processes.Where(i => i.Detected.Date >= start && i.Detected.Date <= end && i.Session.ExplorerUserId == userId)
+                                        .GroupBy(i => i.Session.OS)
+                                        .Select(i => new PieChartStatisticModel
+                                        {
+                                            ChunkName = i.Key,
+                                            Quantity = i.Count()
+                                        })
+                                        .ToListAsync();
+        }
+
+        public async Task<(List<ProcessSearchModel>, int)> GetProcessesForUserSession(Guid userId, int currentPage, int take, string searchCriteria, Guid sessionId)
+        {
+            //get records for specific period and group them by name
+            var query = ProcessExplorerDbContext.Processes.Where(i => i.SessionId == sessionId && i.Session.ExplorerUserId == userId);
+
+            if (!string.IsNullOrEmpty(searchCriteria))
+            {
+                //search processes using given search criteria
+                searchCriteria = searchCriteria.ToLower();
+                query = query.Where(i => i.ProcessName.ToLower().Contains(searchCriteria));
+            }
+
+            //count total number of records
+            int count = await query.CountAsync();
+
+            //get concrete records (PAGINATED)
+            var records = await query.Skip((currentPage - 1) * take).Take(take)
+                                        .Select(i => new ProcessSearchModel { ProcessName = i.ProcessName })
+                                        .ToListAsync();
+
+            return (records, count);
         }
     }
 }

@@ -16,14 +16,14 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod
     /// <summary>
     /// Most used processes by all users for given period ~ 1 month
     /// </summary>
-    public class TopProcessesPeriodQueryHandler : IRequestHandler<TopProcessesPeriodQuery, TopProcessesPeriodQueryResponseDto>
+    public class TopProcessesPeriodListQueryHandler : IRequestHandler<TopProcessesPeriodListQuery, TopProcessesPeriodListQueryResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDateTime _date;
         private readonly DateTimePeriodOptions _periodOptions;
         private readonly PaginationOptions _pagination;
 
-        public TopProcessesPeriodQueryHandler(IUnitOfWork unitOfWork,
+        public TopProcessesPeriodListQueryHandler(IUnitOfWork unitOfWork,
             IDateTime date,
             IOptions<DateTimePeriodOptions> options,
             IOptions<PaginationOptions> pagination)
@@ -34,7 +34,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod
             _pagination = pagination.Value;
         }
 
-        public async Task<TopProcessesPeriodQueryResponseDto> Handle(TopProcessesPeriodQuery request, CancellationToken cancellationToken)
+        public async Task<TopProcessesPeriodListQueryResponseDto> Handle(TopProcessesPeriodListQuery request, CancellationToken cancellationToken)
         {
             //NOTE _periodOptions.DaysBack is negative number. You can see concrete value in appsetings.json
             DateTime endOfPeriod = _date.Now.Date;
@@ -47,7 +47,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod
             var columnChart = await _unitOfWork.Process.GetMostUsedProcessesForPeriod(startOfPeriod, endOfPeriod, _pagination.Take);
 
             //map
-            var dto = new TopProcessesPeriodQueryResponseDto
+            var dto = new TopProcessesPeriodListQueryResponseDto
             {
                 ChartRecords = columnChart?.Adapt<ColumnChartDto>(),
                 MaxNumberOfSessions = maxNumOfSessions

@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProcessExplorerWeb.Application.Processes.Queries.ProcessesSesionUserStats
+namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser
 {
-    public class ProcessesSessionUserStatsQueryResponseDto
+    public class TopProcessesUserListQueryResponseDto
     {
         public ColumnChartDto ChartRecords { get; set; }
+        public int MaxNumberOfSessions { get; set; }
     }
 }

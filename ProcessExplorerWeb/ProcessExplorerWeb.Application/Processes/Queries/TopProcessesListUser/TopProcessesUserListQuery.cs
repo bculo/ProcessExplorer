@@ -8,7 +8,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser
     /// <summary>
     /// Most used processes for specific user
     /// </summary>
-    public class TopProcessesUserQuery : IRequest<TopProcessesUserQueryResponseDto>
+    public class TopProcessesUserListQuery : IRequest<TopProcessesUserListQueryResponseDto>
     {
     }
 }

@@ -8,7 +8,7 @@ namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod
     /// <summary>
     /// Most used processes by all users for given period ~ 1 month
     /// </summary>
-    public class TopProcessesPeriodQuery : IRequest<TopProcessesPeriodQueryResponseDto>
+    public class TopProcessesPeriodListQuery : IRequest<TopProcessesPeriodListQueryResponseDto>
     {
     }
 }

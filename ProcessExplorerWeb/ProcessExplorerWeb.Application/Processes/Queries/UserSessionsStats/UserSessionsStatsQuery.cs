@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProcessExplorerWeb.Application.Processes.Queries.ProcessesSesionUserStats
 {
-    public class ProcessesSessionUserStatsQuery : IRequest<ProcessesSessionUserStatsQueryResponseDto>
+    public class UserSessionsStatsQuery : IRequest<UserSessionsStatsQueryResponseDto>
     {
     }
 }
