@@ -17,6 +17,8 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Configurations
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
+            builder.HasIndex(c => new { c.ProcessName, c.SessionId }).IsUnique();
+
             builder.ToTable(nameof(ProcessEntity));
         }
     }

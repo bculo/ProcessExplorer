@@ -57,10 +57,10 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
             //get new apps for this session and modify old entites if change detected
             //first parameter -> fetched apps
             //second parameter -> application from stored session
-            var newApps = ModifyOldAndGetNewApps(request?.Applications ?? EmptyList<ApplicationInstanceDto>(), session.Applications, out bool modificationHappend);
+            var newApps = ModifyOldAndGetNewApps(request?.Applications ?? EmptyList<ApplicationInstanceDto>(), session.Applications, session.Id, out bool modificationHappend);
 
             //get processes that are not yet stored in database
-            var newProcesses = GetNewProcessesToStore(request?.Processes ?? EmptyList<ProcessInstanceDto>(), session.Processes);
+            var newProcesses = GetNewProcessesToStore(request?.Processes ?? EmptyList<ProcessInstanceDto>(), session.Processes, session.Id);
 
             _logger.LogInformation("Session with given id {0} exists (UPDATE|INSERT...)", request.SessionId);
 

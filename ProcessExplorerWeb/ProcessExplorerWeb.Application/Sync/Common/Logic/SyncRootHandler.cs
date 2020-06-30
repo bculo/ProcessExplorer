@@ -51,7 +51,7 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
         /// <param name="storedApps">apps for this session fetched from store</param>
         /// <returns></returns>
         protected List<ApplicationEntity> ModifyOldAndGetNewApps(List<ApplicationInstanceDto> fetchedApps,
-            ICollection<ApplicationEntity> storedApps, out bool modificationOnDatabaseEntites)
+            ICollection<ApplicationEntity> storedApps, Guid dbSessionId, out bool modificationOnDatabaseEntites)
         {
             //no modification yet
             modificationOnDatabaseEntites = false;
@@ -86,7 +86,11 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
 
                 //if new app, add to collection
                 if (newApp)
-                    newApps.Add(fetchedApp.Adapt<ApplicationEntity>());
+                {
+                    var newAppEntity = fetchedApp.Adapt<ApplicationEntity>();
+                    newAppEntity.SessionId = dbSessionId;
+                    newApps.Add(newAppEntity);
+                }
             }
 
             //return new opened apps
@@ -99,7 +103,7 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
         /// <param name="fetchedProcesses"></param>
         /// <param name="storedProcesses"></param>
         /// <returns></returns>
-        protected List<ProcessEntity> GetNewProcessesToStore(List<ProcessInstanceDto> fetchedProcesses, ICollection<ProcessEntity> storedProcesses)
+        protected List<ProcessEntity> GetNewProcessesToStore(List<ProcessInstanceDto> fetchedProcesses, ICollection<ProcessEntity> storedProcesses, Guid dbSessionId)
         {
             //get stored processes names and put them in hashset
             var storedProccessesName = new HashSet<string>(storedProcesses.Select(i => i.ProcessName));
@@ -107,8 +111,17 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
             //get processes that are not in hashset
             var notStoredProcesses = fetchedProcesses.Where(i => !storedProccessesName.Contains(i.Name));
 
+            var newEntites = new List<ProcessEntity>();
+
             //map them to process entities
-            return notStoredProcesses.Adapt<List<ProcessEntity>>();
+            foreach(var item in notStoredProcesses)
+            {
+                var newEntity = item.Adapt<ProcessEntity>();
+                newEntity.SessionId = dbSessionId;
+                newEntites.Add(newEntity);
+            }
+
+            return newEntites;
         }
 
         /// <summary>

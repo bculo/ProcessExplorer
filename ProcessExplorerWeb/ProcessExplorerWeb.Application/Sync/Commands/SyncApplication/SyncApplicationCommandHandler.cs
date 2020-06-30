@@ -55,7 +55,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncApplication
             //get new apps for this session and modify old entites if change detected
             //first parameter -> fetched apps
             //second parameter -> application from stored session
-            var newApps = ModifyOldAndGetNewApps(request?.Applications ?? EmptyList<ApplicationInstanceDto>(), session.Applications, out bool modificationHappend);
+            var newApps = ModifyOldAndGetNewApps(request?.Applications ?? EmptyList<ApplicationInstanceDto>(), session.Applications, session.Id, out bool modificationHappend);
 
             _logger.LogInformation("Session with given id {0} exists (UPDATE|INSERT...)", request.SessionId);
 

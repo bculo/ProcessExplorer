@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProcessExplorerWeb.Infrastructure.Persistence;
 
 namespace ProcessExplorerWeb.Infrastructure.Migrations
 {
     [DbContext(typeof(ProcessExplorerDbContext))]
-    partial class ProcessExplorerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200630113920_NewAttributeAddedInSessionEntity")]
+    partial class NewAttributeAddedInSessionEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,9 +158,6 @@ namespace ProcessExplorerWeb.Infrastructure.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.HasIndex("ProcessName", "SessionId")
-                        .IsUnique();
-
                     b.ToTable("ProcessEntity");
                 });
 
@@ -218,9 +217,6 @@ namespace ProcessExplorerWeb.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExplorerUserId");
-
-                    b.HasIndex("ComputerSessionId", "ExplorerUserId")
-                        .IsUnique();
 
                     b.ToTable("ProcessExplorerUserSession");
                 });

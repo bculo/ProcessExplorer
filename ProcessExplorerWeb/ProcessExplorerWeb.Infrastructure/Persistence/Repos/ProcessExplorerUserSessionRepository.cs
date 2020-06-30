@@ -23,7 +23,7 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
             return await ProcessExplorerDbContext.Sessions
                             .Include(i => i.Applications)
                             .Include(i => i.Processes)
-                            .SingleOrDefaultAsync(i => i.Id == sessionId && i.ExplorerUserId == userId);
+                            .SingleOrDefaultAsync(i => i.ComputerSessionId == sessionId && i.ExplorerUserId == userId);
         }
 
         public async Task<(List<SessionDetailedModel>, int)> FilterSessions(Guid userId, DateTime? selectedDate, int page, int take)
@@ -140,14 +140,14 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
         {
             return await ProcessExplorerDbContext.Sessions
                             .Include(i => i.Processes)
-                            .SingleOrDefaultAsync(i => i.Id == sessionId && i.ExplorerUserId == userId);
+                            .SingleOrDefaultAsync(i => i.ComputerSessionId == sessionId && i.ExplorerUserId == userId);
         }
 
         public async Task<ProcessExplorerUserSession> GetSessionWithApps(Guid sessionId, Guid userId)
         {
             return await ProcessExplorerDbContext.Sessions
                             .Include(i => i.Applications)
-                            .SingleOrDefaultAsync(i => i.Id == sessionId && i.ExplorerUserId == userId);
+                            .SingleOrDefaultAsync(i => i.ComputerSessionId == sessionId && i.ExplorerUserId == userId);
         }
 
         public async Task<int> GetNumberOfSessinsForPeriod(DateTime startOfPeriod, DateTime endOfPeriod)

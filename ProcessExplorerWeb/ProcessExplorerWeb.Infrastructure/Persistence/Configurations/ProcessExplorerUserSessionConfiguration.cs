@@ -14,11 +14,16 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Configurations
             builder.HasKey(i => i.Id);
 
             builder.Property(i => i.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedOnAdd();
+
+            builder.Property(i => i.ComputerSessionId)
+                .IsRequired();
 
             builder.Property(i => i.UserName)
                 .HasMaxLength(300)
                 .IsRequired();
+
+            builder.HasIndex(c => new { c.ComputerSessionId, c.ExplorerUserId }).IsUnique();
 
             builder.ToTable(nameof(ProcessExplorerUserSession));
         }            

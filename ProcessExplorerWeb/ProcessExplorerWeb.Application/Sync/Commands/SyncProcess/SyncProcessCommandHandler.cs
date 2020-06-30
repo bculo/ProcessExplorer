@@ -55,7 +55,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncProcess
             _logger.LogInformation("Session with given id {0} exists (FILTERING...)", request.SessionId);
 
             //get processes that are not yet stored in database
-            var newProcesses = GetNewProcessesToStore(request?.Processes ?? EmptyList<ProcessInstanceDto>(), session.Processes);
+            var newProcesses = GetNewProcessesToStore(request?.Processes ?? EmptyList<ProcessInstanceDto>(), session.Processes, session.Id);
 
             _logger.LogInformation("Session with given id {0} exists (UPDATE|INSERT...)", request.SessionId);
 
