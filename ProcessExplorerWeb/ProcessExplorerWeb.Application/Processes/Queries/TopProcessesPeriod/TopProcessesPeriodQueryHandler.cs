@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesPeriod
 {
+    /// <summary>
+    /// Most used processes by all users for given period ~ 1 month
+    /// </summary>
     public class TopProcessesPeriodQueryHandler : IRequestHandler<TopProcessesPeriodQuery, TopProcessesPeriodQueryResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;

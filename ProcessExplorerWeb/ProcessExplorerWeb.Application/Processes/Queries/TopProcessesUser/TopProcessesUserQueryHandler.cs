@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.Processes.Queries.TopProcessesUser
 {
+    /// <summary>
+    /// Most used processes for specific user
+    /// </summary>
     public class TopProcessesUserQueryHandler : IRequestHandler<TopProcessesUserQuery, TopProcessesUserQueryResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;

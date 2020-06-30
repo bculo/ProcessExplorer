@@ -144,5 +144,20 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         })
                                         .FirstOrDefaultAsync();
         }
+
+        public async Task<TopProcessDayModel> DayWithMostDifferentProcessesForAllTime(Guid userId)
+        {
+            //get records for specific user
+            return await ProcessExplorerDbContext.Processes
+                                        .Where(i => i.Session.ExplorerUserId == userId)
+                                        .GroupBy(i => i.Detected.Date)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new TopProcessDayModel
+                                        {
+                                            Day = i.Key,
+                                            TotalNumberOfDifferentProcesses = i.Count()
+                                        })
+                                        .FirstOrDefaultAsync();
+        }
     }
 }

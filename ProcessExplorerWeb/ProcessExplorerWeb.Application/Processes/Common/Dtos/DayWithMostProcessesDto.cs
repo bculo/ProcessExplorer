@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProcessExplorerWeb.Application.Processes.Queries.DayWithMostProcesses
+namespace ProcessExplorerWeb.Application.Processes.Common.Dtos
 {
-    public class DayWithMostProcessesQueryResponseDto
+    public class DayWithMostProcessesDto
     {
         public DateTime Day { get; set; }
         public int TotalNumberOfDifferentProcesses { get; set; }

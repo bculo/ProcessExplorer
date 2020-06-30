@@ -23,6 +23,12 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         Task<TopProcessDayModel> DayWithMostDifferentProcessesForAllTime();
 
         /// <summary>
+        /// Get day with most processes for given user
+        /// </summary>
+        /// <returns></returns>
+        Task<TopProcessDayModel> DayWithMostDifferentProcessesForAllTime(Guid userId);
+
+        /// <summary>
         /// Search all processes for given period
         /// </summary>
         /// <param name="start"></param>
