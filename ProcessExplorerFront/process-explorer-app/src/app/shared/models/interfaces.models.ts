@@ -22,3 +22,8 @@ export interface IColumnChartDto {
     label: string[];
     value: number[];
 }
+
+export interface IPieChartDto {
+    name: string[];
+    quantity: number[];
+}

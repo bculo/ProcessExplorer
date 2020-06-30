@@ -1,4 +1,4 @@
-import { IPaginationResponse, IColumnChartDto } from 'src/app/shared/models/interfaces.models';
+import { IPaginationResponse, IColumnChartDto, IPieChartDto } from 'src/app/shared/models/interfaces.models';
 
 export interface IProcessItem {
     processName: string;
@@ -21,4 +21,8 @@ export interface IBestProcessesDay {
 export interface ITopProcessesPeriodResponseDto {
     chartRecords: IColumnChartDto;
     maxNumberOfSessions: number;
+}
+
+export interface IOsStatisticResponse {
+    pieChart: IPieChartDto;
 }

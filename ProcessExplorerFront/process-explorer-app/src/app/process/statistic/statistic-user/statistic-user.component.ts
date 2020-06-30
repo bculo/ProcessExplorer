@@ -10,6 +10,13 @@ import { IBestProcessesDay } from '../../models/process.models';
 })
 export class StatisticUserComponent implements OnInit {
 
+  //best day stats
+  public bestDay: ILoadingMember<IBestProcessesDay> = {
+    data: null, //where data IBestProcessesDay
+    isLoading: true,
+    errorMessage: null //string
+  }
+
   //column chart stats
   public columnChart: ILoadingMember<IChartModel> = {
     data: {
@@ -31,24 +38,44 @@ export class StatisticUserComponent implements OnInit {
   }
 
     //column chart stats
-    public lineChart: ILoadingMember<IChartModel> = {
-      data: {
-        data: [],
-        labels: [],
-        title: false,
-        type: 'line',
-        colors: [{
-          backgroundColor: '#FF7360',
-          borderColor: 'rgba(225,10,24,0.2)',
-          pointBackgroundColor: 'rgba(225,10,24,0.2)',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: 'rgba(225,10,24,0.2)'
-        }],
-      },
-      isLoading: true,
-      errorMessage: null //string
-    }
+  public lineChart: ILoadingMember<IChartModel> = {
+    data: {
+      data: [],
+      labels: [],
+      title: false,
+      type: 'line',
+      colors: [{
+        backgroundColor: '#FF7360',
+        borderColor: 'rgba(225,10,24,0.2)',
+        pointBackgroundColor: 'rgba(225,10,24,0.2)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(225,10,24,0.2)'
+      }],
+    },
+    isLoading: true,
+    errorMessage: null //string
+  }
+
+      //column chart stats
+  public pieChart: ILoadingMember<IChartModel> = {
+    data: {
+      data: [],
+      labels: [],
+      title: true,
+      type: 'pie',
+      colors: [{
+        backgroundColor: '#FF7360',
+        borderColor: 'rgba(225,10,24,0.2)',
+        pointBackgroundColor: 'rgba(225,10,24,0.2)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(225,10,24,0.2)'
+      }],
+    },
+    isLoading: true,
+    errorMessage: null //string
+  }
   
 
   public maxNumOfSessions: number = 0;
@@ -59,10 +86,35 @@ export class StatisticUserComponent implements OnInit {
     this.getBestDay();
     this.loadPopularUserProcesses();
     this.loadNumberOfProcessesPerSession();
+    this.loadOsStatistics();
+  }
+
+  loadOsStatistics(){
+    this.service.loadOsStatisticUser()
+      .subscribe((response) => {
+        this.pieChart.data.data = response.pieChart.quantity;
+        this.pieChart.data.labels = response.pieChart.name;
+        
+        this.pieChart.isLoading = false;
+        this.pieChart.errorMessage = null;
+      },
+      (error) => {
+        this.pieChart.isLoading = false;
+        this.pieChart.errorMessage = "Ann error occured";
+      });
   }
 
   getBestDay() {
-    //TODO
+    this.service.getDayWithMostProcessesUser()
+      .subscribe((response) => {
+        this.bestDay.data = response;
+        this.bestDay.isLoading = false;
+        this.bestDay.errorMessage = null;
+      },
+      (error) => {
+        this.bestDay.isLoading = false;
+        this.bestDay.errorMessage = "Ann error occured";
+      });
   }
 
   loadNumberOfProcessesPerSession(){

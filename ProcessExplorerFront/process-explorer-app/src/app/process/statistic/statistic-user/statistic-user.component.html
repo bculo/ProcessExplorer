@@ -27,6 +27,55 @@
     <br>
 
     <div>
+        <div *ngIf="pieChart.data.data.length > 0" class="box">
+            <canvas baseChart
+                [legend]="pieChart.data.title"
+                [data]="pieChart.data.data"
+                [labels]="pieChart.data.labels"
+                [chartType]="pieChart.data.type"
+                [colors]="pieChart.data.colors"></canvas>
+        </div>
+        <article *ngIf="!pieChart.isLoading && pieChart.errorMessage" class="message is-danger content-box">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="pieChart.isLoading" class="content-box box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- STATS FOR CHOSEN USER -->
+    <div>
+        <div *ngIf="!bestDay.isLoading && !bestDay.errorMessage" class="columns is-multiline has-text-centered">
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Day with most diferent processes</p>
+                    <p class="title"> {{ bestDay.data.day | date:'dd/MM/yyyy' }} </p>
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Maximum number of different processes (Single day)</p>
+                    <p class="title"> {{ bestDay.data.totalNumberOfDifferentProcesses }} </p>
+                </div>
+            </div>
+        </div>
+        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger content-box">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="bestDay.isLoading" class="content-box box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+    <br>
+
+    <div>
         <div *ngIf="lineChart.data.data.length > 0" class="box">
             <canvas baseChart
                 [legend]="lineChart.data.title"

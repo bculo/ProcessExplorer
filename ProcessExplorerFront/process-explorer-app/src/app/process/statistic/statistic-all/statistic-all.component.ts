@@ -37,6 +37,26 @@ export class StatisticAllComponent implements OnInit {
     errorMessage: null //string
   }
 
+  //column chart stats
+  public pieChart: ILoadingMember<IChartModel> = {
+    data: {
+      data: [],
+      labels: [],
+      title: true,
+      type: 'pie',
+      colors: [{
+        backgroundColor: '#FF7360',
+        borderColor: 'rgba(225,10,24,0.2)',
+        pointBackgroundColor: 'rgba(225,10,24,0.2)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(225,10,24,0.2)'
+      }],
+    },
+    isLoading: true,
+    errorMessage: null //string
+  }
+
   public maxNumOfSessions: number = 0;
 
   constructor(private service: ProcessService) { }
@@ -44,6 +64,22 @@ export class StatisticAllComponent implements OnInit {
   ngOnInit(): void {
     this.getBestDay();
     this.loadPopularPeriodProcesses();
+    this.loadOsStatistics();
+  }
+
+  loadOsStatistics(){
+    this.service.loadOsStatisticAll()
+      .subscribe((response) => {
+        this.pieChart.data.data = response.pieChart.quantity;
+        this.pieChart.data.labels = response.pieChart.name;
+        
+        this.pieChart.isLoading = false;
+        this.pieChart.errorMessage = null;
+      },
+      (error) => {
+        this.pieChart.isLoading = false;
+        this.pieChart.errorMessage = "Ann error occured";
+      });
   }
 
   getBestDay() {

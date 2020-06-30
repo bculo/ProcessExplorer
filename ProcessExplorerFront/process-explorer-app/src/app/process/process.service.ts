@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { IProcessPaginationResponseDto, IProcessItem, IBestProcessesDay, ITopProcessesPeriodResponseDto } from './models/process.models';
+import { IProcessPaginationResponseDto, IProcessItem, IBestProcessesDay, ITopProcessesPeriodResponseDto, IOsStatisticResponse } from './models/process.models';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,10 @@ export class ProcessService {
     return this.http.get<IBestProcessesDay>(`${environment.api}/Process/mostprocesses`);
   }
 
+  getDayWithMostProcessesUser() {
+    return this.http.get<IBestProcessesDay>(`${environment.api}/Process/mostprocessesuser`);
+  }
+
   loadTopProcessesForChartAllUsers() {
     return this.http.get<ITopProcessesPeriodResponseDto>(`${environment.api}/Process/topprocessesperiod`);
   }
@@ -41,5 +45,13 @@ export class ProcessService {
 
   loadNumberOfProcessesPerSession(){
     return this.http.get<ITopProcessesPeriodResponseDto>(`${environment.api}/Process/processstatsforsessions`);
+  }
+
+  loadOsStatisticAll(){
+    return this.http.get<IOsStatisticResponse>(`${environment.api}/Process/osstatisticperiod`);
+  }
+
+  loadOsStatisticUser(){
+    return this.http.get<IOsStatisticResponse>(`${environment.api}/Process/osstatisticperioduser`);
   }
 }
