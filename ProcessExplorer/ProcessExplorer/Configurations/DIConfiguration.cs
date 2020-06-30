@@ -10,7 +10,7 @@ namespace ProcessExplorer.Configurations
     {
         public void Install(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IStartupPoint, LoginOldJwtTokenBehaviour>();
+            services.AddTransient<IStartupPoint, LoginEveryTimeBehaviour>();
         }
     }
 }

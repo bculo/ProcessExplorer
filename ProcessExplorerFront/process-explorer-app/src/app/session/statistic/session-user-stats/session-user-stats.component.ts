@@ -63,8 +63,8 @@ export class SessionUserStatsComponent implements OnInit {
   }
 
   setNumberStatistics(response: ISessionStatsResponse) {
-    this.numberStats.mostActiveDay = response.mostActiveDay.date;
-    this.numberStats.maxNumberOfSession = response.mostActiveDay.numberOfSessions;
+    this.numberStats.mostActiveDay = response.mostActiveDay?.date;
+    this.numberStats.maxNumberOfSession = response.mostActiveDay?.numberOfSessions;
   }
 
   setRecordsForActivityChart(records: IActivityRecords) {

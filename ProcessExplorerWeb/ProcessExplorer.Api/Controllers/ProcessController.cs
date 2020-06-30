@@ -122,9 +122,9 @@ namespace ProcessExplorer.Api.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost("searchchoosensession")]
-        public async Task<IActionResult> SearchSession()
+        public async Task<IActionResult> SearchSession([FromBody] SearchSessionProcessesQuery query)
         {
-            return Ok(await Mediator.Send(new SearchSessionProcessesQuery()));
+            return Ok(await Mediator.Send(query));
         }
     }
 }

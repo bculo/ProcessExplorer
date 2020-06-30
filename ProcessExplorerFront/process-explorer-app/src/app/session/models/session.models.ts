@@ -29,3 +29,15 @@ export interface ISessionItem {
     differentProcessesNumber: number;
     applicationNumber: number;
 }
+
+export interface ISingleSession {
+    id: string;
+    userName: string;
+    os: string;
+    started: Date;
+}
+
+export interface ISessionProcessItem {
+    processName: string;
+    googleSearchQuery: string;
+}

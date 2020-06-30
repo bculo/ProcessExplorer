@@ -18,7 +18,8 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     exports: [
         CommonModule,
         ChartsModule,
-        SpinnerComponent
+        SpinnerComponent,
+        BackComponent
     ]
 })
 export class SharedModule {}

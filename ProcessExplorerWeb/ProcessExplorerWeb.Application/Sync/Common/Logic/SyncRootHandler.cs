@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Sync.SharedDtos;
 using ProcessExplorerWeb.Core.Entities;
@@ -119,6 +120,7 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
         {
             //set user id on session instance
             FillSessionEntity(session);
+
 
             //add to database
             _work.Session.Add(session);

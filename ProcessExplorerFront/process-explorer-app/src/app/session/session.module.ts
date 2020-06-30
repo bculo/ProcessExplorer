@@ -9,6 +9,10 @@ import { SessionUserStatsComponent } from './statistic/session-user-stats/sessio
 import { SessionTabsComponent } from './statistic/session-tabs/session-tabs.component';
 import { SessionSearchComponent } from './session-search/session-search.component';
 import { StatisticComponent } from './statistic/statistic.component';
+import { DetailsComponent } from './details/details.component';
+import { DetailsTabComponent } from './details/details-tab/details-tab.component';
+import { DetailsProcessesComponent } from './details/details-processes/details-processes.component';
+import { DetailsApplicationsComponent } from './details/details-applications/details-applications.component';
 
 @NgModule({
     imports: [
@@ -24,6 +28,10 @@ import { StatisticComponent } from './statistic/statistic.component';
         SessionTabsComponent,
         SessionSearchComponent,
         StatisticComponent,
+        DetailsComponent,
+        DetailsTabComponent,
+        DetailsProcessesComponent,
+        DetailsApplicationsComponent,
     ]
 })
 export class SessionModule {}

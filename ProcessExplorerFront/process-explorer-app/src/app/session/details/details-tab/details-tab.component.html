@@ -1,0 +1,15 @@
+<div class="tabs is-centered is-boxed">
+    <ul>
+    <li [routerLinkActive]="['is-active']"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <a routerLink="{{ appsPath }}">
+          <span>Applications</span>
+        </a>
+      </li>
+      <li routerLinkActive="is-active">
+        <a routerLink="{{ processPath }}">
+          <span>Processes</span>
+        </a>
+      </li>
+    </ul>
+</div>

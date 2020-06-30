@@ -6,13 +6,13 @@
             <div class="column is-half">
                 <div class="box">
                     <p class="heading">Day with most diferent processes</p>
-                    <p class="title"> {{ bestDay.data.day | date:'dd/MM/yyyy' }} </p>
+                    <p class="title"> {{ bestDay.data?.day | date:'dd/MM/yyyy' }} </p>
                 </div>
             </div>
             <div class="column is-half">
                 <div class="box">
                     <p class="heading">Maximum number of different processes (Single day)</p>
-                    <p class="title"> {{ bestDay.data.totalNumberOfDifferentProcesses }} </p>
+                    <p class="title"> {{ bestDay.data?.totalNumberOfDifferentProcesses }} </p>
                 </div>
             </div>
         </div>

@@ -5,6 +5,9 @@ import { SessionAllStatsComponent } from './statistic/session-all-stats/session-
 import { SessionUserStatsComponent } from './statistic/session-user-stats/session-user-stats.component';
 import { SessionSearchComponent } from './session-search/session-search.component';
 import { StatisticComponent } from './statistic/statistic.component';
+import { DetailsComponent } from './details/details.component';
+import { DetailsProcessesComponent } from './details/details-processes/details-processes.component';
+import { DetailsApplicationsComponent } from './details/details-applications/details-applications.component';
 
 const routes: Routes = [
     { 
@@ -19,7 +22,15 @@ const routes: Routes = [
                     { path: 'user', component: SessionUserStatsComponent },
                 ]
             },
-            { path: 'search', component: SessionSearchComponent }
+            { path: 'search', component: SessionSearchComponent },
+            { 
+                path: 'details/:id',
+                component: DetailsComponent,
+                children: [ 
+                    { path: '', component: DetailsApplicationsComponent },
+                    { path: 'processes', component: DetailsProcessesComponent },
+                ] 
+            },
         ],
     }
 ];
