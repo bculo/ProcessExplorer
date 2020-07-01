@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using ProcessExplorerWeb.Application.Common.Dtos;
-using ProcessExplorerWeb.Application.Common.Models.Charts;
+using ProcessExplorerWeb.Core.Queries.Charts;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,7 +10,7 @@ namespace ProcessExplorerWeb.Application.Common.Mappings
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.ForType<IEnumerable<ColumnChartStatisticModel>, ColumnChartDto>()
+            config.ForType<IEnumerable<ColumnChartItem>, ColumnChartDto>()
                 .Map(dst => dst.Label, src => src.Select(i => i.Label))
                 .Map(dst => dst.Value, src => src.Select(i => i.Value));
         }

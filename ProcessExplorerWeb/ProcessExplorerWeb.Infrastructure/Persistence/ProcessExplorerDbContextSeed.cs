@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ProcessExplorerWeb.Application.Constants;
+using ProcessExplorerWeb.Application.Common.Constants;
 using ProcessExplorerWeb.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Infrastructure.Persistence

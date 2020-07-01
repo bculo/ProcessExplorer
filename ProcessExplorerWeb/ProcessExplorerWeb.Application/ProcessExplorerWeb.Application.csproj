@@ -20,13 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Commands\" />
-    <Folder Include="Application\Common\" />
-    <Folder Include="Application\Queries\" />
-    <Folder Include="Common\Enums\" />
-    <Folder Include="Processes\Commands\" />
-    <Folder Include="Session\Commands\" />
-    <Folder Include="Sync\Queries\" />
+    <Folder Include="Modules\Application\Commands\" />
+    <Folder Include="Modules\Application\Common\" />
+    <Folder Include="Modules\Application\Queries\" />
+    <Folder Include="Modules\Processes\Commands\" />
+    <Folder Include="Modules\Session\Commands\" />
+    <Folder Include="Modules\Sync\Queries\" />
   </ItemGroup>
 
 </Project>

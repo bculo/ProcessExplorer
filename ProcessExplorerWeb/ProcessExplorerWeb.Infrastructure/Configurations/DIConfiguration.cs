@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProcessExplorerWeb.Application.Common.Contracts.Services;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Core.Interfaces;
 using ProcessExplorerWeb.Infrastructure.Identity.Services;
@@ -32,7 +33,7 @@ namespace ProcessExplorerWeb.Infrastructure.Configurations
 
             #region SINGLETON
 
-
+            services.AddSingleton<ICommunicationTypeService, CommunicationService>();
 
             #endregion
 

@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Core.Entities;
+using ProcessExplorerWeb.Core.Queries.Applications;
+using ProcessExplorerWeb.Core.Queries.Charts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +25,117 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .ToListAsync();
         }
 
-        public void BulkAdd(IList<ApplicationEntity> applicationEntities)
+        public async Task<TopApplicationDay> DayWithMostOpenedAppsAllTime()
         {
-            _context.BulkInsert(applicationEntities);
+            return await ProcessExplorerDbContext.Applications
+                                        .GroupBy(i => i.Started.Date)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new TopApplicationDay
+                                        {
+                                            Day = i.Key,
+                                            Number = i.Count()
+                                        })
+                                        .FirstOrDefaultAsync();
+        }
+
+        public async Task<TopApplicationDay> DayWithMostOpenedAppsAllTime(Guid userId)
+        {
+            return await ProcessExplorerDbContext.Applications
+                                        .Where(i => i.Session.ExplorerUserId == userId)
+                                        .GroupBy(i => i.Started.Date)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new TopApplicationDay
+                                        {
+                                            Day = i.Key,
+                                            Number = i.Count()
+                                        })
+                                        .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<PieChartItem>> GetApplicationStatsForOSPeriod(DateTime start, DateTime end)
+        {
+            return await ProcessExplorerDbContext.Applications
+                                        .Where(i => i.Started.Date >= start && i.Started.Date <= end)
+                                        .GroupBy(i => i.Session.OS)
+                                        .Select(i => new PieChartItem
+                                        {
+                                            ChunkName = i.Key,
+                                            Quantity = i.Count()
+                                        })
+                                        .ToListAsync();
+        }
+
+        public async Task<List<PieChartItem>> GetApplicationStatsForOSUser(DateTime start, DateTime end, Guid userId)
+        {
+            return await ProcessExplorerDbContext.Applications
+                                        .Where(i => i.Started.Date >= start && i.Started.Date <= end && i.Session.ExplorerUserId == userId)
+                                        .GroupBy(i => i.Session.OS)
+                                        .Select(i => new PieChartItem
+                                        {
+                                            ChunkName = i.Key,
+                                            Quantity = i.Count()
+                                        })
+                                        .ToListAsync();
+        }
+
+        public async Task<(List<ApplicationSearchItem>, int)> GetAppsForPeriod(DateTime start, DateTime end, int currentPage, int take, string searchCriteria)
+        {
+            //get records for specific period and group them by name
+            var query = ProcessExplorerDbContext.Applications.Where(i => i.Started.Date >= start && i.Started.Date <= end);
+
+            if (!string.IsNullOrEmpty(searchCriteria))
+            {
+                //search applications using given search criteria
+                searchCriteria = searchCriteria.ToLower();
+                query = query.Where(i => i.Name.ToLower().Contains(searchCriteria));
+            }
+
+            //group by process name
+            var groupBy = query.GroupBy(i => i.Name);
+
+            //count total number of records
+            int count = await groupBy.Select(i => i.Key).CountAsync();
+
+            //get concrete records (PAGINATED)
+            var records = await groupBy.Skip((currentPage - 1) * take).Take(take)
+                                        .Select(i => new ApplicationSearchItem
+                                        {
+                                            ApplicationName = i.Key,
+                                            OccuresNumOfTime = i.Count(),
+                                        })
+                                        .ToListAsync();
+
+            return (records, count);
+        }
+
+        public async Task<(List<ApplicationSearchItem>, int)> GetAppsForUser(Guid userId, int currentPage, int take, string searchCriteria)
+        {
+            //get records for specific period and group them by name
+            var query = ProcessExplorerDbContext.Applications.Where(i => i.Session.ExplorerUserId == userId);
+
+            if (!string.IsNullOrEmpty(searchCriteria))
+            {
+                //search applications using given search criteria
+                searchCriteria = searchCriteria.ToLower();
+                query = query.Where(i => i.Name.ToLower().Contains(searchCriteria));
+            }
+
+            //group by process name
+            var groupBy = query.GroupBy(i => i.Name);
+
+            //count total number of records
+            int count = await groupBy.Select(i => i.Key).CountAsync();
+
+            //get concrete records (PAGINATED)
+            var records = await groupBy.Skip((currentPage - 1) * take).Take(take)
+                                        .Select(i => new ApplicationSearchItem
+                                        {
+                                            ApplicationName = i.Key,
+                                            OccuresNumOfTime = i.Count(),
+                                        })
+                                        .ToListAsync();
+
+            return (records, count);
         }
     }
 }

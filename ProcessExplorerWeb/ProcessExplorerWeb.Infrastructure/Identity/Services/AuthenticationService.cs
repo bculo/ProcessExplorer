@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProcessExplorerWeb.Application.Common.Interfaces;
-using ProcessExplorerWeb.Application.Common.Models.Security;
+using ProcessExplorerWeb.Application.Common.Models.Authentication;
 using ProcessExplorerWeb.Application.Common.Models.Service;
 using ProcessExplorerWeb.Application.Common.Options;
 using ProcessExplorerWeb.Core.Entities;
@@ -108,7 +108,7 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
         /// </summary>
         /// <param name="identifier">Id | email | password</param>
         /// <returns>Instance of TokenInfo</returns>
-        public async Task<TokenInfo> GenerateJwtToken(string identifier)
+        public async Task<TokenModel> GenerateJwtToken(string identifier)
         {
             var user = await GetUserByIdentifier(identifier) as IdentityAppUser;
 
@@ -118,7 +118,7 @@ namespace ProcessExplorerWeb.Infrastructure.Identity.Services
 
             var (jwtToken, expiration) = _tokenManager.GenerateToken(userClaims);
 
-            return new TokenInfo(user, jwtToken, expiration);
+            return new TokenModel(user, jwtToken, expiration);
         }
 
         /// <summary>
