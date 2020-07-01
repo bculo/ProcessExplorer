@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProcessExplorer.Application.Common.Enums
+namespace ProcessExplorer.Core.Enums
 {
     public enum CollectStatus
     {

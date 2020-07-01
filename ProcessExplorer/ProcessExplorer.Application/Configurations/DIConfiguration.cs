@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ProcessExplorer.Application.Behaviours;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Interfaces.Behaviours;
 
 namespace ProcessExplorer.Application.Configurations
 {
@@ -12,6 +13,7 @@ namespace ProcessExplorer.Application.Configurations
             services.AddScoped<IApplicationCollectorBehaviour, ApplicationCollectorBehaviour>();
             services.AddScoped<IProcessBehaviour, ProcessCollectorBehaviour>();
             services.AddScoped<ISyncBehaviour, SyncBehaviour>();
+            services.AddScoped<ICommunicationTypeBehaviour, CommunicationTypeCheckBehaviour>();
         }
     }
 }

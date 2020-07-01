@@ -1,14 +1,8 @@
-﻿using Mapster;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
 using ProcessExplorer.Application.Common.Interfaces;
-using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Service.Options;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Service.Clients.Sync

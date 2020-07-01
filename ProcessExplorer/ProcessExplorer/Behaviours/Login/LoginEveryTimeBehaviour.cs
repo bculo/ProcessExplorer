@@ -1,6 +1,8 @@
 ﻿using Dtos.Responses.Authentication;
-using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Interfaces.Clients;
+using ProcessExplorer.Application.Common.Interfaces.Services;
+using ProcessExplorer.Core.Enums;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Behaviours.Login
@@ -12,8 +14,10 @@ namespace ProcessExplorer.Behaviours.Login
             IAuthenticationClient client,
             IInternet internet,
             ISessionService session,
-            IUnitOfWork work)
-            : base(logger, tokenService, client, internet, session, work)
+            IUnitOfWork work,
+            ICommunicationTypeClient communication,
+            ICommunicationTypeService communicationTypeService)
+            : base(logger, tokenService, client, internet, session, work, communication, communicationTypeService)
         {
         }
 
@@ -49,9 +53,21 @@ namespace ProcessExplorer.Behaviours.Login
             }
             else
             {
-                await GetUserCredentials();
+                await GetUserCredentials(); // Force user to enter valid credentials
             }
 
+            //get communication type for server
+            if (!_session.SessionInformation.Offline)
+            {
+                PromptMessage("Establishing communication type", true);
+                CommunicationType type = await _communication.GetCommunicationType();
+                _communicationTypeService.SetCommuncationType(type);
+                PromptMessage($"Communication type {type}", true);
+            }
+            else
+            {
+                PromptMessage($"Communication type {_communicationTypeService.GetCommunicationType()}", true);
+            }
 
             PromptMessage("Authenticaiton process finished", true);
         }

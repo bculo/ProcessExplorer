@@ -1,6 +1,6 @@
-﻿using ProcessExplorer.Application.Common.Enums;
-using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Core.Enums;
 using System;
 
 namespace ProcessExplorer.Service.Services.System
@@ -58,13 +58,13 @@ namespace ProcessExplorer.Service.Services.System
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32NT:
-                    systemInformation.Type = Platform.Win;
+                    systemInformation.Type = Platform.WIN;
                     break;
                 case PlatformID.Unix:
-                    systemInformation.Type = Platform.Unix;
+                    systemInformation.Type = Platform.UNIX;
                     break;
                 default:
-                    systemInformation.Type = Platform.Unknown;
+                    systemInformation.Type = Platform.UNKNOWN;
                     break;
             }
         }

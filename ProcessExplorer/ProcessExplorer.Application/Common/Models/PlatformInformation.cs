@@ -1,4 +1,4 @@
-﻿using ProcessExplorer.Application.Common.Enums;
+﻿using ProcessExplorer.Core.Enums;
 
 namespace ProcessExplorer.Application.Common.Models
 {

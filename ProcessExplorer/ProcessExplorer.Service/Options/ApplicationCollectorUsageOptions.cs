@@ -1,4 +1,4 @@
-﻿using ProcessExplorer.Application.Common.Enums;
+﻿using ProcessExplorer.Core.Enums;
 using System.Collections.Generic;
 using System.Linq;
 

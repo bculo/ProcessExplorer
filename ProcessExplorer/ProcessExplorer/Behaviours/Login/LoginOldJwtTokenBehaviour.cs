@@ -1,10 +1,8 @@
 ﻿using Dtos.Responses.Authentication;
-using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
-using ProcessExplorer.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ProcessExplorer.Application.Common.Interfaces.Clients;
+using ProcessExplorer.Application.Common.Interfaces.Services;
+using ProcessExplorer.Core.Enums;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Behaviours.Login
@@ -16,8 +14,10 @@ namespace ProcessExplorer.Behaviours.Login
             IAuthenticationClient client, 
             IInternet internet, 
             ISessionService session, 
-            IUnitOfWork work) 
-            : base(logger, tokenService, client, internet, session, work)
+            IUnitOfWork work,
+            ICommunicationTypeClient communication,
+            ICommunicationTypeService communicationTypeService) 
+            : base(logger, tokenService, client, internet, session, work, communication, communicationTypeService)
         {
         }
 

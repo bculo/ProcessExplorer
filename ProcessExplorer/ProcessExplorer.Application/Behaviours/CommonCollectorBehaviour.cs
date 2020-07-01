@@ -11,9 +11,9 @@ namespace ProcessExplorer.Application.Behaviours
         protected readonly ISynchronizationClientFactory _syncFactory;
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IInternet _internet;
-        protected readonly ISessionService _session;
         protected readonly ILoggerWrapper _logger;
         protected readonly IDateTime _time;
+        protected readonly ISessionService _session;
 
         protected CommonCollectorBehaviour(
             ISynchronizationClientFactory syncFactory,

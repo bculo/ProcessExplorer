@@ -1,10 +1,8 @@
-﻿using ProcessExplorer.Application.Common.Enums;
-using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Core.Enums;
 using ProcessExplorer.Service.Session.Linux;
 using ProcessExplorer.Service.Session.Windows;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProcessExplorer.Service.Session
 {
@@ -27,9 +25,9 @@ namespace ProcessExplorer.Service.Session
         {
             switch (_platformInformation.PlatformInformation.Type)
             {
-                case Platform.Unix:
+                case Platform.UNIX:
                     return new LinuxSession(_logger, _platformInformation);
-                case Platform.Win:
+                case Platform.WIN:
                     return new WindowsSession(_logger, _platformInformation);
                 default:
                     throw new NotImplementedException();

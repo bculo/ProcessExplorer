@@ -1,10 +1,9 @@
 ﻿using Mapster;
-using Mapster.Adapters;
-using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Core.Entities;
+using ProcessExplorer.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

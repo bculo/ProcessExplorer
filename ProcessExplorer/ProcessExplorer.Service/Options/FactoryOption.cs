@@ -1,7 +1,4 @@
-﻿using ProcessExplorer.Application.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ProcessExplorer.Core.Enums;
 
 namespace ProcessExplorer.Service.Options
 {

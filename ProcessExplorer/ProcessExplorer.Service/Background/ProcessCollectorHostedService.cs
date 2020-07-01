@@ -40,7 +40,7 @@ namespace ProcessExplorer.Service.Background
                     await behaviour.Collect();
                 }
 
-                await Task.Delay(30000);
+                await Task.Delay(120000); //collect every two minutes
             }
         }
 

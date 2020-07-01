@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
-using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Core.Enums;
 using ProcessExplorer.Service.Options;
 using ProcessExplorer.Service.Process.Linux;
 using ProcessExplorer.Service.Process.Windows;
@@ -37,9 +37,9 @@ namespace ProcessExplorer.Service.Process
         {
             switch (_platform.PlatformInformation.Type)
             {
-                case Platform.Win:
+                case Platform.WIN:
                     return GetWindowsCollector();
-                case Platform.Unix:
+                case Platform.UNIX:
                     return GetLinuxCollector();
                 default:
                     throw new NotSupportedException("Platform not supported");
@@ -52,7 +52,7 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         private IProcessCollector GetWindowsCollector()
         {
-            var result = _usageOptions.GetActiveOptionFor(Platform.Win);
+            var result = _usageOptions.GetActiveOptionFor(Platform.WIN);
 
             switch (result)
             {
@@ -73,7 +73,7 @@ namespace ProcessExplorer.Service.Process
         /// <returns></returns>
         private IProcessCollector GetLinuxCollector()
         {
-            var result = _usageOptions.GetActiveOptionFor(Platform.Unix);
+            var result = _usageOptions.GetActiveOptionFor(Platform.UNIX);
 
             switch(result)
             {

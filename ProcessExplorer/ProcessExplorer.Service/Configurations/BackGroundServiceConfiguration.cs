@@ -17,6 +17,7 @@ namespace ProcessExplorer.Service.Configurations
             services.AddHostedService<ProcessCollectorHostedService>();
             services.AddHostedService<ApplicationCollectorHostedService>();
             services.AddHostedService<SyncHostedService>();
+            services.AddHostedService<CommunicationTypeHostedService>();
 
             #endregion
         }

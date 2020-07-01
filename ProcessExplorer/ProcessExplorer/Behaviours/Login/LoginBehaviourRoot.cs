@@ -1,8 +1,10 @@
 ﻿using Dtos.Responses.Authentication;
 using Mapster;
-using ProcessExplorer.Application.Common.Enums;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Interfaces.Clients;
+using ProcessExplorer.Application.Common.Interfaces.Services;
 using ProcessExplorer.Core.Entities;
+using ProcessExplorer.Core.Enums;
 using ProcessExplorer.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -20,6 +22,8 @@ namespace ProcessExplorer.Behaviours.Login
         protected readonly IInternet _internet;
         protected readonly ISessionService _session;
         protected readonly IUnitOfWork _work;
+        protected readonly ICommunicationTypeClient _communication;
+        protected readonly ICommunicationTypeService _communicationTypeService;
 
         public abstract Task Start();
         public abstract Task HandleLoginResult(LoginResponseDto responseDto);
@@ -31,7 +35,9 @@ namespace ProcessExplorer.Behaviours.Login
             IAuthenticationClient client,
             IInternet internet,
             ISessionService session,
-            IUnitOfWork work)
+            IUnitOfWork work,
+            ICommunicationTypeClient communication,
+            ICommunicationTypeService communicationTypeService)
         {
             _logger = logger;
             _tokenService = tokenService;
@@ -39,6 +45,8 @@ namespace ProcessExplorer.Behaviours.Login
             _internet = internet;
             _session = session;
             _work = work;
+            _communication = communication;
+            _communicationTypeService = communicationTypeService;
         }
 
         /// <summary>

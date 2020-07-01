@@ -1,6 +1,6 @@
-﻿using ProcessExplorer.Application.Common.Enums;
-using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
+using ProcessExplorer.Core.Enums;
 using System;
 
 namespace ProcessExplorer.Service.Session

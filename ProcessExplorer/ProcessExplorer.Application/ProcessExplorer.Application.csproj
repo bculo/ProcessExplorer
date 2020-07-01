@@ -27,8 +27,4 @@
     <ProjectReference Include="..\ProcessExplorer.Core\ProcessExplorer.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\Options\" />
-  </ItemGroup>
-
 </Project>

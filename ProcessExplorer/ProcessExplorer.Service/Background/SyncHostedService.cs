@@ -32,7 +32,7 @@ namespace ProcessExplorer.Service.Background
                     await behaviour.Synchronize();
                 }
 
-                await Task.Delay(30000);
+                await Task.Delay(300000); // sync session every 5 minute
             }
         }
 
