@@ -208,5 +208,18 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .Take(take)
                                         .ToListAsync();
         }
+
+        public async Task<List<AppSessionLineChartItem>> GetNumberOfAppsLastSessions(Guid userId, int take)
+        {
+            return await ProcessExplorerDbContext.Applications.Where(i => i.Session.ExplorerUserId == userId)
+                                        .OrderByDescending(i => i.Session.Started)
+                                        .Select(i => new AppSessionLineChartItem
+                                        {
+                                            Date = i.Session.Started,
+                                            Number = i.Session.Applications.Count
+                                        })
+                                        .Take(take)
+                                        .ToListAsync();
+        }
     }
 }

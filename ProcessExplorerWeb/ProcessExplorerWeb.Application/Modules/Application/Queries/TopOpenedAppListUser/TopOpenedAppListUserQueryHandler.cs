@@ -27,7 +27,7 @@ namespace ProcessExplorerWeb.Application.Modules.Application.Queries.TopOpenedAp
         public async Task<TopOpenedApplicationDto> Handle(TopOpenedAppListUserQuery request, CancellationToken cancellationToken)
         {
             //get column chart models
-            //var columnChart = await _unitOfWork.Process.GetMostUsedProcessesForUser(_user.UserId, 10);
+            var columnChart = await _unitOfWork.Applications.GetMostUsedApplicationsForUser(_user.UserId, 10);
 
             //map
             var dto = new TopOpenedApplicationDto

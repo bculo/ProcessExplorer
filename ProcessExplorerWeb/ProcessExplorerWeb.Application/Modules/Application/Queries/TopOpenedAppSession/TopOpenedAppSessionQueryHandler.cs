@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using ProcessExplorerWeb.Application.Common.Dtos;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Modules.Application.Common.Dtos;

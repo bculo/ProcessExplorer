@@ -44,5 +44,4 @@ namespace ProcessExplorerWeb.Application.Modules.Application.Queries.SearchSessi
             return dto;
         }
     }
-    }
 }

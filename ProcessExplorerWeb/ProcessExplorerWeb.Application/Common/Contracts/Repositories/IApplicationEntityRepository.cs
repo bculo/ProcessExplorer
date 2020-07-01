@@ -85,5 +85,13 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         /// <param name="take"></param>
         /// <returns></returns>
         Task<List<ColumnChartItem>> GetMostUsedApplicationsForUserSession(Guid userId, Guid sessionId, int take);
+
+        /// <summary>
+        /// Number of openeds apps per session (taking only last sessions)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
+        Task<List<AppSessionLineChartItem>> GetNumberOfAppsLastSessions(Guid userId, int take);
     }
 }
