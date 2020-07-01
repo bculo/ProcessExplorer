@@ -21,8 +21,10 @@
 
   <ItemGroup>
     <Folder Include="Modules\Application\Commands\" />
-    <Folder Include="Modules\Application\Common\" />
-    <Folder Include="Modules\Application\Queries\" />
+    <Folder Include="Modules\Application\Queries\TopOpenedAppListPeriod\" />
+    <Folder Include="Modules\Application\Queries\TopOpenedAppListUser\" />
+    <Folder Include="Modules\Application\Queries\TopOpenedAppSession\" />
+    <Folder Include="Modules\Application\Queries\SearchSessionsApps\" />
     <Folder Include="Modules\Processes\Commands\" />
     <Folder Include="Modules\Session\Commands\" />
     <Folder Include="Modules\Sync\Queries\" />

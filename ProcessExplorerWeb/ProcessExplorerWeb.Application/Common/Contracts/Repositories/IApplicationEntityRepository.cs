@@ -56,5 +56,34 @@ namespace ProcessExplorerWeb.Application.Common.Interfaces
         /// <param name="searchCriteria"></param>
         /// <returns></returns>
         Task<(List<ApplicationSearchItem>, int)> GetAppsForUser(Guid userId, int currentPage, int take, string searchCriteria);
+
+
+        Task<(List<ApplicationSearchDetail>, int)> GetApplicationsForUserSession(Guid userId, int currentPage, int take, string searchCriteria, Guid sessionId);
+
+
+        /// <summary>
+        /// Get processes that apperas in largest number of sesssions in specific period like 1 month 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
+        Task<List<ColumnChartItem>> GetMostUsedApplicationsForPeriod(DateTime start, DateTime end, int take);
+
+        /// <summary>
+        /// Get processes that appears in most of user sessions
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
+        Task<List<ColumnChartItem>> GetMostUsedApplicationsForUser(Guid userId, int take);
+
+        /// <summary>
+        /// Get processes that appears most in single user session
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
+        Task<List<ColumnChartItem>> GetMostUsedApplicationsForUserSession(Guid userId, Guid sessionId, int take);
     }
 }

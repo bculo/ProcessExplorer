@@ -137,5 +137,76 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
 
             return (records, count);
         }
+
+        public async Task<(List<ApplicationSearchDetail>, int)> GetApplicationsForUserSession(Guid userId, int currentPage, int take, string searchCriteria, Guid sessionId)
+        {
+            //get records for specific period and group them by name
+            var query = ProcessExplorerDbContext.Applications.Where(i => i.SessionId == sessionId && i.Session.ExplorerUserId == userId);
+
+            if (!string.IsNullOrEmpty(searchCriteria))
+            {
+                //search processes using given search criteria
+                searchCriteria = searchCriteria.ToLower();
+                query = query.Where(i => i.Name.ToLower().Contains(searchCriteria));
+            }
+
+            //count total number of records
+            int count = await query.CountAsync();
+
+            //get concrete records (PAGINATED)
+            var records = await query.Skip((currentPage - 1) * take)
+                                        .Take(take)
+                                        .Select(i => new ApplicationSearchDetail
+                                        { 
+                                            Name = i.Name, 
+                                            Closed = i.Started,
+                                            Opened = i.Closed,
+                                        })
+                                        .ToListAsync();
+
+            return (records, count);
+        }
+
+        public async Task<List<ColumnChartItem>> GetMostUsedApplicationsForPeriod(DateTime start, DateTime end, int take)
+        {
+            return await ProcessExplorerDbContext.Applications.Where(i => i.Started.Date >= start && i.Started.Date <= end)
+                                        .GroupBy(i => i.Name)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new ColumnChartItem
+                                        {
+                                            Label = i.Key,
+                                            Value = i.Count()
+                                        })
+                                        .Take(take)
+                                        .ToListAsync();
+        }
+
+        public async Task<List<ColumnChartItem>> GetMostUsedApplicationsForUser(Guid userId, int take)
+        {
+            return await ProcessExplorerDbContext.Applications.Where(i => i.Session.ExplorerUserId == userId)
+                                        .GroupBy(i => i.Name)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new ColumnChartItem
+                                        {
+                                            Label = i.Key,
+                                            Value = i.Count()
+                                        })
+                                        .Take(take)
+                                        .ToListAsync();
+        }
+
+        public async Task<List<ColumnChartItem>> GetMostUsedApplicationsForUserSession(Guid userId, Guid sessionId, int take)
+        {
+            return await ProcessExplorerDbContext.Applications.Where(i => i.Session.ExplorerUserId == userId && i.SessionId == sessionId)
+                                        .GroupBy(i => i.Name)
+                                        .OrderByDescending(i => i.Count())
+                                        .Select(i => new ColumnChartItem
+                                        {
+                                            Label = i.Key,
+                                            Value = i.Count()
+                                        })
+                                        .Take(take)
+                                        .ToListAsync();
+        }
     }
 }
