@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using ProcessExplorerWeb.Application.Common.Exceptions;
 using ProcessExplorerWeb.Application.Common.Interfaces;
@@ -19,8 +20,9 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncApplication
         public SyncApplicationCommandHandler(IUnitOfWork work,
             ICurrentUserService currentUser,
             IDateTime dateTime,
-            ILogger<SyncApplicationCommandHandler> logger) 
-            : base (work, currentUser, dateTime)
+            ILogger<SyncApplicationCommandHandler> logger,
+            IMediator mediator) 
+            : base (work, currentUser, dateTime, mediator)
         {
             _logger = logger;
         }
@@ -64,7 +66,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncApplication
                 _work.Applications.AddRange(newApps);
 
             //save changes
-            await _work.CommitAsync();
+            await SaveSyncChanges();
 
             _logger.LogInformation("Session with given id {0} (UPDATED|INSERTED)", request.SessionId);
 

@@ -22,7 +22,9 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncProcess
         public SyncProcessCommandHandler(IUnitOfWork work,
             ICurrentUserService currentUser,
             IDateTime dateTime,
-            ILogger<SyncProcessCommandHandler> logger) : base(work, currentUser, dateTime)
+            ILogger<SyncProcessCommandHandler> logger,
+            IMediator mediator) 
+            : base(work, currentUser, dateTime, mediator)
         {
             _logger = logger;
         }
@@ -63,7 +65,7 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncProcess
                 _work.Process.AddRange(newProcesses);
 
             //save changes
-            await _work.CommitAsync();
+            await SaveSyncChanges();
 
             _logger.LogInformation("Session with given id {0} exists (UPDATED|INSERTED)", request.SessionId);
 

@@ -9,6 +9,6 @@ namespace ProcessExplorer.Api.SignalR
     {
         void Add(T key, string connectionId);
         IEnumerable<string> GetConnections(T key);
-        void Remove(T key, string connectionId);
+        bool Remove(T key, string connectionId);
     }
 }

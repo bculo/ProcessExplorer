@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using ProcessExplorerWeb.Application.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +10,24 @@ using System.Threading.Tasks;
 namespace ProcessExplorer.Api.SignalR
 {
     [Authorize]
-    public class ProcessExplorerHub : Hub
+    public class ProcessExplorerHub : Hub<IProcessExplorerHubClient>
     {
         private readonly IConnectionMapper<string> _connections;
+        private readonly IMediator _mediator;
 
-        public ProcessExplorerHub(IConnectionMapper<string> connections)
+        public ProcessExplorerHub(IConnectionMapper<string> connections,
+            IMediator mediator)
         {
             _connections = connections;
+            _mediator = mediator;
         }
 
         public override Task OnConnectedAsync()
+        {
+            return base.OnConnectedAsync();
+        }
+
+        public Task Subscribe()
         {
             //user unique identifier
             string identifier = Context.UserIdentifier;
@@ -26,20 +36,20 @@ namespace ProcessExplorer.Api.SignalR
             if (!_connections.GetConnections(identifier).Contains(Context.ConnectionId))
                 _connections.Add(identifier, Context.ConnectionId);
 
-            //call base function
-            return base.OnConnectedAsync();
+            return Task.CompletedTask;
         }
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
             //user unique identifier
             string identifier = Context.UserIdentifier;
 
             //remove specific connection
-            _connections.Remove(identifier, Context.ConnectionId);
+            if (_connections.Remove(identifier, Context.ConnectionId))
+                await _mediator.Publish(new UserLogedOutEvent { });
 
             //call base function
-            return base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

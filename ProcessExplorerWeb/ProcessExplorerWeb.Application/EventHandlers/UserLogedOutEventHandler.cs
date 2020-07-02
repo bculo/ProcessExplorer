@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Application.EventHandlers
 {
-    public class UserLogedInEventHandler : INotificationHandler<UserLogedInEvent>
+    public class UserLogedOutEventHandler : INotificationHandler<UserLogedOutEvent>
     {
         private readonly INotificationService _service;
 
-        public UserLogedInEventHandler(INotificationService service)
+        public UserLogedOutEventHandler(INotificationService service)
         {
             _service = service;
         }
 
-        public async Task Handle(UserLogedInEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(UserLogedOutEvent notification, CancellationToken cancellationToken)
         {
-            await _service.NotifyUserLogedIn();
+            await _service.NotifyUserLogedOut();
         }
     }
 }

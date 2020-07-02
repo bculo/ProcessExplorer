@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProcessExplorerWeb.Application.Common.Constants;
 using ProcessExplorerWeb.Application.Modules.Communication.Commands.ChangeType;
 using ProcessExplorerWeb.Application.Modules.Communication.Queries.GetType;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProcessExplorer.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Role.ADMINCTRL)]
     public class CommunicationController : MediatRBaseController
     {
         [HttpPost]

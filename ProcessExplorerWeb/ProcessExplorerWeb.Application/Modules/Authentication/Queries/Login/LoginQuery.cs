@@ -9,5 +9,6 @@ namespace ProcessExplorerWeb.Application.Authentication.Queries.Login
     {
         public string Identifier { get; set; }
         public string Password { get; set; }
+        public bool IsWebApp { get; set; } = false; 
     }
 }

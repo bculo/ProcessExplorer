@@ -1,6 +1,8 @@
 ﻿using Mapster;
+using MediatR;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using ProcessExplorerWeb.Application.Common.Interfaces;
+using ProcessExplorerWeb.Application.Events;
 using ProcessExplorerWeb.Application.Sync.SharedDtos;
 using ProcessExplorerWeb.Core.Entities;
 using ProcessExplorerWeb.Core.Interfaces;
@@ -17,14 +19,17 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
         protected readonly IUnitOfWork _work;
         protected readonly ICurrentUserService _currentUser;
         protected readonly IDateTime _dateTime;
+        protected readonly IMediator _mediator;
 
         protected SyncRootHandler(IUnitOfWork work,
             ICurrentUserService currentUser,
-            IDateTime dateTime)
+            IDateTime dateTime,
+            IMediator mediator)
         {
             _work = work;
             _currentUser = currentUser;
             _dateTime = dateTime;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -137,7 +142,19 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
 
             //add to database
             _work.Session.Add(session);
-            await _work.CommitAsync();
+            await SaveSyncChanges();
+        }
+
+        /// <summary>
+        /// Save changes
+        /// </summary>
+        /// <returns></returns>
+        protected async Task SaveSyncChanges()
+        {
+            var changes = await _work.CommitAsync();
+
+            if (changes > 0)
+                await _mediator.Publish(new SyncHappendEvent(_currentUser.UserId));
         }
     }
 }

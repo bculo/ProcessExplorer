@@ -5,6 +5,7 @@ using ProcessExplorerWeb.Application.Common.Constants;
 using ProcessExplorerWeb.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ProcessExplorerWeb.Infrastructure.Persistence
@@ -38,13 +39,21 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence
             IdentityAppUser explorerAdmin = config.GetSection(nameof(IdentityAppUser)).Get<IdentityAppUser>();
 
             var adminTask = await userManager.Users.AllAsync(u => u.UserName != explorerAdmin.UserName);
-            var roleTask = await roleManager.Roles.FirstOrDefaultAsync(r => r.Name == RoleConstants.ADMIN);
+            var roleTask = await roleManager.Roles.FirstOrDefaultAsync(r => r.Name == Role.ADMIN);
 
             if (!adminTask)
                 return;
 
             explorerAdmin.UserRoles.Add(new IdentityAppUserRole { Role = roleTask });
             IdentityResult result = await userManager.CreateAsync(explorerAdmin, nameof(explorerAdmin));
+
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, explorerAdmin.Id.ToString()),
+                new Claim(ClaimTypes.Role, roleTask.Name)
+            };
+
+            await userManager.AddClaimsAsync(explorerAdmin, claims);
 
             if (!result.Succeeded)
                 throw new Exception("Admin seed exception");

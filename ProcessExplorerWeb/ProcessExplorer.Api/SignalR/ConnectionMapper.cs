@@ -48,7 +48,7 @@ namespace ProcessExplorer.Api.SignalR
             return Enumerable.Empty<string>();
         }
 
-        public void Remove(T key, string connectionId)
+        public bool Remove(T key, string connectionId)
         {
             lock (_connections)
             {
@@ -56,19 +56,24 @@ namespace ProcessExplorer.Api.SignalR
                 HashSet<string> connections;
                 if (!_connections.TryGetValue(key, out connections))
                 {
-                    return;
+                    return false;
                 }
 
                 lock (connections)
                 {
                     //remove connection for given key
-                    connections.Remove(connectionId);
+                    bool removed = connections.Remove(connectionId);
 
                     //if hashset empty remove key from dictionary
                     if (connections.Count == 0)
                     {
                         _connections.Remove(key);
                     }
+
+                    if (removed)
+                        return true;
+
+                    return false;
                 }
             }
         }
