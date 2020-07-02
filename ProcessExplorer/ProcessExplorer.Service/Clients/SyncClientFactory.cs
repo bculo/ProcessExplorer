@@ -35,8 +35,10 @@ namespace ProcessExplorer.Service.Clients
             {
                 case CommunicationType.REST:
                     return new RestSyncClient(_clientFactory.CreateClient(), _options, _tokenService);
+                case CommunicationType.SOCKET:
+                    return new SignalRClient(_options, _tokenService);
                 default:
-                    throw new NotImplementedException();
+                    return new RestSyncClient(_clientFactory.CreateClient(), _options, _tokenService);
             }
         }
     }

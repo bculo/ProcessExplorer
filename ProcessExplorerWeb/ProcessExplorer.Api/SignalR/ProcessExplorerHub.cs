@@ -1,7 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using ProcessExplorerWeb.Application.Events;
+using ProcessExplorerWeb.Application.Sync.Commands.SyncApplication;
+using ProcessExplorerWeb.Application.Sync.Commands.SyncProcess;
+using ProcessExplorerWeb.Application.Sync.Commands.SyncSession;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +42,38 @@ namespace ProcessExplorer.Api.SignalR
 
             return Task.CompletedTask;
         }
+
+        public async Task SyncSession(string json)
+        {
+            if (json is null)
+                throw new ArgumentNullException(nameof(json));
+
+            var command = JsonConvert.DeserializeObject<SyncSessionCommand>(json);
+
+            await _mediator.Send(command);
+        }
+
+        public async Task SyncApplications(string json)
+        {
+            if (json is null)
+                throw new ArgumentNullException(nameof(json));
+
+            var command = JsonConvert.DeserializeObject<SyncApplicationCommand>(json);
+
+            await _mediator.Send(command);
+        }
+
+
+        public async Task SynProcesses(string json)
+        {
+            if (json is null)
+                throw new ArgumentNullException(nameof(json));
+
+            var command = JsonConvert.DeserializeObject<SyncProcessCommand>(json);
+
+            await _mediator.Send(command);
+        }
+
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {

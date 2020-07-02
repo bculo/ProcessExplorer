@@ -11,7 +11,6 @@ namespace ProcessExplorer.Interfaces
         /// <summary>
         /// Start method of console application
         /// </summary>
-        /// <param name="provider"></param>
         /// <returns></returns>
         Task Start();
     }
