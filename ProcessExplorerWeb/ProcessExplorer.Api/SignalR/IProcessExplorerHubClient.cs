@@ -7,7 +7,7 @@ namespace ProcessExplorer.Api.SignalR
 {
     public interface IProcessExplorerHubClient
     {
-        Task CreateNotificationForLogin();
+        Task CreateNotificationForLogin(int totalUsers);
         Task CreateNotificationForLogout();
         Task CreateSyncNotification();
     }

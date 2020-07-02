@@ -26,15 +26,36 @@ export class SignalRService {
 
     //start connection
     this.hubConnection.start().then(() => {
-      console.log(this.hubConnection.state);
+      this.subscribe();
+      this.userNotification();
+      this.syncNotification();
     }).catch((err) => {
       console.log(err);
     });
   }
 
+  private subscribe(): void {
+    this.hubConnection.invoke("Subscribe");
+  }
+
+  private userNotification(): void {
+    this.hubConnection.on("CreateNotificationForLogin", (data) => {
+      console.log(data);
+    });
+
+    this.hubConnection.on("CreateNotificationForLogout", () => {
+      console.log("SMANJI ZA JEDAN");
+    });
+  }
+
+  private syncNotification(): void {
+    this.hubConnection.on("CreateSyncNotification", () => {
+      console.log("SYNC HAPPEND");
+    });
+  }
+
   public stopConnection() {
     if(!this.hubConnection) return;
-
     if(this.hubConnection.state === HubConnectionState.Connected)
       this.hubConnection.stop();
   }

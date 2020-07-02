@@ -6,7 +6,8 @@
 
 export class LoginRequestModel {
     constructor(public identifier: string, 
-        public password: string) {}
+        public password: string,
+        public isWebApp) {}
 }
 
 export class RegisterRequestModel {

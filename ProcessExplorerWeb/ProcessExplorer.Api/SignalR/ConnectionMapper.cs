@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Api.SignalR
@@ -8,6 +9,9 @@ namespace ProcessExplorer.Api.SignalR
     public class ConnectionMapper<T> : IConnectionMapper<T>
     {
         private readonly Dictionary<T, HashSet<string>> _connections;
+
+        private int connectionsNum;
+        private int TotalConnections => connectionsNum;
 
         public ConnectionMapper()
         {
@@ -25,12 +29,14 @@ namespace ProcessExplorer.Api.SignalR
                 {
                     connections = new HashSet<string>();
                     _connections.Add(key, connections);
+                    Interlocked.Increment(ref connectionsNum);
                 }
 
                 //add new connection to hashset
                 lock (connections)
                 {
                     connections.Add(connectionId);
+                    Interlocked.Increment(ref connectionsNum);
                 }
             }
         }
@@ -46,6 +52,11 @@ namespace ProcessExplorer.Api.SignalR
 
             //return empty list
             return Enumerable.Empty<string>();
+        }
+
+        public int GetTotalConnections()
+        {
+            return TotalConnections;
         }
 
         public bool Remove(T key, string connectionId)
@@ -71,7 +82,10 @@ namespace ProcessExplorer.Api.SignalR
                     }
 
                     if (removed)
+                    {
+                        Interlocked.Decrement(ref connectionsNum);
                         return true;
+                    }
 
                     return false;
                 }

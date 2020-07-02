@@ -29,7 +29,9 @@ namespace ProcessExplorer.Api.Services
 
         public async Task NotifyUserLogedIn()
         {
-            await _hub.Clients.All.CreateNotificationForLogin();
+            int connections = _connections.GetTotalConnections();
+
+            await _hub.Clients.All.CreateNotificationForLogin(connections);
         }
 
         public async Task NotifyUserLogedOut()

@@ -1,0 +1,23 @@
+<div class="content-box">
+
+    <div>
+        <div *ngIf="!types.isLoading && !types.errorMessage" class="columns is-multiline has-text-centered">
+            <div class="buttons are-medium">
+                <button *ngFor="let type of types.data"
+                    [disabled]="type.isActive"
+                    class="button is-primary"
+                    (click)="chnageCommunicationType(type.type)"
+                    >{{type.name}}</button>
+            </div>
+        </div>
+        <article *ngIf="!types.isLoading && types.errorMessage" class="message is-danger">
+            <div class="message-body">
+                {{ types.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="types.isLoading" class="box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+</div>

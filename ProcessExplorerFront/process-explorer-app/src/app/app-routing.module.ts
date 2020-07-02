@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'process', 
     loadChildren: () => import('./process/process.module').then(l => l.ProcessModule) 
   },
+  { 
+    path: 'admin', 
+    loadChildren: () => import('./admin/admin.module').then(l => l.AdminModule) 
+  },
 ];
 
 @NgModule({

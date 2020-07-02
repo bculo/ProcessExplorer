@@ -24,7 +24,8 @@ namespace ProcessExplorerWeb.Application.Modules.Communication.Queries.GetType
 
             return Task.FromResult(new GetTypeQueryResponseDto
             {
-                Type = (int)type
+                Type = (int)type,
+                Name = type.ToString()
             });
         }
     }

@@ -18,6 +18,7 @@ export class AuthenticationService {
     private validation: FormValidationService) { }
 
   public loginUser(user: LoginRequestModel) {
+    user.isWebApp = true;
     return this.http.post(`${environment.api}/authentication/login`, user)
       .pipe(
         tap((response: ILoginResponse) => this.handleLoginLogic(response)),
