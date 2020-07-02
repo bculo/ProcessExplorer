@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Interfaces.Notifications;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Core.Entities;
 using System;
@@ -17,13 +18,14 @@ namespace ProcessExplorer.Application.Behaviours
         private readonly IDateTime _time;
         private readonly ILoggerWrapper _logger;
         private readonly ISynchronizationClientFactory _factory;
-
+        private readonly INotificationService _notification;
         public SyncBehaviour(IInternet internet,
             IUnitOfWork unitOfWork,
             ILoggerWrapper logger,
             ISynchronizationClientFactory factory,
             ISessionService sessionService,
-            IDateTime time)
+            IDateTime time,
+            INotificationService notification)
         {
             _time = time;
             _internet = internet;
@@ -31,99 +33,109 @@ namespace ProcessExplorer.Application.Behaviours
             _factory = factory;
             _sessionService = sessionService;
             _unitOfWork = unitOfWork;
+            _notification = notification;
         }
 
         public async Task Synchronize()
         {
-            _logger.LogInfo($"Sync behaviourr started: {_time.Now}");
-
-            //Offline mode so exit
-            if (_sessionService.SessionInformation.Offline)
+            try
             {
-                _logger.LogInfo($"Sync finished: {_time.Now}, OFFLINE MODE");
-                return;
-            }
+                _logger.LogInfo($"Sync behaviourr started: {_time.Now}");
 
-            //Check for internet connection
-            if (!await _internet.CheckForInternetConnectionAsync())
-            {
-                _logger.LogInfo($"Sync finished: {_time.Now}, NO INTERNET ACCESS");
-                return;
-            }
+                //Offline mode so exit
+                if (_sessionService.SessionInformation.Offline)
+                {
+                    _logger.LogInfo($"Sync finished: {_time.Now}, OFFLINE MODE");
+                    return;
+                }
 
-            //Get all sessions from database
-            var sessions = await _unitOfWork.Sessions.GetAllWithIncludesAsync();
+                //Check for internet connection
+                if (!await _internet.CheckForInternetConnectionAsync())
+                {
+                    _logger.LogInfo($"Sync finished: {_time.Now}, NO INTERNET ACCESS");
+                    return;
+                }
 
-            //no records in database so finish sync process
-            if (sessions.Count == 0)
-            {
-                _logger.LogInfo($"Sync finished: {_time.Now}, NO RECORDS FOR SYNC");
-                return;
-            }
-            
-            //are we working only with current session ?
-            if(sessions.Count == 1 && IsCurrentSession(sessions))
-            {
-                var curSession = sessions.First();
+                //Get all sessions from database
+                var sessions = await _unitOfWork.Sessions.GetAllWithIncludesAsync();
 
-                if (!SessionNeedsUpdate(curSession))
+                //no records in database so finish sync process
+                if (sessions.Count == 0)
                 {
                     _logger.LogInfo($"Sync finished: {_time.Now}, NO RECORDS FOR SYNC");
                     return;
                 }
+
+                //are we working only with current session ?
+                if (sessions.Count == 1 && IsCurrentSession(sessions))
+                {
+                    var curSession = sessions.First();
+
+                    if (!SessionNeedsUpdate(curSession))
+                    {
+                        _logger.LogInfo($"Sync finished: {_time.Now}, NO RECORDS FOR SYNC");
+                        return;
+                    }
+                }
+
+                //map entites from database to dtos
+                var dtosSessions = sessions.Adapt<List<UserSessionDto>>();
+
+                //list for successfuly synced entites
+                var successStatuses = new List<UserSessionDto>();
+
+                //sync process
+                foreach (var session in dtosSessions)
+                {
+                    //get sync client
+                    var syncClient = _factory.GetClient();
+
+                    //sync session
+                    var result = await syncClient.Sync(session);
+
+                    //if sync successful, add to list
+                    if (result)
+                        successStatuses.Add(session);
+                }
+
+                //no success on sync
+                if (successStatuses.Count == 0)
+                {
+                    _logger.LogInfo($"Sync finished: {_time.Now}, NO SYNC");
+                    return;
+                }
+
+                /// Get successfuly synced sessions -> sessions that needs to be deleted
+                var sessionsForDelete = GetSessionsForDelete(sessions, successStatuses);
+
+                //remove current session entity -> current sessions = different treatment
+                //get current session
+                var currentSession = GetCurrentSessionFromList(sessionsForDelete);
+
+                //remove if from deletesessions
+                RemoveCurrentSessionFromList(sessionsForDelete);
+
+                //handle current session
+                HandleCurrentSession(currentSession);
+
+                //zero objects, exit
+                if (sessionsForDelete.Count() > 0)
+                {
+                    //delete old sessions
+                    _unitOfWork.Sessions.RemoveRange(sessionsForDelete);
+                }
+
+                //save changes
+                await _unitOfWork.CommitAsync();
+
+                _notification.DisplayMessage(nameof(SyncBehaviour), $"Sync finished: {_time.Now}");
+
+                _logger.LogInfo($"Sync finished: {_time.Now}, SYNC");
             }
-
-            //map entites from database to dtos
-            var dtosSessions = sessions.Adapt<List<UserSessionDto>>();
-
-            //list for successfuly synced entites
-            var successStatuses = new List<UserSessionDto>();
-
-            //sync process
-            foreach(var session in dtosSessions)
+            catch(Exception e)
             {
-                //get sync client
-                var syncClient = _factory.GetClient();
-
-                //sync session
-                var result = await syncClient.Sync(session);
-
-                //if sync successful, add to list
-                if (result)
-                    successStatuses.Add(session);
+                _logger.LogError(e);
             }
-
-            //no success on sync
-            if (successStatuses.Count == 0)
-            {
-                _logger.LogInfo($"Sync finished: {_time.Now}, NO SYNC");
-                return;
-            }
-
-            /// Get successfuly synced sessions -> sessions that needs to be deleted
-            var sessionsForDelete = GetSessionsForDelete(sessions, successStatuses);
-
-            //remove current session entity -> current sessions = different treatment
-            //get current session
-            var currentSession = GetCurrentSessionFromList(sessionsForDelete);
-
-            //remove if from deletesessions
-            RemoveCurrentSessionFromList(sessionsForDelete);
-
-            //handle current session
-            HandleCurrentSession(currentSession);
-
-            //zero objects, exit
-            if (sessionsForDelete.Count() > 0)
-            {
-                //delete old sessions
-                _unitOfWork.Sessions.RemoveRange(sessionsForDelete);
-            }
-
-            //save changes
-            await _unitOfWork.CommitAsync();
-
-            _logger.LogInfo($"Sync finished: {_time.Now}, SYNC");
         }
 
         /// <summary>

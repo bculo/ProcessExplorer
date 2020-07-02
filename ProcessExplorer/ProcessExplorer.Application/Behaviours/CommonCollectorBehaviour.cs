@@ -1,4 +1,5 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Interfaces.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +15,7 @@ namespace ProcessExplorer.Application.Behaviours
         protected readonly ILoggerWrapper _logger;
         protected readonly IDateTime _time;
         protected readonly ISessionService _session;
+        protected readonly INotificationService _notification;
 
         protected CommonCollectorBehaviour(
             ISynchronizationClientFactory syncFactory,
@@ -21,7 +23,8 @@ namespace ProcessExplorer.Application.Behaviours
             IInternet internet,
             ISessionService session,
             ILoggerWrapper wrapper,
-            IDateTime dateTime)
+            IDateTime dateTime,
+            INotificationService notification)
         {
             _syncFactory = syncFactory;
             _unitOfWork = unitOfWork;
@@ -29,6 +32,7 @@ namespace ProcessExplorer.Application.Behaviours
             _session = session;
             _logger = wrapper;
             _time = dateTime;
+            _notification = notification;
         }
     }
 }

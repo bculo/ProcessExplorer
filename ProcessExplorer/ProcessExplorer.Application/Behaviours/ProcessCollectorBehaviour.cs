@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Interfaces.Notifications;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Core.Entities;
@@ -26,46 +27,56 @@ namespace ProcessExplorer.Application.Behaviours
             IInternet internet,
             ISessionService session,
             ILoggerWrapper wrapper,
-            IDateTime dateTime)
-            : base(syncFactory, unitOfWork, internet, session, wrapper, dateTime)
+            IDateTime dateTime,
+            INotificationService notification)
+            : base(syncFactory, unitOfWork, internet, session, wrapper, dateTime, notification)
         {
             _processFactory = processFactory;
         }
 
         public async Task Collect()
         {
-            _logger.LogInfo($"Started collecting processes: {_time.Now}");
-
-            //get processes collector
-            IProcessCollector collector = _processFactory.GetProcessCollector();
-
-            //get running processes
-            List<ProcessInformation> processes = collector.GetProcesses();
-
-            //check internet connection and user work mode
-            if (!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
+            try
             {
-                //store records to local database
-                await StoreRecords(processes);
+                _logger.LogInfo($"Started collecting processes: {_time.Now}");
+
+                //get processes collector
+                IProcessCollector collector = _processFactory.GetProcessCollector();
+
+                //get running processes
+                List<ProcessInformation> processes = collector.GetProcesses();
+
+                //check internet connection and user work mode
+                if (!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
+                {
+                    //store records to local database
+                    await StoreRecords(processes);
+                    _logger.LogInfo($"Finished collecting processes: {_time.Now} with status: {CollectStatus}");
+                    return;
+                }
+
+                //get sync client
+                var syncClient = _syncFactory.GetClient();
+
+                //create user session dto
+                var dto = _session.SessionInformation.Adapt<UserSessionDto>();
+                dto.Processes = processes.Adapt<IEnumerable<ProcessDto>>();
+
+                //send to server
+                if (!await syncClient.SyncProcesses(dto))
+                {
+                    //store records to local database
+                    await StoreRecords(processes);
+                }
+
+                _notification.DisplayMessage(nameof(ProcessCollectorBehaviour), $"Processes sync finished: {_time.Now}");
+
                 _logger.LogInfo($"Finished collecting processes: {_time.Now} with status: {CollectStatus}");
-                return;
             }
-
-            //get sync client
-            var syncClient = _syncFactory.GetClient();
-
-            //create user session dto
-            var dto = _session.SessionInformation.Adapt<UserSessionDto>();
-            dto.Processes = processes.Adapt<IEnumerable<ProcessDto>>();
-
-            //send to server
-            if (!await syncClient.SyncProcesses(dto))
+            catch (Exception e)
             {
-                //store records to local database
-                await StoreRecords(processes);
+                _logger.LogError(e);
             }
-
-            _logger.LogInfo($"Finished collecting processes: {_time.Now} with status: {CollectStatus}");
         }
 
         /// <summary>

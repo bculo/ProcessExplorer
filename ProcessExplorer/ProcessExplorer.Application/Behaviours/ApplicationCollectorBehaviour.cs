@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using ProcessExplorer.Application.Common.Interfaces;
+using ProcessExplorer.Application.Common.Interfaces.Notifications;
 using ProcessExplorer.Application.Common.Models;
 using ProcessExplorer.Application.Dtos.Requests.Update;
 using ProcessExplorer.Core.Entities;
@@ -26,46 +27,56 @@ namespace ProcessExplorer.Application.Behaviours
             IInternet internet,
             ISessionService session,
             ILoggerWrapper wrapper,
-            IDateTime dateTime)
-            : base(syncFactory, unitOfWork, internet, session, wrapper, dateTime)
+            IDateTime dateTime,
+            INotificationService notification)
+            : base(syncFactory, unitOfWork, internet, session, wrapper, dateTime, notification)
         {
             _appFactory = appFactory;
         }
 
         public async Task Collect()
         {
-            _logger.LogInfo($"Started collecting apps: {_time.Now}");
-
-            //get app collector
-            IApplicationCollector collector = _appFactory.GetApplicationCollector();
-
-            //get running applications
-            List<ApplicationInformation> apps = collector.GetApplications();
-
-            //check internet connection
-            if(!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
+            try
             {
-                //store records to local database
-                await StoreRecords(apps);
+                _logger.LogInfo($"Started collecting apps: {_time.Now}");
+
+                //get app collector
+                IApplicationCollector collector = _appFactory.GetApplicationCollector();
+
+                //get running applications
+                List<ApplicationInformation> apps = collector.GetApplications();
+
+                //check internet connection
+                if (!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
+                {
+                    //store records to local database
+                    await StoreRecords(apps);
+                    _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
+                    return;
+                }
+
+                //get sync client
+                var syncClient = _syncFactory.GetClient();
+
+                //create user session dto
+                var dto = _session.SessionInformation.Adapt<UserSessionDto>();
+                dto.Applications = apps.Adapt<IEnumerable<ApplicationDto>>();
+
+                //sync fetched apps with server if possible
+                if (!await syncClient.SyncApplications(dto))
+                {
+                    //store records to local database if sync with server failes
+                    await StoreRecords(apps);
+                }
+
+                _notification.DisplayMessage(nameof(ApplicationCollectorBehaviour), $"Application sync finished: {_time.Now}");
+
                 _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
-                return;
             }
-
-            //get sync client
-            var syncClient = _syncFactory.GetClient();
-
-            //create user session dto
-            var dto = _session.SessionInformation.Adapt<UserSessionDto>();
-            dto.Applications = apps.Adapt<IEnumerable<ApplicationDto>>();
-
-            //sync fetched apps with server if possible
-            if (!await syncClient.SyncApplications(dto))
+            catch (Exception e)
             {
-                //store records to local database if sync with server failes
-                await StoreRecords(apps);
+                _logger.LogError(e);
             }
-
-            _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
         }
 
         /// <summary>

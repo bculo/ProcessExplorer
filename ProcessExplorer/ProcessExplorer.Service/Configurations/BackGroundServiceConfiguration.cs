@@ -14,9 +14,9 @@ namespace ProcessExplorer.Service.Configurations
         {
             #region BACKGROUND SERVICES
 
-            //services.AddHostedService<ProcessCollectorHostedService>();
+            services.AddHostedService<ProcessCollectorHostedService>();
             services.AddHostedService<ApplicationCollectorHostedService>();
-            //services.AddHostedService<SyncHostedService>();
+            services.AddHostedService<SyncHostedService>();
             services.AddHostedService<CommunicationTypeHostedService>();
 
             #endregion
