@@ -7,7 +7,6 @@
     <ProjectReference Include="..\ProcessExplorer.Application\ProcessExplorer.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Connected Services\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Session\Linux\" />
   </ItemGroup>

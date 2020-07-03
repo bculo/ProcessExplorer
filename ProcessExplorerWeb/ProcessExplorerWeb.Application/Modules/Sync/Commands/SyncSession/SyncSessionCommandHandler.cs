@@ -7,6 +7,7 @@ using ProcessExplorerWeb.Application.Sync.SharedDtos;
 using ProcessExplorerWeb.Application.Sync.SharedLogic;
 using ProcessExplorerWeb.Core.Entities;
 using ProcessExplorerWeb.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -30,13 +31,15 @@ namespace ProcessExplorerWeb.Application.Sync.Commands.SyncSession
 
         public async Task<Unit> Handle(SyncSessionCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Starting to handle session {0} for user {1}", request.SessionId, _currentUser.UserId);
+            HandleUserIdentifier(request);
+
+            _logger.LogInformation("Starting to handle session {0} for user {1}", request.SessionId, UserId);
 
             //get session with given id and belongs to specific user
-            var session = await _work.Session.GetSessionWithAppsAndProcesses(request.SessionId, _currentUser.UserId);
+            var session = await _work.Session.GetSessionWithAppsAndProcesses(request.SessionId,UserId);
 
             //wrong request
-            if (session != null && session.ExplorerUserId != _currentUser.UserId)
+            if (session != null && session.ExplorerUserId != UserId)
                 throw new ProcessExplorerException("Invalid request");
 
             //Session not found, so create it

@@ -1,10 +1,8 @@
 ﻿using Mapster;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Dtos.Requests.Update;
-using ServiceReference;
+using SyncSoapReference;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Service.Clients.Sync
@@ -12,15 +10,17 @@ namespace ProcessExplorer.Service.Clients.Sync
     public class SoapClient : ISyncClient
     {
         private readonly SyncServiceClient syncServiceClient;
+        private readonly ITokenService _tokenService;
 
-        public SoapClient()
+        public SoapClient(ITokenService tokenService)
         {
             syncServiceClient = new SyncServiceClient();
+            _tokenService = tokenService;
         }
 
         public async Task<bool> Sync(UserSessionDto sessionDto)
         {
-            return false;
+            return await ExecuteSoapMethod<SyncSessionModel>(syncServiceClient.SyncSessionAsync, sessionDto);
         }
 
         public async Task<bool> SyncApplications(UserSessionDto sessionDto)
@@ -33,7 +33,7 @@ namespace ProcessExplorer.Service.Clients.Sync
             return await ExecuteSoapMethod<SyncProcessModel>(syncServiceClient.SyncProcessesAsync, sessionDto);
         }
 
-        public async Task<bool> ExecuteSoapMethod<T>(Func<T, Task<bool>> soapFunctionAsync, UserSessionDto dto)
+        public async Task<bool> ExecuteSoapMethod<T>(Func<T, Task<bool>> soapFunctionAsync, UserSessionDto dto) where T : SecurityModel
         {
             try
             {
@@ -41,13 +41,15 @@ namespace ProcessExplorer.Service.Clients.Sync
 
                 T soapModel = dto.Adapt<T>();
 
+                soapModel.Jwt = _tokenService.GetValidToken();
+
                 await soapFunctionAsync(soapModel);
 
                 await syncServiceClient.CloseAsync();
 
                 return true;
             }
-            catch(Exception e)
+            catch
             {
                 return false;
             }
@@ -58,10 +60,9 @@ namespace ProcessExplorer.Service.Clients.Sync
     {
         public void Register(TypeAdapterConfig config)
         {
-            /*
-            config.ForType<UserSessionDto, SyncSessionCommand>()
+            config.ForType<UserSessionDto, SyncSessionModel>()
                 .Map(dst => dst.Started, src => src.Started)
-                .Map(dst => dst.SessionId, src => Guid.Parse(src.SessionId))
+                .Map(dst => dst.SessionId, src => src.SessionId.ToString())
                 .Map(dst => dst.UserName, src => src.UserName)
                 .Map(dst => dst.OS, src => src.OS)
                 .Map(dst => dst.Applications, src => src.Applications)
@@ -91,8 +92,6 @@ namespace ProcessExplorer.Service.Clients.Sync
                 .Map(dst => dst.UserName, src => src.UserName)
                 .Map(dst => dst.OS, src => src.OS)
                 .Map(dst => dst.Applications, src => src.Applications);
-
-            */
         }
     }
 }

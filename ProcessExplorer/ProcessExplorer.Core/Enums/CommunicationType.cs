@@ -8,5 +8,6 @@ namespace ProcessExplorer.Core.Enums
     {
         REST = 1, //DEFAULT
         SOCKET = 2,
+        SOAP = 3,
     }
 }

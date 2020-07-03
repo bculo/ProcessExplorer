@@ -51,7 +51,11 @@ namespace ProcessExplorer.Application.Behaviours
                 {
                     //store records to local database
                     await StoreRecords(apps);
+
                     _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
+
+                    _notification.DisplayMessage(nameof(ApplicationCollectorBehaviour), $"Applications saved locally (No internet connection | offline mode): {_time.Now}");
+
                     return;
                 }
 
@@ -67,9 +71,13 @@ namespace ProcessExplorer.Application.Behaviours
                 {
                     //store records to local database if sync with server failes
                     await StoreRecords(apps);
+
+                    _notification.DisplayMessage(nameof(ApplicationCollectorBehaviour), $"Applications saved locally (Server error): {_time.Now}");
+
+                    return;
                 }
 
-                _notification.DisplayMessage(nameof(ApplicationCollectorBehaviour), $"Application sync finished: {_time.Now}");
+                _notification.DisplayMessage(nameof(ApplicationCollectorBehaviour), $"Applications sync finished: {_time.Now}");
 
                 _logger.LogInfo($"Finished collecting apps: {_time.Now} with status: {CollectStatus}");
             }

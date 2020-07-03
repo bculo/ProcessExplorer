@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using ProcessExplorerWeb.Application.Common.Interfaces;
 using ProcessExplorerWeb.Application.Events;
+using ProcessExplorerWeb.Application.Modules.Sync.Common.Dtos;
 using ProcessExplorerWeb.Application.Sync.SharedDtos;
 using ProcessExplorerWeb.Core.Entities;
 using ProcessExplorerWeb.Core.Interfaces;
@@ -20,6 +21,8 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
         protected readonly ICurrentUserService _currentUser;
         protected readonly IDateTime _dateTime;
         protected readonly IMediator _mediator;
+
+        protected Guid UserId { get; set; }
 
         protected SyncRootHandler(IUnitOfWork work,
             ICurrentUserService currentUser,
@@ -45,7 +48,7 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
         /// <param name="entity"></param>
         protected void FillSessionEntity(ProcessExplorerUserSession entity)
         {
-            entity.ExplorerUserId = _currentUser.UserId;
+            entity.ExplorerUserId = UserId;
             entity.Inserted = _dateTime.Now;
         }
 
@@ -154,7 +157,19 @@ namespace ProcessExplorerWeb.Application.Sync.SharedLogic
             var changes = await _work.CommitAsync();
 
             if (changes > 0)
-                await _mediator.Publish(new SyncHappendEvent(_currentUser.UserId));
+                await _mediator.Publish(new SyncHappendEvent(UserId));
+        }
+
+        /// <summary>
+        /// Set user id
+        /// </summary>
+        /// <param name="command"></param>
+        protected void HandleUserIdentifier(SyncCommand command)
+        {
+            UserId = (Guid.Empty != _currentUser.UserId) ? _currentUser.UserId : command.UserId;
+
+            if (UserId == Guid.Empty)
+                throw new ArgumentNullException(nameof(UserId));
         }
     }
 }

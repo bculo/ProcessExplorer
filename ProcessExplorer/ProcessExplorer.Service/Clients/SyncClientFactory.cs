@@ -4,7 +4,6 @@ using ProcessExplorer.Application.Common.Interfaces.Services;
 using ProcessExplorer.Core.Enums;
 using ProcessExplorer.Service.Clients.Sync;
 using ProcessExplorer.Service.Options;
-using System;
 using System.Net.Http;
 
 namespace ProcessExplorer.Service.Clients
@@ -37,6 +36,8 @@ namespace ProcessExplorer.Service.Clients
                     return new RestSyncClient(_clientFactory.CreateClient(), _options, _tokenService);
                 case CommunicationType.SOCKET:
                     return new SignalRClient(_options, _tokenService);
+                case CommunicationType.SOAP:
+                    return new SoapClient(_tokenService);
                 default:
                     return new RestSyncClient(_clientFactory.CreateClient(), _options, _tokenService);
             }

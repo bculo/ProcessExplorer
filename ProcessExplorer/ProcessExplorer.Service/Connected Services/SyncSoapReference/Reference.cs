@@ -7,18 +7,43 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceReference
+namespace SyncSoapReference
 {
     using System.Runtime.Serialization;
     
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SyncApplicationModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
-    public partial class SyncApplicationModel : object
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SecurityModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(SyncSoapReference.SyncApplicationModel))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(SyncSoapReference.SyncProcessModel))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(SyncSoapReference.SyncSessionModel))]
+    public partial class SecurityModel : object
     {
         
-        private ServiceReference.ApplicationInstanceModel[] ApplicationsField;
+        private string JwtField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Jwt
+        {
+            get
+            {
+                return this.JwtField;
+            }
+            set
+            {
+                this.JwtField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SyncApplicationModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
+    public partial class SyncApplicationModel : SyncSoapReference.SecurityModel
+    {
+        
+        private SyncSoapReference.ApplicationInstanceModel[] ApplicationsField;
         
         private string OSField;
         
@@ -29,7 +54,7 @@ namespace ServiceReference
         private string UserNameField;
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public ServiceReference.ApplicationInstanceModel[] Applications
+        public SyncSoapReference.ApplicationInstanceModel[] Applications
         {
             get
             {
@@ -95,7 +120,186 @@ namespace ServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SyncProcessModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
+    public partial class SyncProcessModel : SyncSoapReference.SecurityModel
+    {
+        
+        private string OSField;
+        
+        private SyncSoapReference.ProcessInstanceModel[] ProcessesField;
+        
+        private string SessionIdField;
+        
+        private System.DateTime StartedField;
+        
+        private string UserNameField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string OS
+        {
+            get
+            {
+                return this.OSField;
+            }
+            set
+            {
+                this.OSField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public SyncSoapReference.ProcessInstanceModel[] Processes
+        {
+            get
+            {
+                return this.ProcessesField;
+            }
+            set
+            {
+                this.ProcessesField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SessionId
+        {
+            get
+            {
+                return this.SessionIdField;
+            }
+            set
+            {
+                this.SessionIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Started
+        {
+            get
+            {
+                return this.StartedField;
+            }
+            set
+            {
+                this.StartedField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UserName
+        {
+            get
+            {
+                return this.UserNameField;
+            }
+            set
+            {
+                this.UserNameField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SyncSessionModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
+    public partial class SyncSessionModel : SyncSoapReference.SecurityModel
+    {
+        
+        private SyncSoapReference.ApplicationInstanceModel[] ApplicationsField;
+        
+        private string OSField;
+        
+        private SyncSoapReference.ProcessInstanceModel[] ProcessesField;
+        
+        private string SessionIdField;
+        
+        private System.DateTime StartedField;
+        
+        private string UserNameField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public SyncSoapReference.ApplicationInstanceModel[] Applications
+        {
+            get
+            {
+                return this.ApplicationsField;
+            }
+            set
+            {
+                this.ApplicationsField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string OS
+        {
+            get
+            {
+                return this.OSField;
+            }
+            set
+            {
+                this.OSField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public SyncSoapReference.ProcessInstanceModel[] Processes
+        {
+            get
+            {
+                return this.ProcessesField;
+            }
+            set
+            {
+                this.ProcessesField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SessionId
+        {
+            get
+            {
+                return this.SessionIdField;
+            }
+            set
+            {
+                this.SessionIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Started
+        {
+            get
+            {
+                return this.StartedField;
+            }
+            set
+            {
+                this.StartedField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UserName
+        {
+            get
+            {
+                return this.UserNameField;
+            }
+            set
+            {
+                this.UserNameField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ApplicationInstanceModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
     public partial class ApplicationInstanceModel : object
     {
@@ -162,94 +366,14 @@ namespace ServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SyncProcessModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
-    public partial class SyncProcessModel : object
-    {
-        
-        private string OSField;
-        
-        private ServiceReference.ProcessInstanceModel[] ProcessesField;
-        
-        private string SessionIdField;
-        
-        private System.DateTime StartedField;
-        
-        private string UserNameField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string OS
-        {
-            get
-            {
-                return this.OSField;
-            }
-            set
-            {
-                this.OSField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public ServiceReference.ProcessInstanceModel[] Processes
-        {
-            get
-            {
-                return this.ProcessesField;
-            }
-            set
-            {
-                this.ProcessesField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string SessionId
-        {
-            get
-            {
-                return this.SessionIdField;
-            }
-            set
-            {
-                this.SessionIdField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime Started
-        {
-            get
-            {
-                return this.StartedField;
-            }
-            set
-            {
-                this.StartedField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string UserName
-        {
-            get
-            {
-                return this.UserNameField;
-            }
-            set
-            {
-                this.UserNameField = value;
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ProcessInstanceModel", Namespace="http://schemas.datacontract.org/2004/07/ProcessExplorer.Api.Soap.Models")]
     public partial class ProcessInstanceModel : object
     {
         
         private System.DateTime DetectedField;
+        
+        private string JWTField;
         
         private string NameField;
         
@@ -265,6 +389,19 @@ namespace ServiceReference
             set
             {
                 this.DetectedField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string JWT
+        {
+            get
+            {
+                return this.JWTField;
+            }
+            set
+            {
+                this.JWTField = value;
             }
         }
         
@@ -295,29 +432,32 @@ namespace ServiceReference
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference.ISyncService")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="SyncSoapReference.ISyncService")]
     public interface ISyncService
     {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISyncService/Test", ReplyAction="http://tempuri.org/ISyncService/TestResponse")]
         System.Threading.Tasks.Task<string> TestAsync();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISyncService/SyncSession", ReplyAction="http://tempuri.org/ISyncService/SyncSessionResponse")]
+        System.Threading.Tasks.Task<bool> SyncSessionAsync(SyncSoapReference.SyncSessionModel model);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISyncService/SyncApplications", ReplyAction="http://tempuri.org/ISyncService/SyncApplicationsResponse")]
-        System.Threading.Tasks.Task<bool> SyncApplicationsAsync(ServiceReference.SyncApplicationModel model);
+        System.Threading.Tasks.Task<bool> SyncApplicationsAsync(SyncSoapReference.SyncApplicationModel model);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISyncService/SyncProcesses", ReplyAction="http://tempuri.org/ISyncService/SyncProcessesResponse")]
-        System.Threading.Tasks.Task<bool> SyncProcessesAsync(ServiceReference.SyncProcessModel model);
+        System.Threading.Tasks.Task<bool> SyncProcessesAsync(SyncSoapReference.SyncProcessModel model);
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    public interface ISyncServiceChannel : ServiceReference.ISyncService, System.ServiceModel.IClientChannel
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    public interface ISyncServiceChannel : SyncSoapReference.ISyncService, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    public partial class SyncServiceClient : System.ServiceModel.ClientBase<ServiceReference.ISyncService>, ServiceReference.ISyncService
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    public partial class SyncServiceClient : System.ServiceModel.ClientBase<SyncSoapReference.ISyncService>, SyncSoapReference.ISyncService
     {
         
         /// <summary>
@@ -365,12 +505,17 @@ namespace ServiceReference
             return base.Channel.TestAsync();
         }
         
-        public System.Threading.Tasks.Task<bool> SyncApplicationsAsync(ServiceReference.SyncApplicationModel model)
+        public System.Threading.Tasks.Task<bool> SyncSessionAsync(SyncSoapReference.SyncSessionModel model)
+        {
+            return base.Channel.SyncSessionAsync(model);
+        }
+        
+        public System.Threading.Tasks.Task<bool> SyncApplicationsAsync(SyncSoapReference.SyncApplicationModel model)
         {
             return base.Channel.SyncApplicationsAsync(model);
         }
         
-        public System.Threading.Tasks.Task<bool> SyncProcessesAsync(ServiceReference.SyncProcessModel model)
+        public System.Threading.Tasks.Task<bool> SyncProcessesAsync(SyncSoapReference.SyncProcessModel model)
         {
             return base.Channel.SyncProcessesAsync(model);
         }

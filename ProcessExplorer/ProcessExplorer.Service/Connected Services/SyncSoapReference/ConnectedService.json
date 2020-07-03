@@ -1,14 +1,20 @@
-{
-  "providerId": "Microsoft.Tools.ServiceModel.Svcutil",
-  "version": "2.0.1",
-  "options": {
+﻿{
+  "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
+  "Version": "15.0.40203.910",
+  "GettingStartedDocument": {
+    "Uri": "https://go.microsoft.com/fwlink/?linkid=858517"
+  },
+  "ExtendedData": {
     "inputs": [
       "https://localhost:44362/SyncService.asmx"
     ],
-    "namespaceMappings": [
-      "*, ServiceReference"
+    "collectionTypes": [
+      "System.Array",
+      "System.Collections.Generic.Dictionary`2"
     ],
-    "outputFile": "Reference.cs",
+    "namespaceMappings": [
+      "*, SyncSoapReference"
+    ],
     "references": [
       "D:\\Diplomski\\ProcessExplorer\\ProcessExplorer\\ProcessExplorer.Service\\bin\\Debug\\netcoreapp3.1\\ProcessExplorer.Application.dll",
       "D:\\Diplomski\\ProcessExplorer\\ProcessExplorer\\ProcessExplorer.Service\\bin\\Debug\\netcoreapp3.1\\ProcessExplorer.Core.dll",
@@ -52,6 +58,12 @@
       "System.Reflection.Emit.ILGeneration, {System.Reflection.Emit.ILGeneration, 4.3.0}",
       "System.Reflection.Primitives, {System.Reflection.Primitives, 4.3.0}",
       "System.Runtime, {System.Runtime, 4.3.0}",
+      "System.ServiceModel, {System.ServiceModel.Primitives, 4.4.4}",
+      "System.ServiceModel.Duplex, {System.ServiceModel.Duplex, 4.4.4}",
+      "System.ServiceModel.Http, {System.ServiceModel.Http, 4.4.4}",
+      "System.ServiceModel.NetTcp, {System.ServiceModel.NetTcp, 4.4.4}",
+      "System.ServiceModel.Primitives, {System.ServiceModel.Primitives, 4.4.4}",
+      "System.ServiceModel.Security, {System.ServiceModel.Security, 4.4.4}",
       "System.Text.Encoding, {System.Text.Encoding, 4.3.0}",
       "System.Threading.Channels, {System.Threading.Channels, 4.7.1}",
       "System.Threading.Tasks, {System.Threading.Tasks, 4.3.0}"
