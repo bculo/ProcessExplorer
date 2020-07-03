@@ -1,22 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using ProcessExplorer.Api.Filters;
 using ProcessExplorer.Api.SignalR;
+using ProcessExplorer.Api.Soap.Interfaces;
 using ProcessExplorerWeb.Application;
 using ProcessExplorerWeb.Application.Extensions;
 using ProcessExplorerWeb.Infrastructure;
+using SoapCore;
+using System.Reflection;
+using System.ServiceModel;
 
 namespace ProcessExplorer.Api
 {
@@ -37,6 +32,9 @@ namespace ProcessExplorer.Api
             services.AddApplicationLayer(Configuration);
             services.AddHttpContextAccessor();
             services.AddControllers(opt => opt.Filters.Add(new ExceptionFilter()));
+            services.AddSignalR();
+            services.AddHttpContextAccessor();
+            services.AddSoapCore();
 
             services.AddCors(options =>
             {
@@ -85,8 +83,14 @@ namespace ProcessExplorer.Api
 
             app.UseEndpoints(endpoints =>
             {
+                //REST api
                 endpoints.MapControllers();
+
+                //SignalR (sockets)
                 endpoints.MapHub<ProcessExplorerHub>("/processhub");
+
+                //Soap
+                endpoints.UseSoapEndpoint<ISyncService>("/SyncService.asmx", new BasicHttpBinding());
             });
         }
     }

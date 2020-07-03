@@ -27,7 +27,26 @@ namespace ProcessExplorer.Api.Filters
                 return;
             }
 
+            if (context.Exception is ArgumentNullException || context.Exception is ArgumentException)
+                HandleBadRequest(context);
+
             HandleUnknownException(context);
+        }
+
+        private void HandleBadRequest(ExceptionContext context)
+        {
+            var details = new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Bad request",
+            };
+
+            context.Result = new ObjectResult(details)
+            {
+                StatusCode = StatusCodes.Status400BadRequest
+            };
+
+            context.ExceptionHandled = true;
         }
 
         private void HandleUnknownException(ExceptionContext context)

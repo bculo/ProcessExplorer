@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
-using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Configurations;
 using ProcessExplorer.Configurations;
 using ProcessExplorer.Interfaces;
