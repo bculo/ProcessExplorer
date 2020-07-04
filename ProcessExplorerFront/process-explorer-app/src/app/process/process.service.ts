@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { IProcessPaginationResponseDto, IBestProcessesDay, ITopProcessesPeriodResponseDto, IOsStatisticResponse } from './models/process.models';
+import { IProcessPaginationResponseDto, IBestProcessesDay, ITopProcessesPeriodResponseDto } from './models/process.models';
+import { IOsStatisticResponse } from '../shared/models/interfaces.models';
 
 @Injectable({
   providedIn: 'root'

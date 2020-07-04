@@ -1,0 +1,81 @@
+<div class="content-box">
+
+    <!-- STATS FOR ALL USERS (NUMBERS) -->
+    <div>
+        <div *ngIf="!bestDay.isLoading && !bestDay.errorMessage" class="columns is-multiline has-text-centered">
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Day with most opened applications</p>
+                    <p class="title"> {{ bestDay.data?.day | date:'dd/MM/yyyy' }} </p>
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Maximum number of opened applications (Single day)</p>
+                    <p class="title"> {{ bestDay.data?.number }} </p>
+                </div>
+            </div>
+        </div>
+        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="bestDay.isLoading" class="box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+    <!-- SPACING -->
+    <br>
+
+    <!-- OS STATISTICS -->
+    <div>
+        <div *ngIf="pieChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Number of opened applications (Last month period)</p>
+            </div>
+            <canvas baseChart
+                [legend]="pieChart.data.title"
+                [data]="pieChart.data.data"
+                [labels]="pieChart.data.labels"
+                [chartType]="pieChart.data.type"
+                [colors]="pieChart.data.colors"></canvas>
+        </div>
+        <article *ngIf="!pieChart.isLoading && pieChart.errorMessage" class="message is-danger">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="pieChart.isLoading" class="box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+    <!-- SPACING -->
+    <br>
+
+    <!-- TOP 20 APPLICATIONS CHART -->
+    <div>
+        <div *ngIf="columnChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Top 20 applications (Last month period)</p>
+            </div>
+            <canvas baseChart
+                [legend]="columnChart.data.title"
+                [data]="columnChart.data.data"
+                [labels]="columnChart.data.labels"
+                [chartType]="columnChart.data.type"
+                [colors]="columnChart.data.colors"></canvas>
+        </div>
+        <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="columnChart.isLoading" class="box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,21 @@
+<div class="tab-box">
+    <div class="tabs is-centered is-boxed">
+      <ul>
+  
+        <li [routerLinkActive]="['is-active']" [routerLinkActiveOptions]="{ exact: true }">
+          <a routerLink="/application">
+            <span class="icon is-small"><i class="fa fa-users" aria-hidden="true"></i></span>
+            <span>All applications</span>
+          </a>
+        </li>
+  
+        <li routerLinkActive="is-active">
+          <a routerLink="/application/user">
+            <span class="icon is-small"><i class="fa fa-user" aria-hidden="true"></i></span>
+            <span>My applications</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>

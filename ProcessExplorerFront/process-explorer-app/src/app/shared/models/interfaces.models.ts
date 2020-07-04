@@ -27,3 +27,7 @@ export interface IPieChartDto {
     name: string[];
     quantity: number[];
 }
+
+export interface IOsStatisticResponse {
+    pieChart: IPieChartDto;
+}

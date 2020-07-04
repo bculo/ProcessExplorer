@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ApplicationUser } from '../shared/models/application-user.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { LoginRequestModel, RegisterRequestModel, ILoginResponse } from './models/authentication.models';
 import { environment } from 'src/environments/environment';
-import { catchError, tap } from 'rxjs/operators'
+import { catchError, tap, filter } from 'rxjs/operators'
 import { FormValidationService } from '../shared/services/form-validation.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,12 @@ import { FormValidationService } from '../shared/services/form-validation.servic
 export class AuthenticationService {
   public user = new BehaviorSubject<ApplicationUser>(null);
 
+
+
   constructor(private http: HttpClient,
-    private validation: FormValidationService) { }
+    private validation: FormValidationService,
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   public loginUser(user: LoginRequestModel) {
     user.isWebApp = true;
@@ -58,7 +63,13 @@ export class AuthenticationService {
     } = JSON.parse(userAsString);
 
     const appuser = new ApplicationUser(tmp.userName, tmp.userId, tmp._token, new Date(tmp._tokenExpirationDate));
-    this.user.next(appuser);
+
+    if(!appuser.isValid()) {
+      this.logout(); 
+      this.router.navigate(['/authentication']);
+    }
+
+    console.log("PROSO");
   }
 
 }

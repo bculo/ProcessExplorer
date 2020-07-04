@@ -9,4 +9,11 @@ export class ApplicationUser {
             return null;
         return this._token;
     }
+
+    isValid(): boolean {
+        if(!this.userName) return false;
+        if(!this.userId) return false;
+        if(!this._token) return false;
+        return true;
+    }
 }

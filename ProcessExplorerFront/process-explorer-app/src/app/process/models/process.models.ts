@@ -22,7 +22,3 @@ export interface ITopProcessesPeriodResponseDto {
     chartRecords: IColumnChartDto;
     maxNumberOfSessions: number;
 }
-
-export interface IOsStatisticResponse {
-    pieChart: IPieChartDto;
-}

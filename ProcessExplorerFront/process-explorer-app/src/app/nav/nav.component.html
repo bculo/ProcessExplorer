@@ -42,9 +42,19 @@
                 </div>
                 
                 <!-- APLICATIONS -->
-                <a routerLink="/session" class="navbar-item">
-                    Applications
-                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        Applications
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" routerLink="/application">
+                            Statistics
+                        </a>
+                        <a class="navbar-item" [routerLink]="['application', 'search']">
+                            Search
+                        </a>
+                    </div>
+                </div>
 
                 <!-- PROCESSES -->
                 <div class="navbar-item has-dropdown is-hoverable">

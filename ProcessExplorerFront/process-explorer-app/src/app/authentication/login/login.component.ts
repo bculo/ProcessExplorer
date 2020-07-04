@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { FormValidationService } from 'src/app/shared/services/form-validation.service';
 import { AuthenticationService } from '../authentication.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ApplicationUser } from 'src/app/shared/models/application-user.model';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.authService.logout();
     this.initForm();
     this.validation.setForm(this.loginForm);
   }
