@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IChartModel, ILoadingMember } from 'src/app/shared/models/interfaces.models';
+import { IChartModel, ILoadingMember, IChartExtendedModel } from 'src/app/shared/models/interfaces.models';
 import { ProcessService } from '../../process.service';
 import { IBestProcessesDay } from '../../models/process.models';
 
@@ -18,7 +18,7 @@ export class StatisticAllComponent implements OnInit {
   }
 
   //column chart stats
-  public columnChart: ILoadingMember<IChartModel> = {
+  public columnChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
@@ -32,19 +32,21 @@ export class StatisticAllComponent implements OnInit {
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(225,10,24,0.2)'
       }],
+      mainHeading: 'Top 20 processes (Last month period)'
     },
     isLoading: true,
     errorMessage: null //string
   }
 
-  //pie chart stats
-  public pieChart: ILoadingMember<IChartModel> = {
+  //pie chart stats -> os statistic
+  public pieChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
       title: true,
       type: 'pie',
       colors: [{ backgroundColor:[ '#320E3B', '#D8A47F'] }],
+      mainHeading: 'Number of different processes (Last month period)'
     },
     isLoading: true,
     errorMessage: null //string

@@ -1,0 +1,24 @@
+<div>
+
+    <!-- CONCRETE CHART -->
+    <div *ngIf="chart.data.data.length > 0" class="box">
+
+        <!-- MAIN HEADING -->
+        <div class="has-text-centered">
+            <p class="heading"> {{ chart.data.mainHeading }} </p>
+        </div>
+        <canvas baseChart
+            [legend]="chart.data.title"
+            [data]="chart.data.data"
+            [labels]="chart.data.labels"
+            [chartType]="chart.data.type"
+            [colors]="chart.data.colors"></canvas>
+    </div>
+
+    <!-- SPINNER -->
+    <app-spinner [loading]="chart.isLoading"></app-spinner>
+
+    <!-- ERROR MESSAGE -->
+    <app-error-message [error]="chart.errorMessage"></app-error-message>
+
+</div>

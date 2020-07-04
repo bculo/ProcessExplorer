@@ -16,66 +16,23 @@
                 </div>
             </div>
         </div>
-        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger">
-            <div class="message-body">
-                {{ bestDay.errorMessage }}
-            </div>
-        </article>
-        <div *ngIf="bestDay.isLoading" class="box">
-            <app-spinner></app-spinner>
-        </div>
+        <!-- SPINNER -->
+        <app-spinner [loading]="bestDay.isLoading"></app-spinner>
+
+        <!-- ERROR MESSAGE -->
+        <app-error-message [error]="bestDay.errorMessage"></app-error-message>
     </div>
 
     <!-- SPACING -->
     <br>
 
     <!-- OS STATISTICS -->
-    <div>
-        <div *ngIf="pieChart.data.data.length > 0" class="box">
-            <div class="has-text-centered">
-                <p class="heading">Number of opened applications (Last month period)</p>
-            </div>
-            <canvas baseChart
-                [legend]="pieChart.data.title"
-                [data]="pieChart.data.data"
-                [labels]="pieChart.data.labels"
-                [chartType]="pieChart.data.type"
-                [colors]="pieChart.data.colors"></canvas>
-        </div>
-        <article *ngIf="!pieChart.isLoading && pieChart.errorMessage" class="message is-danger">
-            <div class="message-body">
-                {{ bestDay.errorMessage }}
-            </div>
-        </article>
-        <div *ngIf="pieChart.isLoading" class="box">
-            <app-spinner></app-spinner>
-        </div>
-    </div>
+    <app-chart-canvas [chart]="pieChart"></app-chart-canvas>
 
     <!-- SPACING -->
     <br>
 
     <!-- TOP 20 APPLICATIONS CHART -->
-    <div>
-        <div *ngIf="columnChart.data.data.length > 0" class="box">
-            <div class="has-text-centered">
-                <p class="heading">Top 20 applications (Last month period)</p>
-            </div>
-            <canvas baseChart
-                [legend]="columnChart.data.title"
-                [data]="columnChart.data.data"
-                [labels]="columnChart.data.labels"
-                [chartType]="columnChart.data.type"
-                [colors]="columnChart.data.colors"></canvas>
-        </div>
-        <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger">
-            <div class="message-body">
-                {{ bestDay.errorMessage }}
-            </div>
-        </article>
-        <div *ngIf="columnChart.isLoading" class="box">
-            <app-spinner></app-spinner>
-        </div>
-    </div>
+    <app-chart-canvas [chart]="columnChart"></app-chart-canvas>
 
 </div>

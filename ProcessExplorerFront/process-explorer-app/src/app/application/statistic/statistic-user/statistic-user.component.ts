@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ILoadingMember, IChartModel } from 'src/app/shared/models/interfaces.models';
+import { ILoadingMember, IChartExtendedModel } from 'src/app/shared/models/interfaces.models';
 import { IBestApplicationDay } from '../../models/application.models';
 import { ApplicationService } from '../../application.service';
 
@@ -10,7 +10,6 @@ import { ApplicationService } from '../../application.service';
 })
 export class StatisticUserComponent implements OnInit {
 
-
   //best day stats
   public bestDay: ILoadingMember<IBestApplicationDay> = {
     data: null, //where data IBestApplicationDay
@@ -18,8 +17,8 @@ export class StatisticUserComponent implements OnInit {
     errorMessage: null //string
   }
 
-  //column chart stats
-  public columnChart: ILoadingMember<IChartModel> = {
+  //column chart stats -> TOP 10 applications
+  public columnChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
@@ -33,31 +32,35 @@ export class StatisticUserComponent implements OnInit {
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(225,10,24,0.2)'
       }],
+      mainHeading: 'Top 10 applications (Last month period)'
     },
     isLoading: true,
     errorMessage: null //string
   }
 
-  //pie chart stats
-  public pieChart: ILoadingMember<IChartModel> = {
+  //pie chart stats -> os statistics
+  public pieChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
       title: true,
       type: 'doughnut',
       colors: [{ backgroundColor:[ '#E0FF4F', '#00272B'] }],
+      mainHeading: 'Number of opened applications (Last month period)'
     },
     isLoading: true,
-    errorMessage: null //string
+    errorMessage: null,
   }
 
-  public lineChart: ILoadingMember<IChartModel> = {
+  //Number of oppened apps per session
+  public lineChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
       title: false,
       type: 'line',
       colors: [{ backgroundColor: ['#95C623'] }],
+      mainHeading: 'Number of oppened apps per session (Last 20 sessions)'
     },
     isLoading: true,
     errorMessage: null //string

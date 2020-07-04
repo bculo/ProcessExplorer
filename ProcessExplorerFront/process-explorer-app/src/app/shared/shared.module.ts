@@ -10,6 +10,7 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
 import { RouterModule } from '@angular/router';
 import { TabItemComponent } from './components/tab-navigation/tab-item/tab-item.component';
 import { PageTabNavigationComponent } from './components/tab-navigation/page-tab-navigation/page-tab-navigation.component';
+import { ChartCanvasComponent } from './components/chart-canvas/chart-canvas.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { PageTabNavigationComponent } from './components/tab-navigation/page-tab
         ListPagesComponent,
         ErrorMessageComponent,
         TabItemComponent,
-        PageTabNavigationComponent
+        PageTabNavigationComponent,
+        ChartCanvasComponent
     ],
     imports: [
         ChartsModule,
@@ -38,6 +40,7 @@ import { PageTabNavigationComponent } from './components/tab-navigation/page-tab
         TabItemComponent,
         PageTabNavigationComponent,
         ErrorMessageComponent,
+        ChartCanvasComponent
     ]
 })
 export class SharedModule {}

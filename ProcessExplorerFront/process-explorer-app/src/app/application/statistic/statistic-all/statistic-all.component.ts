@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ILoadingMember, IChartModel } from 'src/app/shared/models/interfaces.models';
+import { ILoadingMember, IChartExtendedModel } from 'src/app/shared/models/interfaces.models';
 import { ApplicationService } from '../../application.service';
 import { IBestApplicationDay } from '../../models/application.models';
 
@@ -17,8 +17,8 @@ export class StatisticAllComponent implements OnInit {
     errorMessage: null //string
   }
 
-  //column chart stats
-  public columnChart: ILoadingMember<IChartModel> = {
+  //column chart stats -> TOP 20 apps
+  public columnChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
@@ -32,19 +32,21 @@ export class StatisticAllComponent implements OnInit {
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(225,10,24,0.2)'
       }],
+      mainHeading: 'Top 20 opened applications (Last month period)'
     },
     isLoading: true,
     errorMessage: null //string
   }
 
-  //pie chart stats
-  public pieChart: ILoadingMember<IChartModel> = {
+  //pie chart stats -> os statistics
+  public pieChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
       title: true,
       type: 'doughnut',
       colors: [{ backgroundColor:[ '#23B5D3', '#EA526F'] }],
+      mainHeading: 'Number of opened applications (Last month period)'
     },
     isLoading: true,
     errorMessage: null //string

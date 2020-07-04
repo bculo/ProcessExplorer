@@ -6,6 +6,10 @@ export interface IChartModel {
     colors: any[]
 }
 
+export interface IChartExtendedModel extends IChartModel {
+    mainHeading: string;
+}
+
 export interface IPaginationResponse<T> {
     records: T[];
     totalRecords: number;

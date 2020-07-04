@@ -12,13 +12,13 @@ export class StatisticComponent implements ITabClient, OnInit {
 
   tabItems: ITabItem[] = [
     {
-      route: '/process/search',
+      route: '/process',
       exactRoute: true,
       icon: 'fa fa-users',
       title: 'All processes'
     },
     {
-      route: '/process/search/user',
+      route: '/process/user',
       exactRoute: false,
       icon: 'fa fa-user',
       title: 'My processes'

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IChartModel, ILoadingMember } from 'src/app/shared/models/interfaces.models';
+import { IChartModel, ILoadingMember, IChartExtendedModel } from 'src/app/shared/models/interfaces.models';
 import { ProcessService } from '../../process.service';
 import { IBestProcessesDay } from '../../models/process.models';
 
@@ -18,7 +18,7 @@ export class StatisticUserComponent implements OnInit {
   }
 
   //column chart stats -> TOP PROCESSES ALL TIME
-  public columnChart: ILoadingMember<IChartModel> = {
+  public columnChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
@@ -32,13 +32,14 @@ export class StatisticUserComponent implements OnInit {
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(225,10,24,0.2)'
       }],
+      mainHeading: 'Top 10 processes for user (All time)'
     },
     isLoading: true,
     errorMessage: null //string
   }
 
   //line chart stats
-  public lineChart: ILoadingMember<IChartModel> = {
+  public lineChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
@@ -52,19 +53,21 @@ export class StatisticUserComponent implements OnInit {
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(225,10,24,0.2)'
       }],
+      mainHeading: 'Number of different processes for each session'
     },
     isLoading: true,
     errorMessage: null //string
   }
 
-  //pie chart stats
-  public pieChart: ILoadingMember<IChartModel> = {
+  //pie chart stats -> os statistic
+  public pieChart: ILoadingMember<IChartExtendedModel> = {
     data: {
       data: [],
       labels: [],
       title: true,
       type: 'pie',
       colors: [{ backgroundColor:[ '#A14A76', '#CDB2AB'] }],
+      mainHeading: 'Operating system statistics (Last month period)'
     },
     isLoading: true,
     errorMessage: null //string

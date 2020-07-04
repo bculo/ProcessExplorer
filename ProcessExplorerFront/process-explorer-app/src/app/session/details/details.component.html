@@ -4,44 +4,39 @@
 
 <div class="content-box">
 
-  <!-- SESSION INFORMATION -->
-  <div>
-      <nav class="level box" *ngIf="!session.isLoading && !session.errorMessage">
-          <div class="level-item has-text-centered">
-              <div>
-              <p class="heading">User</p>
-              <p class="title"> {{ session.data.userName }} </p>
-              </div>
-          </div>
-          <div class="level-item has-text-centered">
-              <div>
-              <p class="heading">Started</p>
-              <p class="title"> {{ session.data.started | date:'dd/MM/yyyy HH:mm' }} </p>
-              </div>
-          </div>
-          <div class="level-item has-text-centered">
-              <div>
-              <p class="heading">Operating system</p>
-              <p class="title"> {{ session.data.os }} </p>
-              </div>
-          </div>
-      </nav>
-      <article *ngIf="!session.isLoading && session.errorMessage" class="message is-danger">
-          <div class="message-body">
-              {{ session.errorMessage }}
-          </div>
-      </article>
-      <div *ngIf="session.isLoading" class="box">
-          <app-spinner></app-spinner>
-      </div>
-  </div>
+    <!-- SESSION INFORMATION -->
+    <div>
+        <nav class="level box" *ngIf="!session.isLoading && !session.errorMessage">
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">User</p>
+                    <p class="title"> {{ session.data.userName }} </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Started</p>
+                    <p class="title"> {{ session.data.started | date:'dd/MM/yyyy HH:mm' }} </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Operating system</p>
+                    <p class="title"> {{ session.data.os }} </p>
+                </div>
+            </div>
+        </nav>
+        <app-error-message [error]="session.errorMessage"></app-error-message>
+        <app-spinner [loading]="session.isLoading"></app-spinner>
 
-  <br>
+    </div>
 
-  <app-details-tab [id]="id"></app-details-tab>
+    <br>
 
-  <br>
+    <app-details-tab [id]="id"></app-details-tab>
 
-  <router-outlet></router-outlet>
+    <br>
+
+    <router-outlet></router-outlet>
 
 </div>

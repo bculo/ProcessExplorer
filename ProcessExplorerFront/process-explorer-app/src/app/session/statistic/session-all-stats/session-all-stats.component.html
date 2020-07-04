@@ -1,15 +1,7 @@
 <div class="content-box">
-    <!-- SPINNER -->
-    <div *ngIf="isLoading" class="box">
-        <app-spinner></app-spinner>
-    </div>
-
-    <!-- ERROR MESSAGE -->
-    <article *ngIf="!isLoading && errorMessage" class="message is-danger">
-        <div class="message-body">
-            {{ errorMessage}}
-        </div>
-    </article>
+    
+    <app-error-message [error]="errorMessage"></app-error-message>
+    <app-spinner [loading]="isLoading"></app-spinner>
 
     <!-- OPERATING SYSTEM STATISTICS -->
     <div *ngIf="!isLoading && !errorMessage">
