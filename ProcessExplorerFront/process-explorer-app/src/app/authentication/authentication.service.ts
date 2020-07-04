@@ -69,7 +69,7 @@ export class AuthenticationService {
       this.router.navigate(['/authentication']);
     }
 
-    console.log("PROSO");
+    this.user.next(appuser);
   }
 
 }

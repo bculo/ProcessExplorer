@@ -51,6 +51,18 @@ export class StatisticUserComponent implements OnInit {
     errorMessage: null //string
   }
 
+  public lineChart: ILoadingMember<IChartModel> = {
+    data: {
+      data: [],
+      labels: [],
+      title: false,
+      type: 'line',
+      colors: [{ backgroundColor: ['#95C623'] }],
+    },
+    isLoading: true,
+    errorMessage: null //string
+  }
+
   public maxNumOfSessions: number = 0;
 
   constructor(private service: ApplicationService) { }
@@ -59,6 +71,7 @@ export class StatisticUserComponent implements OnInit {
     this.getBestDayAllUsers();
     this.loadOsStatisticsPeriod();
     this.getTopOpenedAppsPeriod();
+    this.getOpenedAppsPerSession();
   }
 
   getBestDayAllUsers() {
@@ -103,5 +116,21 @@ export class StatisticUserComponent implements OnInit {
       this.columnChart.errorMessage = "Ann error occured";
     });
   }
+
+  getOpenedAppsPerSession(){
+    this.service.getNumberOfOpenedAppsPerSession()
+    .subscribe((response) => {
+      this.lineChart.data.data = response.chart.number;
+      this.lineChart.data.labels = response.chart.date;
+      
+      this.lineChart.isLoading = false;
+      this.lineChart.errorMessage = null;
+    },
+    (error) => {
+      this.lineChart.isLoading = false;
+      this.lineChart.errorMessage = "Ann error occured";
+    });
+  }
+
 
 }

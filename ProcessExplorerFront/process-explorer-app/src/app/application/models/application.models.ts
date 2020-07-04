@@ -8,3 +8,12 @@ export interface IBestApplicationDay {
 export interface ITopApplications {
     chartRecords: IColumnChartDto
 }
+
+export interface ISessionAppsChart {
+    date: string[];
+    number: number[];
+}
+
+export interface IOpenedAppsPerSessionResponse {
+    chart: ISessionAppsChart;
+}

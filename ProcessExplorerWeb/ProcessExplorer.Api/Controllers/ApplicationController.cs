@@ -73,7 +73,7 @@ namespace ProcessExplorer.Api.Controllers
             return Ok(await Mediator.Send(new TopOpenedAppListUserQuery { }));
         }
 
-        [HttpGet("topopenedappssession")]
+        [HttpPost("topopenedappssession")]
         public async Task<IActionResult> GetMostOpenedAppsForSession([FromBody] TopOpenedAppSessionQuery query)
         {
             return Ok(await Mediator.Send(query));

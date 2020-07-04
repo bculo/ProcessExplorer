@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IBestApplicationDay, ITopApplications } from './models/application.models';
+import { IBestApplicationDay, ITopApplications, IOpenedAppsPerSessionResponse } from './models/application.models';
 import { environment } from 'src/environments/environment';
 import { IOsStatisticResponse } from '../shared/models/interfaces.models';
 
@@ -37,5 +37,9 @@ export class ApplicationService {
 
   getTopOpenedAppsForChoosenSession(sessionId: string){
     return this.http.post<ITopApplications>(`${environment.api}/Application/osappstatisticuser`, { sessionId: sessionId });
+  }
+
+  getNumberOfOpenedAppsPerSession(){
+    return this.http.get<IOpenedAppsPerSessionResponse>(`${environment.api}/Application/openedappspersession`);
   }
 }

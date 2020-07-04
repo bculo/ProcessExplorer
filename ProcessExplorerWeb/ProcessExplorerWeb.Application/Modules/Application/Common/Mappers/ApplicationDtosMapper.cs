@@ -21,7 +21,7 @@ namespace ProcessExplorerWeb.Application.Modules.Application.Common.Mappers
                  .Map(dst => dst.OccuresNumOfTime, src => src.OccuresNumOfTime);
 
             config.ForType<IEnumerable<AppSessionLineChartItem>, AppSessionLineChartDto> ()
-                 .Map(dst => dst.Date, src => src.Select(i => i.Date))
+                 .Map(dst => dst.Date, src => src.Select(i => $"{i.Date.Day}/{i.Date.Month}/{i.Date.Year}"))
                  .Map(dst => dst.Number, src => src.Select(i => i.Number));
         }
     }

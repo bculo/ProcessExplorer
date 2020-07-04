@@ -3,7 +3,8 @@ import { ApplicationUser } from '../shared/models/application-user.model';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { SignalRService } from '../shared/services/signal-r.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-nav',
@@ -13,7 +14,8 @@ import { Router } from '@angular/router';
 export class NavComponent implements OnInit, OnDestroy {
   public authenticatedUser: ApplicationUser;
   
-  private subscription: Subscription;
+  private userSub: Subscription;
+  private pathSub: Subscription;
 
   private burgerActive = false;
 
@@ -22,11 +24,12 @@ export class NavComponent implements OnInit, OnDestroy {
     private signalR: SignalRService) { }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.userSub.unsubscribe();
+    this.pathSub.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.subscription = this.authService.user.subscribe((user: ApplicationUser) => {
+    this.userSub = this.authService.user.subscribe((user: ApplicationUser) => {
       if(user) {
         this.authenticatedUser = user;
         this.signalR.startConnection(user);
@@ -35,6 +38,13 @@ export class NavComponent implements OnInit, OnDestroy {
         this.signalR.stopConnection();
       }
     });
+
+    this.pathSub = this.router.events
+      .pipe(filter(i => i instanceof NavigationEnd))
+      .subscribe((instnace: NavigationEnd) => {
+        if(instnace.url.indexOf('/authentication') > -1 && this.isAuthenticated())
+          this.router.navigate(['/session']);
+      });
   }
 
   onLogout(){

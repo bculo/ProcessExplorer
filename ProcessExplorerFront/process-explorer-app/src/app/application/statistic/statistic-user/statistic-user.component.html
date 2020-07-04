@@ -78,4 +78,30 @@
         </div>
     </div>
 
+    <!-- SPACING -->
+    <br>
+
+    <!-- TOP 20 APPLICATIONS CHART -->
+    <div>
+        <div *ngIf="lineChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Number of oppened apps per session (Last 20 sessions)</p>
+            </div>
+            <canvas baseChart
+                [legend]="lineChart.data.title"
+                [data]="lineChart.data.data"
+                [labels]="lineChart.data.labels"
+                [chartType]="lineChart.data.type"
+                [colors]="lineChart.data.colors"></canvas>
+        </div>
+        <article *ngIf="!lineChart.isLoading && lineChart.errorMessage" class="message is-danger">
+            <div class="message-body">
+                {{ bestDay.errorMessage }}
+            </div>
+        </article>
+        <div *ngIf="lineChart.isLoading" class="box">
+            <app-spinner></app-spinner>
+        </div>
+    </div>
+
 </div>

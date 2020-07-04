@@ -9,7 +9,7 @@ namespace ProcessExplorerWeb.Application.Modules.Application.Common.Dtos
         /// <summary>
         /// X -> date when session started
         /// </summary>
-        public IEnumerable<DateTime> Date { get; set; }
+        public IEnumerable<string> Date { get; set; }
 
         /// <summary>
         /// Y -> Number of opened app in session

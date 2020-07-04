@@ -21,7 +21,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private authService: AuthenticationService) { }
 
   ngOnInit(): void {
-    this.authService.logout();
     this.initForm();
     this.validation.setForm(this.registerForm);
   }

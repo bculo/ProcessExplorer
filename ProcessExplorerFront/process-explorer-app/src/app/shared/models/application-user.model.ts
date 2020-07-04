@@ -11,9 +11,9 @@ export class ApplicationUser {
     }
 
     isValid(): boolean {
-        if(!this.userName) return false;
-        if(!this.userId) return false;
-        if(!this._token) return false;
+        if(this.userName === null) return false;
+        if(this.userId === null) return false;
+        if(this._token === null) return false;
         return true;
     }
 }
