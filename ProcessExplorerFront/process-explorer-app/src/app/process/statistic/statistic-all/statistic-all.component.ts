@@ -25,7 +25,7 @@ export class StatisticAllComponent implements OnInit {
       title: false,
       type: 'bar',
       colors: [{
-        backgroundColor: '#FF7360',
+        backgroundColor: '#F58F29',
         borderColor: 'rgba(225,10,24,0.2)',
         pointBackgroundColor: 'rgba(225,10,24,0.2)',
         pointBorderColor: '#fff',
@@ -37,21 +37,14 @@ export class StatisticAllComponent implements OnInit {
     errorMessage: null //string
   }
 
-  //column chart stats
+  //pie chart stats
   public pieChart: ILoadingMember<IChartModel> = {
     data: {
       data: [],
       labels: [],
       title: true,
       type: 'pie',
-      colors: [{
-        backgroundColor: '#FF7360',
-        borderColor: 'rgba(225,10,24,0.2)',
-        pointBackgroundColor: 'rgba(225,10,24,0.2)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(225,10,24,0.2)'
-      }],
+      colors: [{ backgroundColor:[ '#320E3B', '#D8A47F'] }],
     },
     isLoading: true,
     errorMessage: null //string

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationUser } from '../shared/models/application-user.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { LoginRequestModel, RegisterRequestModel, ILoginResponse } from './models/authentication.models';
 import { environment } from 'src/environments/environment';
 import { catchError, tap } from 'rxjs/operators'
@@ -52,13 +51,13 @@ export class AuthenticationService {
     }
 
     const tmp: {
-      username: string,
-      id: string,
+      userName: string,
+      userId: string,
       _token: string,
       _tokenExpirationDate: string
     } = JSON.parse(userAsString);
 
-    const appuser = new ApplicationUser(tmp.username, tmp.id, tmp._token, new Date(+tmp._tokenExpirationDate));
+    const appuser = new ApplicationUser(tmp.userName, tmp.userId, tmp._token, new Date(tmp._tokenExpirationDate));
     this.user.next(appuser);
   }
 

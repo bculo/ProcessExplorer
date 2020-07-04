@@ -17,7 +17,7 @@ export class StatisticUserComponent implements OnInit {
     errorMessage: null //string
   }
 
-  //column chart stats
+  //column chart stats -> TOP PROCESSES ALL TIME
   public columnChart: ILoadingMember<IChartModel> = {
     data: {
       data: [],
@@ -25,7 +25,7 @@ export class StatisticUserComponent implements OnInit {
       title: false,
       type: 'bar',
       colors: [{
-        backgroundColor: '#FF7360',
+        backgroundColor: '#4464AD',
         borderColor: 'rgba(225,10,24,0.2)',
         pointBackgroundColor: 'rgba(225,10,24,0.2)',
         pointBorderColor: '#fff',
@@ -37,7 +37,7 @@ export class StatisticUserComponent implements OnInit {
     errorMessage: null //string
   }
 
-    //column chart stats
+  //line chart stats
   public lineChart: ILoadingMember<IChartModel> = {
     data: {
       data: [],
@@ -45,7 +45,7 @@ export class StatisticUserComponent implements OnInit {
       title: false,
       type: 'line',
       colors: [{
-        backgroundColor: '#FF7360',
+        backgroundColor: '#FBC2B5',
         borderColor: 'rgba(225,10,24,0.2)',
         pointBackgroundColor: 'rgba(225,10,24,0.2)',
         pointBorderColor: '#fff',
@@ -57,21 +57,14 @@ export class StatisticUserComponent implements OnInit {
     errorMessage: null //string
   }
 
-      //column chart stats
+  //pie chart stats
   public pieChart: ILoadingMember<IChartModel> = {
     data: {
       data: [],
       labels: [],
       title: true,
       type: 'pie',
-      colors: [{
-        backgroundColor: '#FF7360',
-        borderColor: 'rgba(225,10,24,0.2)',
-        pointBackgroundColor: 'rgba(225,10,24,0.2)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(225,10,24,0.2)'
-      }],
+      colors: [{ backgroundColor:[ '#A14A76', '#CDB2AB'] }],
     },
     isLoading: true,
     errorMessage: null //string

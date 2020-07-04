@@ -15,6 +15,8 @@ export class NavComponent implements OnInit, OnDestroy {
   
   private subscription: Subscription;
 
+  private burgerActive = false;
+
   constructor(private authService: AuthenticationService,
     private router: Router,
     private signalR: SignalRService) { }
@@ -25,6 +27,8 @@ export class NavComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.authService.user.subscribe((user: ApplicationUser) => {
+      console.log(user);
+
       if(user) {
         this.authenticatedUser = user;
         this.signalR.startConnection(user);
@@ -45,6 +49,12 @@ export class NavComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  
+  show(){
+    this.burgerActive = !this.burgerActive;
+  }
+
+  isBurgerActive(){
+    return this.burgerActive;
+  }
 
 }

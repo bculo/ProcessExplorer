@@ -1,6 +1,6 @@
 <div class="content-box">
 
-    <!-- STATS FOR ALL USERS -->
+    <!-- STATS FOR ALL USERS (NUMBERS) -->
     <div>
         <div *ngIf="!bestDay.isLoading && !bestDay.errorMessage" class="columns is-multiline has-text-centered">
             <div class="column is-half">
@@ -16,20 +16,25 @@
                 </div>
             </div>
         </div>
-        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger content-box">
+        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger">
             <div class="message-body">
                 {{ bestDay.errorMessage }}
             </div>
         </article>
-        <div *ngIf="bestDay.isLoading" class="content-box box">
+        <div *ngIf="bestDay.isLoading" class="box">
             <app-spinner></app-spinner>
         </div>
     </div>
 
+    <!-- SPACING -->
     <br>
 
+    <!-- DIFFERENT PROCESSES FOR PERIOD -->
     <div>
         <div *ngIf="pieChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Number of different processes (Last month period)</p>
+            </div>
             <canvas baseChart
                 [legend]="pieChart.data.title"
                 [data]="pieChart.data.data"
@@ -37,25 +42,32 @@
                 [chartType]="pieChart.data.type"
                 [colors]="pieChart.data.colors"></canvas>
         </div>
-        <article *ngIf="!pieChart.isLoading && pieChart.errorMessage" class="message is-danger content-box">
+        <article *ngIf="!pieChart.isLoading && pieChart.errorMessage" class="message is-danger">
             <div class="message-body">
                 {{ bestDay.errorMessage }}
             </div>
         </article>
-        <div *ngIf="pieChart.isLoading" class="content-box box">
+        <div *ngIf="pieChart.isLoading" class="box">
             <app-spinner></app-spinner>
         </div>
     </div>
 
     <br>
 
-    <!-- CHART FOR ALL USERS -->
+    <!-- TOP PROCESSES SECTION -->
     <div>
+
+        <!-- NUM STATIS FOR MAXIMUM SESSIONS -->
         <div class="box has-text-centered">
             <p class="heading">Maximum number of sessions</p>
             <p class="title"> {{ maxNumOfSessions }} </p>
         </div>
+
+        <!-- TOP PROCESSES -->
         <div *ngIf="columnChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Top 20 processes (Last month period)</p>
+            </div>
             <canvas baseChart
                 [legend]="columnChart.data.title"
                 [data]="columnChart.data.data"
@@ -63,12 +75,12 @@
                 [chartType]="columnChart.data.type"
                 [colors]="columnChart.data.colors"></canvas>
         </div>
-        <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger content-box">
+        <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger">
             <div class="message-body">
                 {{ bestDay.errorMessage }}
             </div>
         </article>
-        <div *ngIf="columnChart.isLoading" class="content-box box">
+        <div *ngIf="columnChart.isLoading" class="box">
             <app-spinner></app-spinner>
         </div>
     </div>

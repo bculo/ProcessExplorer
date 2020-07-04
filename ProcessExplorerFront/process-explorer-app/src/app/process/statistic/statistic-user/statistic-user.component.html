@@ -1,12 +1,17 @@
 <div class="content-box">
 
-    <!-- CHART FOR SINGLE USER -->
+    <!-- CHART FOR TOP PROCESSES USER -->
     <div>
+        <!-- MAXIMUM NUMBER OF SESSIONS -->
         <div class="box has-text-centered">
             <p class="heading">Maximum number of sessions</p>
             <p class="title"> {{ maxNumOfSessions }} </p>
         </div>
+
         <div *ngIf="columnChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Top 10 processes for user (All time)</p>
+            </div>
             <canvas baseChart
                 [legend]="columnChart.data.title"
                 [data]="columnChart.data.data"
@@ -14,20 +19,25 @@
                 [chartType]="columnChart.data.type"
                 [colors]="columnChart.data.colors"></canvas>
         </div>
-        <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger content-box">
+        <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger">
             <div class="message-body">
                 {{ columnChart.errorMessage }}
             </div>
         </article>
-        <div *ngIf="columnChart.isLoading" class="content-box box">
+        <div *ngIf="columnChart.isLoading" class="box">
             <app-spinner></app-spinner>
         </div>
     </div>
 
+    <!-- SPACING -->
     <br>
 
+    <!-- OS STATISTICS FOR USER  -->
     <div>
         <div *ngIf="pieChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Operating system statistics (Last month period)</p>
+            </div>
             <canvas baseChart
                 [legend]="pieChart.data.title"
                 [data]="pieChart.data.data"
@@ -35,19 +45,19 @@
                 [chartType]="pieChart.data.type"
                 [colors]="pieChart.data.colors"></canvas>
         </div>
-        <article *ngIf="!pieChart.isLoading && pieChart.errorMessage" class="message is-danger content-box">
+        <article *ngIf="!pieChart.isLoading && pieChart.errorMessage" class="message is-danger">
             <div class="message-body">
                 {{ bestDay.errorMessage }}
             </div>
         </article>
-        <div *ngIf="pieChart.isLoading" class="content-box box">
+        <div *ngIf="pieChart.isLoading" class="box">
             <app-spinner></app-spinner>
         </div>
     </div>
 
     <br>
 
-    <!-- STATS FOR CHOSEN USER -->
+    <!-- NUBMER STATS FOR USER ( TOP DAY PROCESSES ) -->
     <div>
         <div *ngIf="!bestDay.isLoading && !bestDay.errorMessage" class="columns is-multiline has-text-centered">
             <div class="column is-half">
@@ -63,20 +73,24 @@
                 </div>
             </div>
         </div>
-        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger content-box">
+        <article *ngIf="!bestDay.isLoading && bestDay.errorMessage" class="message is-danger">
             <div class="message-body">
                 {{ bestDay.errorMessage }}
             </div>
         </article>
-        <div *ngIf="bestDay.isLoading" class="content-box box">
+        <div *ngIf="bestDay.isLoading" class="box">
             <app-spinner></app-spinner>
         </div>
     </div>
 
+    <!-- SPACING -->
     <br>
 
     <div>
         <div *ngIf="lineChart.data.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Number of different processes for each session</p>
+            </div>
             <canvas baseChart
                 [legend]="lineChart.data.title"
                 [data]="lineChart.data.data"
@@ -84,12 +98,12 @@
                 [chartType]="lineChart.data.type"
                 [colors]="lineChart.data.colors"></canvas>
         </div>
-        <article *ngIf="!lineChart.isLoading && lineChart.errorMessage" class="message is-danger content-box">
+        <article *ngIf="!lineChart.isLoading && lineChart.errorMessage" class="message is-danger">
             <div class="message-body">
                 {{ lineChart.errorMessage }}
             </div>
         </article>
-        <div *ngIf="lineChart.isLoading" class="content-box box">
+        <div *ngIf="lineChart.isLoading" class="box">
             <app-spinner></app-spinner>
         </div>
     </div>

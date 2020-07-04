@@ -8,16 +8,23 @@
             </a>
 
             <!-- BURGER -->
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <a role="button" 
+                class="navbar-burger burger" 
+                aria-label="menu" 
+                aria-expanded="false" 
+                data-target="navbarBasicExample" 
+                (click)="show()"
+                [ngClass]="isBurgerActive() ? 'is-active' : ''">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div id="navbarBasicExample" class="navbar-menu" 
+            [ngClass]="isBurgerActive() ? 'is-active' : ''">
 
-            <div class="navbar-start"  *ngIf="isAuthenticated()">  
+            <div class="navbar-start" *ngIf="isAuthenticated()">  
 
                 <!-- SESSIONS -->
                 <div class="navbar-item has-dropdown is-hoverable">

@@ -1,20 +1,29 @@
-<div *ngIf="isLoading" class="content-box box">
+<div class="content-box">
+
+  <!-- SPINNER -->
+  <div *ngIf="isLoading" class="box">
     <app-spinner></app-spinner>
-</div>
+  </div>
 
-<article *ngIf="!isLoading && errorMessage" class="message is-danger content-box">
+  <!-- ERROR MESSAGE -->
+  <article *ngIf="!isLoading && errorMessage" class="message is-danger">
     <div class="message-body">
-        {{ errorMessage}}
+      {{ errorMessage}}
     </div>
-</article>
+  </article>
 
-<div *ngIf="!isLoading && !errorMessage" class="content-box">
+  <div *ngIf="!isLoading && !errorMessage">
 
+    <!-- SEARCH BAR COMPONENT -->
     <app-search-bar (search)="onSearch($event)"></app-search-bar>
 
-    <br/>
+    <br />
 
-    <table class="table is-fullwidth is-hoverable">
+    <div class="has-text-centered">
+      <!-- TABLE -->
+      <table class="table is-fullwidth is-hoverable is-striped">
+
+        <!-- TABLE HEAD -->
         <thead>
           <tr>
             <th>Process name</th>
@@ -22,36 +31,43 @@
             <th>Google link</th>
           </tr>
         </thead>
+
+        <!-- TABLE BODY -->
         <tbody>
-            <tr *ngFor="let process of records">
-                <th> {{ process.processName }} </th>
-                <th> {{ process.occuresInNumOfSessions }} / {{ totalNumberOfSessions }} </th>
-                <th> <a target="_blank" href="{{process.googleSearchQuery}}">link</a></th>
-            </tr>
+          <tr *ngFor="let process of records">
+            <th> {{ process.processName }} </th>
+            <th> {{ process.occuresInNumOfSessions }} / {{ totalNumberOfSessions }} </th>
+            <th> <a target="_blank" href="{{process.googleSearchQuery}}">link</a></th>
+          </tr>
         </tbody>
-    </table>
+      </table>
+    </div>
 
-      <nav class="level is-mobile">
-        <div class="level-item has-text-centered">
-          <p class="control">
-            <button class="button" (click)="back()">
-              Previous
-            </button>
-          </p>
-        </div>
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">PAGES</p>
-            <p class="title">{{ currentPage }} / {{ totalPages }}</p>
-          </div>
-        </div>
-        <div class="level-item has-text-centered">
-          <p class="control">
-            <button class="button" (click)="next()">
-              Next
-            </button>
-          </p>
-        </div>
-      </nav>
+    <!-- TABLE BUTTONS AND PAGE NUM -->
+    <nav class="level is-mobile">
+      <div class="level-item has-text-centered">
+        <p class="control">
+          <button class="button" (click)="back()">
+            Previous
+          </button>
+        </p>
+      </div>
 
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">PAGES</p>
+          <p class="title">{{ currentPage }} / {{ totalPages }}</p>
+        </div>
+      </div>
+
+      <div class="level-item has-text-centered">
+        <p class="control">
+          <button class="button" (click)="next()">
+            Next
+          </button>
+        </p>
+      </div>
+    </nav>
+
+  </div>
 </div>
