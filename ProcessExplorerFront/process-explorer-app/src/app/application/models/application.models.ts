@@ -17,3 +17,11 @@ export interface ISessionAppsChart {
 export interface IOpenedAppsPerSessionResponse {
     chart: ISessionAppsChart;
 }
+
+export interface IApplicationItem {
+    applicationName: string;
+    googleSearchQuery: string;
+    occuresNumOfTime: string;
+}
+
+

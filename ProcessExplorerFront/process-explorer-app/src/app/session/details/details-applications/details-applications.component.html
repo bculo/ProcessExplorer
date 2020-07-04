@@ -1,1 +1,55 @@
-<p>details-applications works!</p>
+
+  <div>
+    <div *ngIf="columnChart.data.data.length > 0" class="box">
+      <div class="has-text-centered">
+        <p class="heading">Top applications for given session</p>
+      </div>
+      <canvas baseChart [legend]="columnChart.data.title" [data]="columnChart.data.data"
+        [labels]="columnChart.data.labels" [chartType]="columnChart.data.type"
+        [colors]="columnChart.data.colors"></canvas>
+    </div>
+    <article *ngIf="!columnChart.isLoading && columnChart.errorMessage" class="message is-danger">
+      <div class="message-body">
+        {{ columnChart.errorMessage }}
+      </div>
+    </article>
+    <div *ngIf="columnChart.isLoading" class="box">
+      <app-spinner></app-spinner>
+    </div>
+  </div>
+
+
+  <!-- SPINNER -->
+  <app-spinner [loading]="isLoading"></app-spinner>
+
+  <!-- ERROR MESSAGE -->
+  <app-error-message [error]="errorMessage"></app-error-message>
+
+  <!-- TABLE -->
+  <div *ngIf="!isLoading && !errorMessage" class="has-text-centered">
+    <br />
+    <table class="table is-fullwidth is-striped is-hoverable">
+
+      <!-- TABLE HEAD -->
+      <thead>
+        <tr>
+          <th>Application name</th>
+          <th>Opened</th>
+          <th>Closed</th>
+        </tr>
+      </thead>
+
+      <!-- TABLE BODY -->
+      <tbody>
+        <tr *ngFor="let process of records">
+          <th> {{ process.name }} </th>
+          <th> {{ process.opened | date:'dd/MM/yyyy hh:mm' }} </th>
+          <th> {{ process.closed | date:'dd/MM/yyyy hh:mm'}} </th>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- TABLE BUTTONS AND PAGE NUM -->
+    <app-list-pages [client]="this"></app-list-pages>
+
+  </div>

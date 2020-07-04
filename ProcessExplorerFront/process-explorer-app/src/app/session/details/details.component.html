@@ -1,5 +1,5 @@
 <div class="tab-box">
-    <app-back></app-back>
+    <app-back [uri]="'/session/search'"></app-back>
 </div>
 
 <div class="content-box">
@@ -39,6 +39,8 @@
   <br>
 
   <app-details-tab [id]="id"></app-details-tab>
+
+  <br>
 
   <router-outlet></router-outlet>
 

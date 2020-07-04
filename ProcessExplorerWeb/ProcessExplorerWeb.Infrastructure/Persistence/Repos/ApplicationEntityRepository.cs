@@ -159,8 +159,8 @@ namespace ProcessExplorerWeb.Infrastructure.Persistence.Repos
                                         .Select(i => new ApplicationSearchDetail
                                         { 
                                             Name = i.Name, 
-                                            Closed = i.Started,
-                                            Opened = i.Closed,
+                                            Closed = i.Closed,
+                                            Opened = i.Started,
                                         })
                                         .ToListAsync();
 

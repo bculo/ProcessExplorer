@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SessionComponent } from './session.component';
 import { SessionAllStatsComponent } from './statistic/session-all-stats/session-all-stats.component';
 import { SessionUserStatsComponent } from './statistic/session-user-stats/session-user-stats.component';
-import { SessionTabsComponent } from './statistic/session-tabs/session-tabs.component';
 import { SessionSearchComponent } from './session-search/session-search.component';
 import { StatisticComponent } from './statistic/statistic.component';
 import { DetailsComponent } from './details/details.component';
@@ -25,7 +24,6 @@ import { DetailsApplicationsComponent } from './details/details-applications/det
         SessionComponent,
         SessionAllStatsComponent,
         SessionUserStatsComponent,
-        SessionTabsComponent,
         SessionSearchComponent,
         StatisticComponent,
         DetailsComponent,

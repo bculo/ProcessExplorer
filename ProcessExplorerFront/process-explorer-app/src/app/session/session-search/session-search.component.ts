@@ -1,24 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../session.service';
 import { ISessionItem } from '../models/session.models';
-import { environment } from 'src/environments/environment';
+import { PaginationComponent } from 'src/app/shared/abstract/pagination-component';
 
 @Component({
   selector: 'app-session-search',
   templateUrl: './session-search.component.html',
   styleUrls: ['./session-search.component.css']
 })
-export class SessionSearchComponent implements OnInit {
+export class SessionSearchComponent extends PaginationComponent<ISessionItem> implements OnInit {
 
-  public errorMessage: string | null = null;
-  public isLoading: boolean = true;
-
-  public totalRecords: number = 0;
-  public records: ISessionItem[] = [];
-  public currentPage: number = 1;
-  public totalPages: number = 1;
-  
-  constructor(private service: SessionService) { }
+  constructor(private service: SessionService) {  super() }
 
   ngOnInit(): void {
     this.getRecords();
@@ -27,30 +19,10 @@ export class SessionSearchComponent implements OnInit {
   getRecords(){
     this.service.getSessionsForUsers(this.currentPage)
       .subscribe(response => {
-        this.records = response.records;
-        this.totalRecords = response.totalRecords;
-        this.totalPages = response.totalPages;
-
-        this.isLoading = false;
-        this.errorMessage = null;
+        this.handleResponse(response);
       },
       (error) => {
-        this.errorMessage = "An error occurred";
-        this.isLoading = false;
+        this.handleError();
       });
-  }
-
-  back(){
-    if(this.currentPage === 1) return;
-
-    this.currentPage--;
-    this.getRecords();
-  }
-
-  next(){
-    if(this.currentPage === this.totalPages) return;
-
-    this.currentPage++;
-    this.getRecords();
   }
 }

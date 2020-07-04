@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-back',
@@ -8,12 +9,14 @@ import { Location } from '@angular/common';
 })
 export class BackComponent implements OnInit {
 
-  constructor(private location: Location) { }
+  @Input() uri: string;
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
   onGoBack() {
-    this.location.back();
+    this.router.navigate([this.uri]);
   }
 }

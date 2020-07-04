@@ -8,7 +8,8 @@ import { StatisticComponent } from './statistic/statistic.component';
 import { SearchComponent } from './search/search.component';
 import { StatisticAllComponent } from './statistic/statistic-all/statistic-all.component';
 import { StatisticUserComponent } from './statistic/statistic-user/statistic-user.component';
-import { StatisticTabComponent } from './statistic/statistic-tab/statistic-tab.component';
+import { SearchAllComponent } from './search/search-all/search-all.component';
+import { SearchUserComponent } from './search/search-user/search-user.component';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import { StatisticTabComponent } from './statistic/statistic-tab/statistic-tab.c
         SearchComponent,
         StatisticAllComponent,
         StatisticUserComponent,
-        StatisticTabComponent,
+        SearchAllComponent,
+        SearchUserComponent,
     ]
 })
 export class ApplicationModule {}

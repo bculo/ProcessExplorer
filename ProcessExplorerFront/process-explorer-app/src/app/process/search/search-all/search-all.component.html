@@ -1,21 +1,15 @@
 <div class="content-box">
 
   <!-- SPINNER -->
-  <div *ngIf="isLoading" class="box">
-    <app-spinner></app-spinner>
-  </div>
+  <app-spinner [loading]="isLoading"></app-spinner>
 
   <!-- ERROR MESSAGE -->
-  <article *ngIf="!isLoading && errorMessage" class="message is-danger">
-    <div class="message-body">
-      {{ errorMessage}}
-    </div>
-  </article>
+  <app-error-message [error]="errorMessage"></app-error-message>
 
   <div *ngIf="!isLoading && !errorMessage">
 
     <!-- SEARCH BAR COMPONENT -->
-    <app-search-bar (search)="onSearch($event)"></app-search-bar>
+    <app-search-bar (search)="onSearch($event)" [placeholder]="'Search processes by name'"></app-search-bar>
 
     <br />
 
@@ -43,31 +37,10 @@
       </table>
     </div>
 
+    <br>
+
     <!-- TABLE BUTTONS AND PAGE NUM -->
-    <nav class="level is-mobile">
-      <div class="level-item has-text-centered">
-        <p class="control">
-          <button class="button" (click)="back()">
-            Previous
-          </button>
-        </p>
-      </div>
-
-      <div class="level-item has-text-centered">
-        <div>
-          <p class="heading">PAGES</p>
-          <p class="title">{{ currentPage }} / {{ totalPages }}</p>
-        </div>
-      </div>
-
-      <div class="level-item has-text-centered">
-        <p class="control">
-          <button class="button" (click)="next()">
-            Next
-          </button>
-        </p>
-      </div>
-    </nav>
+    <app-list-pages [client]="this"></app-list-pages>
 
   </div>
 </div>

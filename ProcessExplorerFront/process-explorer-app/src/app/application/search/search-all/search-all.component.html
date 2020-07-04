@@ -7,7 +7,6 @@
   <app-error-message [error]="errorMessage"></app-error-message>
 
   <div *ngIf="!isLoading && !errorMessage">
-
     <!-- SEARCH BAR COMPONENT -->
     <app-search-bar (search)="onSearch($event)" [placeholder]="'Search processes by name'"></app-search-bar>
 
@@ -15,23 +14,23 @@
 
     <div class="has-text-centered">
       <!-- TABLE -->
-      <table class="table is-fullwidth is-hoverable is-striped">
+      <table class="table is-striped is-fullwidth is-hoverable is-striped">
 
         <!-- TABLE HEAD -->
         <thead>
           <tr>
-            <th>Process name</th>
-            <th>Occures in number of sessions</th>
+            <th>Application name</th>
+            <th>Occures</th>
             <th>Google link</th>
           </tr>
         </thead>
 
         <!-- TABLE BODY -->
         <tbody>
-          <tr *ngFor="let process of records">
-            <th> {{ process.processName }} </th>
-            <th> {{ process.occuresInNumOfSessions }} / {{ totalNumberOfSessions }} </th>
-            <th> <a target="_blank" href="{{process.googleSearchQuery}}">link</a></th>
+          <tr *ngFor="let application of records">
+            <th> {{ application.applicationName }} </th>
+            <th> {{ application.occuresNumOfTime }} </th>
+            <th> <a target="_blank" href="{{application.googleSearchQuery}}">link</a></th>
           </tr>
         </tbody>
       </table>
@@ -41,6 +40,6 @@
 
     <!-- TABLE BUTTONS AND PAGE NUM -->
     <app-list-pages [client]="this"></app-list-pages>
-
   </div>
+
 </div>

@@ -1,0 +1,33 @@
+<nav class="level is-mobile">
+
+    <!-- GO TO PREVIOUS PAGE -->
+    <div class="level-item has-text-centered">
+      <p class="control">
+        <button class="button" 
+            (click)="client.back()"
+            [disabled]="!client.canGoBack()">
+          Previous
+        </button>
+      </p>
+    </div>
+
+    <!-- DISPLAY CURRENT PAGE / TOTAL PAGES -->
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">PAGES</p>
+        <p class="title">{{ client.getCurrentPage() }} / {{ client.getTotalPages() }}</p>
+      </div>
+    </div>
+
+    <!-- GO TO NEXT PAGE -->
+    <div class="level-item has-text-centered">
+      <p class="control">
+        <button class="button" 
+            (click)="client.next()"
+            [disabled]="!client.hasMore()">
+          Next
+        </button>
+      </p>
+    </div>
+
+</nav>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IProcessItem } from '../../models/process.models';
-import { ProcessService } from '../../process.service';
+import { ApplicationService } from '../../application.service';
+import { IApplicationItem } from '../../models/application.models';
 import { PaginationComponent } from 'src/app/shared/abstract/pagination-component';
 
 @Component({
@@ -8,21 +8,18 @@ import { PaginationComponent } from 'src/app/shared/abstract/pagination-componen
   templateUrl: './search-all.component.html',
   styleUrls: ['./search-all.component.css']
 })
-export class SearchAllComponent extends PaginationComponent<IProcessItem> implements  OnInit {
+export class SearchAllComponent extends PaginationComponent<IApplicationItem> implements OnInit {
 
-  public totalNumberOfSessions: number = 0;
-
-  constructor(private service: ProcessService) { super() }
+  constructor(private service: ApplicationService) { super() }
 
   ngOnInit(): void {
     this.getRecords();
   }
 
   getRecords() {
-    this.service.searchAllProcesses(this.searchCriteria, this.currentPage)
+    this.service.searchApplicationsPeriod(this.searchCriteria, this.currentPage)
       .subscribe(response => {
         this.handleResponse(response);
-        this.totalNumberOfSessions = response.totalNumberOfSessions;
       },
       (error) => {
         this.handleError();

@@ -1,3 +1,5 @@
+import { IColumnChartDto } from 'src/app/shared/models/interfaces.models';
+
 export interface IPieChartRecords {
     name: string[],
     quantity: number[]
@@ -40,4 +42,14 @@ export interface ISingleSession {
 export interface ISessionProcessItem {
     processName: string;
     googleSearchQuery: string;
+}
+
+export interface ISessionApplicationItem {
+    name: string;
+    opened: Date;
+    closed: Date;
+}
+
+export interface ITopSessionApplications {
+    chartRecords: IColumnChartDto;
 }

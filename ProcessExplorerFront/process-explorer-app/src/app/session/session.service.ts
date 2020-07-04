@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { ISessionStatsResponse, ISessionItem, ISingleSession, ISessionProcessItem } from './models/session.models';
+import { ISessionStatsResponse, ISessionItem, ISingleSession, ISessionProcessItem, ISessionApplicationItem, ITopSessionApplications } from './models/session.models';
 import { IPaginationResponse } from '../shared/models/interfaces.models';
 
 @Injectable({
@@ -33,6 +33,14 @@ export class SessionService {
 
   getSessionProcesses(sessionId: string, currentPage: number){
     return this.http.post<IPaginationResponse<ISessionProcessItem>>(`${environment.api}/Process/searchchoosensession`, { sessionId: sessionId, currentPage: currentPage });
+  }
+
+  getSessionApplications(sessionId: string, currentPage: number){
+    return this.http.post<IPaginationResponse<ISessionApplicationItem>>(`${environment.api}/Application/searchappsinsession`, { sessionId: sessionId, currentPage: currentPage });
+  }
+
+  getTopSessionApplications(sessionId: string){
+    return this.http.post<ITopSessionApplications>(`${environment.api}/Application/topopenedappssession`, { sessionId: sessionId });
   }
 
 }

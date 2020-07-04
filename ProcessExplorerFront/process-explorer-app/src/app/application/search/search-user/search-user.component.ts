@@ -1,28 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { ProcessService } from '../../process.service';
-import { IProcessItem } from '../../models/process.models';
+import { ApplicationService } from '../../application.service';
 import { PaginationComponent } from 'src/app/shared/abstract/pagination-component';
+import { IApplicationItem } from '../../models/application.models';
 
 @Component({
   selector: 'app-search-user',
   templateUrl: './search-user.component.html',
   styleUrls: ['./search-user.component.css']
 })
-export class SearchUserComponent extends PaginationComponent<IProcessItem> implements OnInit {
+export class SearchUserComponent extends PaginationComponent<IApplicationItem> implements OnInit {
 
-  public totalNumberOfSessions: number = 0;
-
-  constructor(private service: ProcessService) { super() }
+  constructor(private service: ApplicationService) { super() }
 
   ngOnInit(): void {
     this.getRecords();
   }
 
   getRecords() {
-    this.service.searchUserProcesses(this.searchCriteria, this.currentPage)
+    this.service.searchApplicationsUser(this.searchCriteria, this.currentPage)
       .subscribe(response => {
         this.handleResponse(response);
-        this.totalNumberOfSessions = response.totalNumberOfSessions;
       },
       (error) => {
         this.handleError();
