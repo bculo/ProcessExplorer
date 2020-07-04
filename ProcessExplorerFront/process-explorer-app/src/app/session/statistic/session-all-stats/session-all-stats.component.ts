@@ -19,7 +19,7 @@ export class SessionAllStatsComponent implements OnInit {
     labels: [],
     title: true,
     type: 'doughnut',
-    colors: [{ backgroundColor:['#FF7360', '#6FC8CE', '#FAFFF2', '#FFFCC4', '#B9E8E0'] }],
+    colors: [{ backgroundColor:['#D8A47F', '#272932'] }],
   }
 
   //number statistic
@@ -36,7 +36,7 @@ export class SessionAllStatsComponent implements OnInit {
     labels: [],
     title: false,
     type: 'line',
-    colors: [{ backgroundColor: ['#FF7360'] }],
+    colors: [{ backgroundColor: ['#F05D5E'] }],
   }
 
   constructor(public service: SessionService) { }

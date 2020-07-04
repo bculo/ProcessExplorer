@@ -7,11 +7,13 @@ import { SearchAllComponent } from './search/search-all/search-all.component';
 import { StatisticComponent } from './statistic/statistic.component';
 import { StatisticAllComponent } from './statistic/statistic-all/statistic-all.component';
 import { StatisticUserComponent } from './statistic/statistic-user/statistic-user.component';
+import { AuthGuardService } from '../shared/services/auth-guard.service';
 
 const routes: Routes = [
     { 
         path: '', 
         component: ProcessComponent,
+        canActivate: [AuthGuardService],
         children: [
             { 
                 path: 'search',

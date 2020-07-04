@@ -1,59 +1,73 @@
-<div *ngIf="isLoading" class="content-box box">
-  <app-spinner></app-spinner>
-</div>
+<div class="content-box">
 
-<article *ngIf="!isLoading && errorMessage" class="message is-danger content-box">
-  <div class="message-body">
-      {{ errorMessage }}
+  <!-- SPINNER -->
+  <div *ngIf="isLoading" class="box">
+    <app-spinner></app-spinner>
   </div>
-</article>
 
-<div *ngIf="!isLoading && !errorMessage" class="content-box">
+  <!-- ERROR MESSAGE -->
+  <article *ngIf="!isLoading && errorMessage" class="message is-danger">
+    <div class="message-body">
+      {{ errorMessage }}
+    </div>
+  </article>
 
-    <table class="table is-fullwidth is-hoverable">
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>System</th>
-            <th>Session started</th>
-            <th>Processes number</th>
-            <th>Applications number</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let session of records">
-                <th> {{ session.userName }} </th>
-                <th> {{ session.os }} </th>
-                <th> {{ session.started | date:'dd/MM/yyyy HH:mm' }} </th>
-                <th> {{ session.differentProcessesNumber }} </th>
-                <th> {{ session.applicationNumber }} </th>
-                <th> <a [routerLink]="['/session', 'details', session.id]">More</a></th>
-            </tr>
-        </tbody>
+  <div *ngIf="!isLoading && !errorMessage" class="has-text-centered">
+
+    <!-- TABLE CONTENT -->
+    <table class="table is-fullwidth is-striped is-hoverable">
+
+      <!-- TABLE HEAD -->
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>System</th>
+          <th>Session started</th>
+          <th>Processes number</th>
+          <th>Applications number</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+
+      <!-- TABLE BODY -->
+      <tbody>
+        <tr *ngFor="let session of records">
+          <th> {{ session.userName }} </th>
+          <th> {{ session.os }} </th>
+          <th> {{ session.started | date:'dd/MM/yyyy HH:mm' }} </th>
+          <th> {{ session.differentProcessesNumber }} </th>
+          <th> {{ session.applicationNumber }} </th>
+          <th> <a [routerLink]="['/session', 'details', session.id]">More</a></th>
+        </tr>
+      </tbody>
     </table>
 
-      <nav class="level is-mobile">
-        <div class="level-item has-text-centered">
-          <p class="control">
-            <button class="button" (click)="back()">
-              Previous
-            </button>
-          </p>
-        </div>
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">PAGES</p>
-            <p class="title">{{ currentPage }} / {{ totalPages }}</p>
-          </div>
-        </div>
-        <div class="level-item has-text-centered">
-          <p class="control">
-            <button class="button" (click)="next()">
-              Next
-            </button>
-          </p>
-        </div>
-      </nav>
+    <!-- TABLE BUTTONS AND PAGE STATUS -->
+    <nav class="level is-mobile">
 
+      <div class="level-item has-text-centered">
+        <p class="control">
+          <button class="button" (click)="back()">
+            Previous
+          </button>
+        </p>
+      </div>
+
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">PAGES</p>
+          <p class="title">{{ currentPage }} / {{ totalPages }}</p>
+        </div>
+      </div>
+
+      <div class="level-item has-text-centered">
+        <p class="control">
+          <button class="button" (click)="next()">
+            Next
+          </button>
+        </p>
+      </div>
+    </nav>
+
+  </div>
 </div>

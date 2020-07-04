@@ -8,11 +8,13 @@ import { StatisticComponent } from './statistic/statistic.component';
 import { DetailsComponent } from './details/details.component';
 import { DetailsProcessesComponent } from './details/details-processes/details-processes.component';
 import { DetailsApplicationsComponent } from './details/details-applications/details-applications.component';
+import { AuthGuardService } from '../shared/services/auth-guard.service';
 
 const routes: Routes = [
     { 
         path: '', 
         component: SessionComponent,
+        canActivate: [AuthGuardService],
         children: [
             { 
                 path: '', 

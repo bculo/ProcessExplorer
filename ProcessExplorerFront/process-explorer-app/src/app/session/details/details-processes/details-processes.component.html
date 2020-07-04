@@ -1,48 +1,61 @@
-
+<!-- SPINNER -->
 <div *ngIf="isLoadingProcesses" class="box">
-    <app-spinner></app-spinner>
+  <app-spinner></app-spinner>
 </div>
+
+<!-- ERROR MESSAGE -->
 <article *ngIf="!isLoadingProcesses && errorMessageProcesses" class="message is-danger">
-    <div class="message-body">
-        {{ errorMessageProcesses }}
-    </div>
-</article>
-<div *ngIf="!isLoadingProcesses && !errorMessageProcesses">
-    <br/>
-    <table class="table is-fullwidth is-hoverable">
-        <thead>
-          <tr>
-            <th>Process name</th>
-            <th>Google link</th>
-          </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let process of recordsProcesses">
-                <th> {{ process.processName }} </th>
-                <th> <a target="_blank" href="{{process.googleSearchQuery}}">link</a></th>
-            </tr>
-        </tbody>
-    </table>
-      <nav class="level is-mobile">
-        <div class="level-item has-text-centered">
-          <p class="control">
-            <button class="button" (click)="backProcesses()">
-              Previous
-            </button>
-          </p>
-        </div>
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">PAGES</p>
-            <p class="title">{{ currentPageProcesses }} / {{ totalPagesProcesses }}</p>
-          </div>
-        </div>
-        <div class="level-item has-text-centered">
-          <p class="control">
-            <button class="button" (click)="nextProcesses()">
-              Next
-            </button>
-          </p>
-        </div>
-      </nav>
+  <div class="message-body">
+    {{ errorMessageProcesses }}
   </div>
+</article>
+
+<!-- TABLE -->
+<div *ngIf="!isLoadingProcesses && !errorMessageProcesses" class="has-text-centered">
+  <br />
+  <table class="table is-fullwidth is-striped is-hoverable">
+
+    <!-- TABLE HEAD -->
+    <thead>
+      <tr>
+        <th>Process name</th>
+        <th>Google link</th>
+      </tr>
+    </thead>
+
+    <!-- TABLE BODY -->
+    <tbody>
+      <tr *ngFor="let process of recordsProcesses">
+        <th> {{ process.processName }} </th>
+        <th> <a target="_blank" href="{{process.googleSearchQuery}}">link</a></th>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TABLE BUTTONS AND PAGE -->
+  <nav class="level is-mobile">
+    <div class="level-item has-text-centered">
+      <p class="control">
+        <button class="button" (click)="backProcesses()">
+          Previous
+        </button>
+      </p>
+    </div>
+
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">PAGES</p>
+        <p class="title">{{ currentPageProcesses }} / {{ totalPagesProcesses }}</p>
+      </div>
+    </div>
+
+    <div class="level-item has-text-centered">
+      <p class="control">
+        <button class="button" (click)="nextProcesses()">
+          Next
+        </button>
+      </p>
+    </div>
+  </nav>
+
+</div>

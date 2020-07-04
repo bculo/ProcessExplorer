@@ -549,7 +549,9 @@ namespace SyncSoapReference
         {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding))
             {
-                return new System.ServiceModel.EndpointAddress("https://localhost:44362/SyncService.asmx");
+
+                return new System.ServiceModel.EndpointAddress("https://localhost:44362/SyncService.asmx"); //Development
+                //return new System.ServiceModel.EndpointAddress("https://processexplorerfoi.azurewebsites.net/SyncService.asmx"); //Production
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

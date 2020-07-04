@@ -33,9 +33,13 @@ footer {
 }
 
 .authentication-box {
-    padding: 3rem 4.5rem;
+    padding: 3rem 6rem;
 }
 
 .content-box {
-    margin: 2rem 1rem;
+    margin: 2rem 8rem;
+}
+
+.tab-box {
+    margin: 0rem 8rem;
 }

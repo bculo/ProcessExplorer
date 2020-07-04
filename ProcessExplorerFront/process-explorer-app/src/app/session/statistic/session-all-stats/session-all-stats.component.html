@@ -1,65 +1,71 @@
-<div *ngIf="isLoading" class="content-box box">
-    <app-spinner></app-spinner>
-</div>
-
-<article *ngIf="!isLoading && errorMessage" class="message is-danger content-box">
-    <div class="message-body">
-        {{ errorMessage}}
-    </div>
-</article>
-
-<div *ngIf="!isLoading && !errorMessage" class="content-box">
-
-    <div *ngIf="pieChart.data.length > 0" class="box">
-        <canvas baseChart
-            [legend]="pieChart.title"
-            [data]="pieChart.data"
-            [labels]="pieChart.labels"
-            [chartType]="pieChart.type"
-            [colors]="pieChart.colors"></canvas>
+<div class="content-box">
+    <!-- SPINNER -->
+    <div *ngIf="isLoading" class="box">
+        <app-spinner></app-spinner>
     </div>
 
+    <!-- ERROR MESSAGE -->
+    <article *ngIf="!isLoading && errorMessage" class="message is-danger">
+        <div class="message-body">
+            {{ errorMessage}}
+        </div>
+    </article>
 
-    <div class="columns is-multiline has-text-centered">
+    <!-- OPERATING SYSTEM STATISTICS -->
+    <div *ngIf="!isLoading && !errorMessage">
 
-        <div class="column is-half">
-            <div class="box">
-                <p class="heading">Day with most sessions</p>
-                <p class="title"> {{ numberStats?.mostActiveDay }} </p>
+        <div *ngIf="pieChart.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Operating systems statistics (Last month period)</p>
             </div>
+            <canvas baseChart
+                [legend]="pieChart.title"
+                [data]="pieChart.data"
+                [labels]="pieChart.labels"
+                [chartType]="pieChart.type"
+                [colors]="pieChart.colors"></canvas>
         </div>
 
-        <div class="column is-half">
-            <div class="box">
-                <p class="heading">Maximum number of session (Single day)</p>
-                <p class="title"> {{ numberStats?.maxNumberOfSession }} </p>
+        <!-- BOX STATISTICS -->
+        <div class="columns is-multiline has-text-centered">
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Day with most sessions</p>
+                    <p class="title"> {{ numberStats?.mostActiveDay }} </p>
+                </div>
             </div>
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Maximum number of session (Single day)</p>
+                    <p class="title"> {{ numberStats?.maxNumberOfSession }} </p>
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Total number of sessions</p>
+                    <p class="title"> {{ numberStats?.totalNumberOfSessions }} </p>
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="box">
+                    <p class="heading">Total number of users</p>
+                    <p class="title"> {{ numberStats?.numberOfUsers }} </p>
+                </div>
+            </div>
+        </div>       
+
+        <!-- SESSIONS PER DAY STATISTIC -->
+        <div *ngIf="activityChart.data.length > 0" class="box">
+            <div class="has-text-centered">
+                <p class="heading">Number of sessions per day (Last month period)</p>
+            </div>
+            <canvas baseChart
+                [legend]="activityChart.title"
+                [data]="activityChart.data"
+                [labels]="activityChart.labels"
+                [chartType]="activityChart.type"
+                [colors]="activityChart.colors"></canvas>
         </div>
 
-        <div class="column is-half">
-            <div class="box">
-                <p class="heading">Total number of sessions</p>
-                <p class="title"> {{ numberStats?.totalNumberOfSessions }} </p>
-            </div>
-        </div>
-
-        <div class="column is-half">
-            <div class="box">
-                <p class="heading">Total number of users</p>
-                <p class="title"> {{ numberStats?.numberOfUsers }} </p>
-            </div>
-        </div>
-
-    </div>       
-
-
-    <div *ngIf="activityChart.data.length > 0" class="box">
-        <canvas baseChart
-            [legend]="activityChart.title"
-            [data]="activityChart.data"
-            [labels]="activityChart.labels"
-            [chartType]="activityChart.type"
-            [colors]="activityChart.colors"></canvas>
     </div>
-
 </div>
