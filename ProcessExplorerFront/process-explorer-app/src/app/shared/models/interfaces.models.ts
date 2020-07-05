@@ -35,3 +35,7 @@ export interface IPieChartDto {
 export interface IOsStatisticResponse {
     pieChart: IPieChartDto;
 }
+
+export interface IChartMapper {
+    map<T>(response: T, member: ILoadingMember<IChartExtendedModel>): void;
+}

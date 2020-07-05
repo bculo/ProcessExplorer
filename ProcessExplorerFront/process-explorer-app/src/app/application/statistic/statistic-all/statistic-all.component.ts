@@ -1,109 +1,87 @@
 import { Component, OnInit } from '@angular/core';
-import { ILoadingMember, IChartExtendedModel } from 'src/app/shared/models/interfaces.models';
+import {
+  ILoadingMember,
+  IChartExtendedModel,
+  IOsStatisticResponse,
+} from 'src/app/shared/models/interfaces.models';
 import { ApplicationService } from '../../application.service';
-import { IBestApplicationDay } from '../../models/application.models';
+import {
+  IBestApplicationDay,
+  ITopApplications,
+} from '../../models/application.models';
+import { LoadingMemberService } from 'src/app/shared/services/loading-member.service';
 
 @Component({
   selector: 'app-statistic-all',
   templateUrl: './statistic-all.component.html',
-  styleUrls: ['./statistic-all.component.css']
+  styleUrls: ['./statistic-all.component.css'],
 })
 export class StatisticAllComponent implements OnInit {
-
   //best day stats
-  public bestDay: ILoadingMember<IBestApplicationDay> = {
-    data: null, //where data IBestApplicationDay
-    isLoading: true,
-    errorMessage: null //string
-  }
+  public bestDay: ILoadingMember<IBestApplicationDay>;
 
   //column chart stats -> TOP 20 apps
-  public columnChart: ILoadingMember<IChartExtendedModel> = {
-    data: {
-      data: [],
-      labels: [],
-      title: false,
-      type: 'bar',
-      colors: [{
-        backgroundColor: '#A51080',
-        borderColor: 'rgba(225,10,24,0.2)',
-        pointBackgroundColor: 'rgba(225,10,24,0.2)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(225,10,24,0.2)'
-      }],
-      mainHeading: 'Top 20 opened applications (Last month period)'
-    },
-    isLoading: true,
-    errorMessage: null //string
-  }
+  public columnChart: ILoadingMember<IChartExtendedModel>;
 
-  //pie chart stats -> os statistics
-  public pieChart: ILoadingMember<IChartExtendedModel> = {
-    data: {
-      data: [],
-      labels: [],
-      title: true,
-      type: 'doughnut',
-      colors: [{ backgroundColor:[ '#23B5D3', '#EA526F'] }],
-      mainHeading: 'Number of opened applications (Last month period)'
-    },
-    isLoading: true,
-    errorMessage: null //string
-  }
+  //os statistics
+  public pieChart: ILoadingMember<IChartExtendedModel>;
 
-  public maxNumOfSessions: number = 0;
-
-  constructor(private service: ApplicationService) { }
+  constructor(
+    private service: ApplicationService,
+    private ls: LoadingMemberService
+  ) {}
 
   ngOnInit(): void {
+    this.prepareCharts();
     this.getBestDayAllUsers();
     this.loadOsStatisticsPeriod();
     this.getTopOpenedAppsPeriod();
   }
 
+  prepareCharts(): void {
+    this.bestDay = this.ls.createMember<IBestApplicationDay>();
+    this.pieChart = this.ls.createChart(
+      'doughnut',
+      'Number of opened applications (Last month period)',
+      [{ backgroundColor: ['#23B5D3', '#EA526F'] }],
+      true
+    );
+    this.columnChart = this.ls.createColumnChart(
+      'Top 20 opened applications (Last month period)',
+      '#A51080'
+    );
+  }
+
   getBestDayAllUsers() {
-    this.service.getDayWithMostOpenedApplicaitonAllUsers()
-      .subscribe((response) => {
-        this.bestDay.data = response;
-        this.bestDay.isLoading = false;
-        this.bestDay.errorMessage = null;
-      },
-      (error) => {
-        this.bestDay.isLoading = false;
-        this.bestDay.errorMessage = "Ann error occured";
-      });
+    this.ls.handle<IBestApplicationDay>(
+      this.service.getDayWithMostOpenedApplicaitonAllUsers(),
+      this.bestDay
+    );
   }
 
   loadOsStatisticsPeriod() {
-      this.service.getOsStatisticAllPeriod()
-        .subscribe((response) => {
-          this.pieChart.data.data = response.pieChart.quantity;
-          this.pieChart.data.labels = response.pieChart.name;
-          
-          this.pieChart.isLoading = false;
-          this.pieChart.errorMessage = null;
+    this.ls.handleChart<IOsStatisticResponse>(
+      this.service.getOsStatisticUserPeriod(),
+      this.pieChart,
+      {
+        map<IOsStatisticResponse>(response, member) {
+          member.data.data = response.pieChart.quantity;
+          member.data.labels = response.pieChart.name;
         },
-        (error) => {
-          this.pieChart.isLoading = false;
-          this.pieChart.errorMessage = "Ann error occured";
-        });
+      }
+    );
   }
 
-  getTopOpenedAppsPeriod(){
-    this.service.getTopOpenedAppsPeriod()
-    .subscribe((response) => {
-      this.columnChart.data.data = response.chartRecords.value;
-      this.columnChart.data.labels = response.chartRecords.label;
-      
-      this.columnChart.isLoading = false;
-      this.columnChart.errorMessage = null;
-    },
-    (error) => {
-      this.columnChart.isLoading = false;
-      this.columnChart.errorMessage = "Ann error occured";
-    });
+  getTopOpenedAppsPeriod() {
+    this.ls.handleChart<ITopApplications>(
+      this.service.getTopOpenedAppsPeriod(),
+      this.columnChart,
+      {
+        map<ITopApplications>(response, member) {
+          member.data.data = response.chartRecords.value;
+          member.data.labels = response.chartRecords.label;
+        },
+      }
+    );
   }
-
-
 }
