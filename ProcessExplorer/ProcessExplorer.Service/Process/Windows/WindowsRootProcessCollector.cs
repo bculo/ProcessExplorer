@@ -1,6 +1,7 @@
 ﻿using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProcessExplorer.Service.Process.Windows
 {
@@ -12,6 +13,10 @@ namespace ProcessExplorer.Service.Process.Windows
         {
         }
 
-        public override IEnumerable<ProcessInformation> PlatformSpecificHandler(IEnumerable<ProcessInformation> processes) => processes;
+        public override IEnumerable<ProcessInformation> PlatformSpecificHandler(IEnumerable<ProcessInformation> processes)
+        {
+            //remove all processes that have 40 or more characters
+            return processes.Where(i => i.ProcessName.Length < 40);
+        }
     }
 }

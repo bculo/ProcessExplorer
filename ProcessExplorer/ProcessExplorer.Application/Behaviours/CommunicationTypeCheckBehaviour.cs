@@ -54,7 +54,7 @@ namespace ProcessExplorer.Application.Behaviours
                 {
                     CommunicationType old = _communicationTypeService.GetCommunicationType();
                     _communicationTypeService.SetCommuncationType(type);
-                    _notification.DisplayMessage(nameof(CommunicationTypeCheckBehaviour), $"Communication type changed from {old} to {type}");
+                    _notification.ShowStatusMessage(nameof(CommunicationTypeCheckBehaviour), $"Communication type changed from {old} to {type}");
                 }
 
                 _logger.LogInfo($"Finished fetching communication type: {_time.Now} | type is {type}");

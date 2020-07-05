@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ProcessExplorer.Service.Application
 {
@@ -17,6 +18,7 @@ namespace ProcessExplorer.Service.Application
         /// Standard app title separator
         /// </summary>
         private static string STANDARD_APP_SEPARATOR = " - ";
+        private static string UKNKOWN_APP = "UNKNOWN";
 
         public RootAppCollector(ILoggerWrapper logger,
             ISessionService sessionService,
@@ -39,7 +41,7 @@ namespace ProcessExplorer.Service.Application
         {
             //if title null or empty return empty string
             if (string.IsNullOrEmpty(fullTitle))
-                return string.Empty;
+                return UKNKOWN_APP;
 
             //Format example: D:\\test\\test\\hello.exe
             //get only hello.exe
@@ -47,6 +49,7 @@ namespace ProcessExplorer.Service.Application
                 return fullTitle.Split(Path.DirectorySeparatorChar).Last();
 
             //Format example: DB Browser - D:\\test\\test\\tekst.db
+            //Format example: D:\\test\\test\\tekst.db - Notepad++
             //Get DB Browser
             if (fullTitle.Contains(STANDARD_APP_SEPARATOR) && fullTitle.Contains(Path.DirectorySeparatorChar))
                 return FormatName(fullTitle);
@@ -59,6 +62,7 @@ namespace ProcessExplorer.Service.Application
             //Handle platform specific title
             return PlatformSpecificTitleHandler(fullTitle, processName);
         }
+
 
         /// <summary>
         /// Make first letter of word uppercase, other chars lowercase
@@ -86,12 +90,11 @@ namespace ProcessExplorer.Service.Application
         /// <returns></returns>
         private string FormatName(string title)
         {
-            var firstPartOfTitle = title.Split(STANDARD_APP_SEPARATOR).First();
+            var titleParts = title.Split(STANDARD_APP_SEPARATOR);
 
-            if(firstPartOfTitle.Contains(Path.DirectorySeparatorChar))
-                title.Split(Path.DirectorySeparatorChar).Last();
+            var validTitles = titleParts.Where(i => !i.Contains(Path.DirectorySeparatorChar));
 
-            return firstPartOfTitle;
+            return validTitles.FirstOrDefault() ?? UKNKOWN_APP;
         }
     }
 }

@@ -35,19 +35,26 @@ namespace ProcessExplorer.Service.Clients.Sync
                 .Build();
         }
 
+        /// <summary>
+        /// Invoke web socket method
+        /// Method can throw Exception !!!
+        /// </summary>
+        /// <param name="methodName"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        private async Task<bool> InvokeSocketMethod(string methodName, UserSessionDto dto)
+        {
+            await _connection.StartAsync();
+            await _connection.InvokeAsync("SyncSession", JsonConvert.SerializeObject(dto));
+            await _connection.StopAsync();
+            return true;
+        }
+
         public async Task<bool> Sync(UserSessionDto sessionDto)
         {
             try
             {
-                //start connection
-                await _connection.StartAsync();
-
-                //send message
-                await _connection.InvokeAsync("SyncSession", JsonConvert.SerializeObject(sessionDto));
-
-                await _connection.StopAsync();
-
-                return true;
+                return await InvokeSocketMethod("SyncSession", sessionDto);
             }
             catch
             {
@@ -60,16 +67,7 @@ namespace ProcessExplorer.Service.Clients.Sync
             try
             {
                 sessionDto.Processes = null;
-
-                //start connection
-                await _connection.StartAsync();
-
-                //send message
-                await _connection.InvokeAsync("SyncApplications", JsonConvert.SerializeObject(sessionDto));
-
-                await _connection.StopAsync();
-
-                return true;
+                return await InvokeSocketMethod("SyncApplications", sessionDto);
             }
             catch
             {
@@ -82,16 +80,7 @@ namespace ProcessExplorer.Service.Clients.Sync
             try
             {
                 sessionDto.Applications = null;
-
-                //start connection
-                await _connection.StartAsync();
-
-                //send message
-                await _connection.InvokeAsync("SynProcesses", JsonConvert.SerializeObject(sessionDto));
-
-                await _connection.StopAsync();
-
-                return true;
+                return await InvokeSocketMethod("SynProcesses", sessionDto);
             }
             catch
             {

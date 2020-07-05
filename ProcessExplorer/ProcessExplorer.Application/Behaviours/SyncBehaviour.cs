@@ -45,7 +45,7 @@ namespace ProcessExplorer.Application.Behaviours
                 //Offline mode so exit
                 if (_sessionService.SessionInformation.Offline)
                 {
-                    _notification.DisplayMessage(nameof(SyncBehaviour), $"Sessions sync skipped (OFFLINE MODE): {_time.Now}");
+                    _notification.ShowStatusMessage(nameof(SyncBehaviour), $"Sessions sync skipped (OFFLINE MODE): {_time.Now}");
 
                     _logger.LogInfo($"Sync finished: {_time.Now}, OFFLINE MODE");
                     return;
@@ -54,7 +54,7 @@ namespace ProcessExplorer.Application.Behaviours
                 //Check for internet connection
                 if (!await _internet.CheckForInternetConnectionAsync())
                 {
-                    _notification.DisplayMessage(nameof(SyncBehaviour), $"Sessions sync skipped (No internet connection): {_time.Now}");
+                    _notification.ShowStatusMessage(nameof(SyncBehaviour), $"Sessions sync skipped (No internet connection): {_time.Now}");
 
                     _logger.LogInfo($"Sync finished: {_time.Now}, NO INTERNET ACCESS");
                     return;
@@ -66,7 +66,7 @@ namespace ProcessExplorer.Application.Behaviours
                 //no records in database so finish sync process
                 if (sessions.Count == 0)
                 {
-                    _notification.DisplayMessage(nameof(SyncBehaviour), $"No sessions for sync (No sync needed): {_time.Now}");
+                    _notification.ShowStatusMessage(nameof(SyncBehaviour), $"No sessions for sync (No sync needed): {_time.Now}");
 
                     _logger.LogInfo($"Sync finished: {_time.Now}, NO RECORDS FOR SYNC");
                     return;
@@ -79,7 +79,7 @@ namespace ProcessExplorer.Application.Behaviours
 
                     if (!SessionNeedsUpdate(curSession))
                     {
-                        _notification.DisplayMessage(nameof(SyncBehaviour), $"Current session only (No sync needed): {_time.Now}");
+                        _notification.ShowStatusMessage(nameof(SyncBehaviour), $"Current session only (No sync needed): {_time.Now}");
 
                         _logger.LogInfo($"Sync finished: {_time.Now}, NO RECORDS FOR SYNC");
 
@@ -112,7 +112,7 @@ namespace ProcessExplorer.Application.Behaviours
                 {
                     _logger.LogInfo($"Sync finished: {_time.Now}, NO SYNC");
 
-                    _notification.DisplayMessage(nameof(SyncBehaviour), $"Sync for session failed (Server error): {_time.Now}");
+                    _notification.ShowStatusMessage(nameof(SyncBehaviour), $"Sync for session failed (Server error): {_time.Now}");
 
                     return;
                 }
@@ -140,7 +140,7 @@ namespace ProcessExplorer.Application.Behaviours
                 //save changes
                 await _unitOfWork.CommitAsync();
 
-                _notification.DisplayMessage(nameof(SyncBehaviour), $"Sync finished: {_time.Now}");
+                _notification.ShowStatusMessage(nameof(SyncBehaviour), $"Sync finished: {_time.Now}");
 
                 _logger.LogInfo($"Sync finished: {_time.Now}, SYNC");
             }

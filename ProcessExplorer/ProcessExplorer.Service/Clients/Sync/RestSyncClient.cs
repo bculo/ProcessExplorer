@@ -18,9 +18,16 @@ namespace ProcessExplorer.Service.Clients.Sync
             _tokenService = tokenService;
         }
 
-        public async Task<bool> Sync(UserSessionDto sessionDto)
+        /// <summary>
+        /// Execute rest api method
+        /// Method can throw exception !!!
+        /// </summary>
+        /// <param name="endPoint"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        private async Task<bool> ExecuteRestApiMethod(string endPoint, UserSessionDto dto)
         {
-            var response = await Post("Synchronization/sync", sessionDto, _tokenService.GetValidToken());
+            var response = await Post(endPoint, dto, _tokenService.GetValidToken());
 
             if (TimeOccurred) //Timeout occurred
                 return false;
@@ -29,36 +36,23 @@ namespace ProcessExplorer.Service.Clients.Sync
                 return true;
 
             return false;
+        }
+
+        public async Task<bool> Sync(UserSessionDto sessionDto)
+        {
+            return await ExecuteRestApiMethod("Synchronization/sync", sessionDto);
         }
 
         public async Task<bool> SyncApplications(UserSessionDto sessionDto)
         {
             sessionDto.Processes = null;
-
-            var response = await Post("Synchronization/sync/applications", sessionDto, _tokenService.GetValidToken());
-
-            if (TimeOccurred) //Timeout occurred
-                return false;
-
-            if (response.IsSuccessStatusCode)
-                return true;
-
-            return false;
+            return await ExecuteRestApiMethod("Synchronization/sync/applications", sessionDto);
         }
 
         public async Task<bool> SyncProcesses(UserSessionDto sessionDto)
         {
             sessionDto.Applications = null;
-
-            var response = await Post("Synchronization/sync/processes", sessionDto, _tokenService.GetValidToken());
-
-            if (TimeOccurred) //Timeout occurred
-                return false;
-
-            if (response.IsSuccessStatusCode)
-                return true;
-
-            return false;
+            return await ExecuteRestApiMethod("Synchronization/sync/processes", sessionDto);
         }
     }
 }

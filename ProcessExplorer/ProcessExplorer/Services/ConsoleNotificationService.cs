@@ -5,7 +5,7 @@ namespace ProcessExplorer.Services
 {
     public class ConsoleNotificationService : INotificationService
     {
-        public void DisplayMessage(string from, string message)
+        public void ShowStatusMessage(string from, string message)
         {
             Console.WriteLine($"__{from}__, {message}");
         }

@@ -19,8 +19,8 @@ namespace ProcessExplorer.Service.Process.Linux
 
         public override IEnumerable<ProcessInformation> PlatformSpecificHandler(IEnumerable<ProcessInformation> processes)
         {
-            //remove all processes that have 50 or more characters
-            return processes.Where(i => i.ProcessName.Length < 50);
+            //remove all processes that have 40 or more characters
+            return processes.Where(i => i.ProcessName.Length < 40);
         }
     }
 }
