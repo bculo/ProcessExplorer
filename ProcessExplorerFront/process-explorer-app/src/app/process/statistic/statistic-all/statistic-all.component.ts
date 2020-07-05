@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { IChartModel, ILoadingMember, IChartExtendedModel } from 'src/app/shared/models/interfaces.models';
+import { IChartModel, ILoadingMember, IChartExtendedModel, IOsStatisticResponse } from 'src/app/shared/models/interfaces.models';
 import { ProcessService } from '../../process.service';
 import { IBestProcessesDay } from '../../models/process.models';
+import { LoadingMemberService } from 'src/app/shared/services/loading-member.service';
 
 @Component({
   selector: 'app-statistic-all',
@@ -11,99 +12,74 @@ import { IBestProcessesDay } from '../../models/process.models';
 export class StatisticAllComponent implements OnInit {
 
   //best day stats
-  public bestDay: ILoadingMember<IBestProcessesDay> = {
-    data: null, //where data IBestProcessesDay
-    isLoading: true,
-    errorMessage: null //string
-  }
+  public bestDay: ILoadingMember<IBestProcessesDay>;
 
   //column chart stats
-  public columnChart: ILoadingMember<IChartExtendedModel> = {
-    data: {
-      data: [],
-      labels: [],
-      title: false,
-      type: 'bar',
-      colors: [{
-        backgroundColor: '#F58F29',
-        borderColor: 'rgba(225,10,24,0.2)',
-        pointBackgroundColor: 'rgba(225,10,24,0.2)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(225,10,24,0.2)'
-      }],
-      mainHeading: 'Top 20 processes (Last month period)'
-    },
-    isLoading: true,
-    errorMessage: null //string
-  }
+  public columnChart: ILoadingMember<IChartExtendedModel>;
 
   //pie chart stats -> os statistic
-  public pieChart: ILoadingMember<IChartExtendedModel> = {
-    data: {
-      data: [],
-      labels: [],
-      title: true,
-      type: 'pie',
-      colors: [{ backgroundColor:[ '#320E3B', '#D8A47F'] }],
-      mainHeading: 'Number of different processes (Last month period)'
-    },
-    isLoading: true,
-    errorMessage: null //string
-  }
+  public pieChart: ILoadingMember<IChartExtendedModel>;
 
   public maxNumOfSessions: number = 0;
 
-  constructor(private service: ProcessService) { }
+  constructor(private service: ProcessService,
+    private ls: LoadingMemberService) { }
 
   ngOnInit(): void {
+    this.prepareCharts();
     this.getBestDay();
     this.loadPopularPeriodProcesses();
     this.loadOsStatistics();
   }
 
-  loadOsStatistics(){
-    this.service.loadOsStatisticAll()
-      .subscribe((response) => {
-        this.pieChart.data.data = response.pieChart.quantity;
-        this.pieChart.data.labels = response.pieChart.name;
-        
-        this.pieChart.isLoading = false;
-        this.pieChart.errorMessage = null;
-      },
-      (error) => {
-        this.pieChart.isLoading = false;
-        this.pieChart.errorMessage = "Ann error occured";
-      });
+  prepareCharts(): void {
+    this.bestDay = this.ls.createMember<IBestProcessesDay>();
+    this.pieChart = this.ls.createChart(
+      'pie',
+      'Number of different processes (Last month period)',
+      [{ backgroundColor: ['#320E3B', '#D8A47F'] }],
+      true
+    );
+    this.columnChart = this.ls.createColumnChart(
+      'Top 20 processes (Last month period)',
+      '#F58F29'
+    );
+  }
+
+  loadOsStatistics() {
+    this.ls.handleChart<IOsStatisticResponse>(
+      this.service.loadOsStatisticAll(),
+      this.pieChart,
+      {
+        map<IOsStatisticResponse>(response, member) {
+          member.data.data = response.pieChart.quantity;
+          member.data.labels = response.pieChart.name;
+        },
+      }
+    );
   }
 
   getBestDay() {
-    this.service.getDayWithMostProcesses()
-      .subscribe((response) => {
-        this.bestDay.data = response;
-        this.bestDay.isLoading = false;
-        this.bestDay.errorMessage = null;
-      },
-      (error) => {
-        this.bestDay.isLoading = false;
-        this.bestDay.errorMessage = "Ann error occured";
-      });
+    this.ls.handle<IBestProcessesDay>(
+      this.service.getDayWithMostProcesses(),
+      this.bestDay
+    );
   }
 
-  loadPopularPeriodProcesses(){
+  loadPopularPeriodProcesses() {
     this.service.loadTopProcessesForChartAllUsers()
       .subscribe((response) => {
         this.columnChart.data.data = response.chartRecords.value;
         this.columnChart.data.labels = response.chartRecords.label;
         this.maxNumOfSessions = response.maxNumberOfSessions;
-        
+
         this.columnChart.isLoading = false;
         this.columnChart.errorMessage = null;
       },
-      (error) => {
-        this.columnChart.isLoading = false;
-        this.columnChart.errorMessage = "Ann error occured";
-      });
+        (error) => {
+          this.columnChart.isLoading = false;
+          this.columnChart.errorMessage = "Ann error occured";
+        });
   }
 
 }
