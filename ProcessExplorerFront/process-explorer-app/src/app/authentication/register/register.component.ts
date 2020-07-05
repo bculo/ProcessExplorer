@@ -4,6 +4,7 @@ import { FormValidationService } from 'src/app/shared/services/form-validation.s
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
