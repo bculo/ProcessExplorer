@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProcessExplorer.Api.Filters;
+using ProcessExplorer.Api.Services;
 using ProcessExplorer.Api.SignalR;
 using ProcessExplorer.Api.Soap.Interfaces;
 using ProcessExplorerWeb.Application;
@@ -35,7 +36,7 @@ namespace ProcessExplorer.Api
             services.AddSignalR();
             services.AddHttpContextAccessor();
             services.AddSoapCore();
-            services.AddHealthChecks();
+            services.AddHealthChecks().AddCheck<SqlHealthCheckService>(nameof(SqlHealthCheckService));
 
             services.AddCors(options =>
             {
