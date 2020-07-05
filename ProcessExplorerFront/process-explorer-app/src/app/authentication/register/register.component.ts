@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class RegisterComponent implements OnInit, OnDestroy {
   public submited: boolean = false;
   public errorMessage: string | null = null;
-
+  private userSub: Subscription;
   public registerForm: FormGroup;
 
   constructor(public validation: FormValidationService,
@@ -23,6 +23,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.validation.setForm(this.registerForm);
+
+    this.userSub = this.authService.user.subscribe((user) => {
+      if(user) this.router.navigate(['/session']);
+    })
   }
 
   initForm(): void {
@@ -54,6 +58,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.validation.removeForm();
+    this.userSub.unsubscribe();
   }
 
   cleanForm(): void {

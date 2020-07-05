@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: FormGroup;
   public submited: boolean = false;
   public errorMessage: string | null = null;
+  private userSub: Subscription;
 
   constructor(public validation: FormValidationService,
     private router: Router,
@@ -24,11 +25,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.validation.removeForm();
+    this.userSub.unsubscribe();
   }
 
   ngOnInit(): void {
     this.initForm();
     this.validation.setForm(this.loginForm);
+
+    this.userSub = this.authService.user.subscribe((user) => {
+      if(user) this.router.navigate(['/session']);
+    })
   }
 
   initForm(): void {
