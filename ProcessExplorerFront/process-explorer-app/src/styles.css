@@ -3,6 +3,10 @@
     --background-color: #ECF0F3;
 }
 
+.section {
+    position: relative;
+}
+
 html, body {
     height: 100%;
     background: var(--background-color);
@@ -44,6 +48,16 @@ footer {
     margin: 0rem 8rem;
 }
 
+.hide {
+    visibility: hidden;
+}
+
+.notification {
+    position: absolute;
+    top: -42px;
+    right: -10px;
+}
+
 @media only screen and (max-width: 750px) {
     .content-box {
         margin: 2rem 2rem;
@@ -52,4 +66,4 @@ footer {
     .tab-box {
         margin: 0rem 2rem;
     }
-  }
+}

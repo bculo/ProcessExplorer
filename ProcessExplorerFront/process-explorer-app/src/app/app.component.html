@@ -7,6 +7,14 @@
   <!-- CONTENT -->
   <div class="container">
     <router-outlet></router-outlet>
+
+    <div #notification 
+      class="notification is-primary is-light"
+      [ngClass]="!isVisible ? 'hide' : ''">
+      <button class="delete" (click)="remove()"></button>
+        Synchronization occurred!!!
+    </div>
+
   </div>
 
 </section>

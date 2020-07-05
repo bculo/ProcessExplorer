@@ -80,6 +80,11 @@
                     User: {{ authenticatedUser.userName }}
                 </div>
 
+                <!-- USER ACTIVITY -->
+                <div class="navbar-item" *ngIf="isAuthenticated()">
+                    <i class="fa fa-child" aria-hidden="true"></i> : {{ activeUsers }}
+                </div>
+
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-primary" (click)="onLogout()" *ngIf="isAuthenticated()">

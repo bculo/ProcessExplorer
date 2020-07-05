@@ -13,9 +13,11 @@ import { filter } from 'rxjs/operators';
 })
 export class NavComponent implements OnInit, OnDestroy {
   public authenticatedUser: ApplicationUser;
-  
+  public activeUsers: number = 1;
+
   private userSub: Subscription;
-  private pathSub: Subscription;
+  private userNum: Subscription;
+  private userLogedOut: Subscription;
 
   private burgerActive = false;
 
@@ -25,7 +27,8 @@ export class NavComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
-    this.pathSub.unsubscribe();
+    this.userNum.unsubscribe();
+    this.userLogedOut.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -39,12 +42,14 @@ export class NavComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.pathSub = this.router.events
-      .pipe(filter(i => i instanceof NavigationEnd))
-      .subscribe((instnace: NavigationEnd) => {
-        if(instnace.url.indexOf('/authentication') > -1 && this.isAuthenticated())
-          this.router.navigate(['/session']);
-      });
+    this.userNum = this.signalR.userNum.subscribe((num: number) => {
+      this.activeUsers = num;
+    });
+
+    this.userNum = this.signalR.userLogedOut.subscribe(() => {
+      this.activeUsers--;
+    });
+
   }
 
   onLogout(){

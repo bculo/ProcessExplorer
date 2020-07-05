@@ -31,7 +31,7 @@ namespace ProcessExplorer.Api.SignalR
             return base.OnConnectedAsync();
         }
 
-        public Task Subscribe()
+        public async Task Subscribe()
         {
             //user unique identifier
             string identifier = Context.UserIdentifier;
@@ -40,7 +40,9 @@ namespace ProcessExplorer.Api.SignalR
             if (!_connections.GetConnections(identifier).Contains(Context.ConnectionId))
                 _connections.Add(identifier, Context.ConnectionId);
 
-            return Task.CompletedTask;
+            int connections = _connections.GetTotalConnections();
+
+            await Clients.All.CreateNotificationForLogin(connections);
         }
 
         public async Task SyncSession(string json)

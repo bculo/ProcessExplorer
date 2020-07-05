@@ -29,7 +29,6 @@ namespace ProcessExplorer.Api.SignalR
                 {
                     connections = new HashSet<string>();
                     _connections.Add(key, connections);
-                    Interlocked.Increment(ref connectionsNum);
                 }
 
                 //add new connection to hashset

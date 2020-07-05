@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel, HubConnectionState } from "@microsoft/signalr";
 import { environment } from 'src/environments/environment';
 import { ApplicationUser } from '../models/application-user.model';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,10 @@ export class SignalRService {
 
   private hubConnection: HubConnection;
   private hubUrl: string = environment.hub;
+
+  public userNum = new BehaviorSubject<number>(1);
+  public userLogedOut = new Subject();
+  public sync = new Subject();
 
   constructor() { }
 
@@ -40,17 +45,17 @@ export class SignalRService {
 
   private userNotification(): void {
     this.hubConnection.on("CreateNotificationForLogin", (data) => {
-      console.log(data);
+      this.userNum.next(data);
     });
 
     this.hubConnection.on("CreateNotificationForLogout", () => {
-      console.log("SMANJI ZA JEDAN");
+      this.userLogedOut.next();
     });
   }
 
   private syncNotification(): void {
     this.hubConnection.on("CreateSyncNotification", () => {
-      console.log("SYNC HAPPEND");
+      this.sync.next();
     });
   }
 
