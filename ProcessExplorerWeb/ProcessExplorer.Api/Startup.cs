@@ -35,6 +35,7 @@ namespace ProcessExplorer.Api
             services.AddSignalR();
             services.AddHttpContextAccessor();
             services.AddSoapCore();
+            services.AddHealthChecks();
 
             services.AddCors(options =>
             {
@@ -91,6 +92,9 @@ namespace ProcessExplorer.Api
 
                 //Soap
                 endpoints.UseSoapEndpoint<ISyncService>("/SyncService.asmx", new BasicHttpBinding());
+
+                //health check
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
