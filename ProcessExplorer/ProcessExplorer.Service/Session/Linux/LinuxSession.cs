@@ -36,7 +36,7 @@ namespace ProcessExplorer.Service.Session.Linux
             process.Start();
 
             var terminalContent = process.StandardOutput.ReadToEnd();
-            DateTime logonTime = GetLogonTime(terminalContent);
+            DateTime logonTime = GetLogonTime(terminalContent).ToUniversalTime();
 
             var userName = Environment.UserName;
 

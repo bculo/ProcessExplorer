@@ -30,6 +30,8 @@ namespace ProcessExplorer.Service.Background
         /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Delay(5000);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInfo($"{nameof(ProcessCollectorHostedService)} service running.");

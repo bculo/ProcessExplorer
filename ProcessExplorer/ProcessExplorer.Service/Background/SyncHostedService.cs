@@ -22,6 +22,8 @@ namespace ProcessExplorer.Service.Background
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Delay(10000);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInfo($"{nameof(SyncHostedService)} service running.");

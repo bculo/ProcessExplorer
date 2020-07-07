@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Newtonsoft.Json;
 using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Interfaces.Notifications;
 using ProcessExplorer.Application.Common.Models;
@@ -46,6 +47,9 @@ namespace ProcessExplorer.Application.Behaviours
                 //get running processes
                 List<ProcessInformation> processes = collector.GetProcesses();
 
+                var jsonTest = JsonConvert.SerializeObject(processes);
+                _logger.LogInfo(jsonTest);
+
                 //check internet connection and user work mode
                 if (!await _internet.CheckForInternetConnectionAsync() || _session.SessionInformation.Offline)
                 {
@@ -65,6 +69,9 @@ namespace ProcessExplorer.Application.Behaviours
                 //create user session dto
                 var dto = _session.SessionInformation.Adapt<UserSessionDto>();
                 dto.Processes = processes.Adapt<IEnumerable<ProcessDto>>();
+
+                var jsonTest2 = JsonConvert.SerializeObject(dto);
+                _logger.LogInfo(jsonTest2);
 
                 //send to server
                 if (!await syncClient.SyncProcesses(dto))
