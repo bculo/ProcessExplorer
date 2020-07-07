@@ -60,7 +60,9 @@ namespace ProcessExplorer.Service.Process.Linux
             string username = _info.PlatformInformation.UserName;
             var rowsWithSpecificUser = terminalContent.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries) //split on /r/n
                                                 .Skip(1) //skip header
-                                                .Where(i => i.Contains(username)); //get only processes for currently loged in user
+                                                .Where(i => i.Contains(username)) //get only processes for currently loged in user
+                                                .GroupBy(i => i?.Trim()) //remove duplicates
+                                                .Select(i => i.Key);
 
             DateTime fetchedTime = _time.Now;
             Guid sessionId = _session.SessionInformation.SessionId;
