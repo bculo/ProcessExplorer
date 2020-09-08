@@ -30,7 +30,7 @@ namespace ProcessExplorer.Service.Application.Windows
                 var process = System.Diagnostics.Process.GetProcessById((int) processId);
                 appList.Add(new ApplicationInformation
                 {
-                    StartTime = process.StartTime,
+                    StartTime = process.StartTime.ToUniversalTime(),
                     ApplicationName = GetBasicApplicationTitle(window.Value, process?.ProcessName),
                     Session = _sessionService.SessionInformation.SessionId,
                     FetchTime = _dateTime.Now

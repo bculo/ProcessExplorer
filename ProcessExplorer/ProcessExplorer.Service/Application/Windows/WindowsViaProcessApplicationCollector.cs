@@ -24,7 +24,7 @@ namespace ProcessExplorer.Service.Application.Windows
             {
                 appList.Add(new ApplicationInformation
                 {
-                    StartTime = item.StartTime,
+                    StartTime = item.StartTime.ToUniversalTime(),
                     ApplicationName = GetBasicApplicationTitle(item.MainWindowTitle, item.ProcessName),
                     Session = _sessionService.SessionInformation.SessionId,
                     FetchTime = _dateTime.Now

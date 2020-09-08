@@ -108,9 +108,9 @@ namespace ProcessExplorer.Service.Application.Linux
             return new ApplicationInformation
             {
                 ApplicationName = GetBasicApplicationTitle(longName, fetchedProcess?.ProcessName),
-                StartTime = processStarted,
+                StartTime = processStarted.ToUniversalTime(),
                 Session = _sessionService.SessionInformation.SessionId,
-                FetchTime = processStarted
+                FetchTime = processStarted.ToUniversalTime()
             };
         }
 
