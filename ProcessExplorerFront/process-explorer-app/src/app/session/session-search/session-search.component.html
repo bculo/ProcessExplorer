@@ -28,7 +28,7 @@
         <tr *ngFor="let session of records">
           <th> {{ session.userName }} </th>
           <th> {{ session.os }} </th>
-          <th> {{ session.started | date:'dd/MM/yyyy HH:mm' }} </th>
+          <th> {{ session.started | date:'dd/MM/yyyy HH:mm:ss' }} </th>
           <th> {{ session.differentProcessesNumber }} </th>
           <th> {{ session.applicationNumber }} </th>
           <th> <a [routerLink]="['/session', 'details', session.id]">More</a></th>

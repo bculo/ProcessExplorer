@@ -43,8 +43,8 @@
       <tbody>
         <tr *ngFor="let process of records">
           <th> {{ process.name }} </th>
-          <th> {{ process.opened | date:'dd/MM/yyyy hh:mm' }} </th>
-          <th> {{ process.closed | date:'dd/MM/yyyy hh:mm'}} </th>
+          <th> {{ process.opened | date:'dd/MM/yyyy HH:mm:ss' }} </th>
+          <th> {{ process.closed | date:'dd/MM/yyyy HH:mm:ss'}} </th>
         </tr>
       </tbody>
     </table>
