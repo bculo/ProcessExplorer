@@ -61,7 +61,7 @@ export class StatisticAllComponent implements OnInit {
 
   loadOsStatisticsPeriod() {
     this.ls.handleChart<IOsStatisticResponse>(
-      this.service.getOsStatisticUserPeriod(),
+      this.service.getOsStatisticAllPeriod(),
       this.pieChart,
       {
         map<IOsStatisticResponse>(response, member) {

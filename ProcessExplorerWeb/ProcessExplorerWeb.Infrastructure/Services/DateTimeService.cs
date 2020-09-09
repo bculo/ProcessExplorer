@@ -7,6 +7,9 @@ namespace ProcessExplorerWeb.Infrastructure.Services
 {
     public class DateTimeService : IDateTime
     {
-        public DateTime Now => DateTime.UtcNow;
+        public TimeZoneInfo EST { get; set; } 
+            = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+
+        public DateTime Now => TimeZoneInfo.ConvertTime(DateTime.Now, EST);
     }
 }

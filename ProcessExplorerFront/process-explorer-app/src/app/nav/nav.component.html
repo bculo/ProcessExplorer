@@ -71,6 +71,10 @@
                     </div>
                 </div>
                 
+                <!-- ADMIN -->
+                <a *ngIf="authenticatedUser.userName==='admin'" routerLink="/admin" class="navbar-item">
+                        Configuration
+                </a>
             </div>
        
             <div class="navbar-end">

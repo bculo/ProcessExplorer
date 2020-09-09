@@ -103,14 +103,14 @@ namespace ProcessExplorer.Service.Application.Linux
             var fetchedProcess = System.Diagnostics.Process.GetProcessById(pid);
 
             //if process is null, set start time to current time
-            DateTime processStarted = fetchedProcess?.StartTime ?? _dateTime.Now;
+            DateTime processStarted = fetchedProcess?.StartTime.ToUniversalTime() ?? _dateTime.Now;
 
             return new ApplicationInformation
             {
                 ApplicationName = GetBasicApplicationTitle(longName, fetchedProcess?.ProcessName),
-                StartTime = processStarted.ToUniversalTime(),
+                StartTime = processStarted,
                 Session = _sessionService.SessionInformation.SessionId,
-                FetchTime = processStarted.ToUniversalTime()
+                FetchTime = processStarted
             };
         }
 

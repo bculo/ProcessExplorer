@@ -1,4 +1,5 @@
-﻿using ProcessExplorer.Application.Common.Interfaces;
+﻿using ProcessExplorer.Application.Common.Extensions;
+using ProcessExplorer.Application.Common.Interfaces;
 using ProcessExplorer.Application.Common.Models;
 using System;
 using System.Collections.Generic;

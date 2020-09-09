@@ -7,6 +7,7 @@ using ProcessExplorer.Core.Entities;
 using ProcessExplorer.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProcessExplorer.Application.Behaviours
@@ -65,6 +66,8 @@ namespace ProcessExplorer.Application.Behaviours
                 //create user session dto
                 var dto = _session.SessionInformation.Adapt<UserSessionDto>();
                 dto.Applications = apps.Adapt<IEnumerable<ApplicationDto>>();
+
+                var test = dto.Applications.ToList();
 
                 //sync fetched apps with server if possible
                 if (!await syncClient.SyncApplications(dto))
